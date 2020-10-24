@@ -49,6 +49,7 @@ flutter:
   assets:
     - UIAssets/
     - UIAssets/Onboarding/UI1/
+    - UIAssets/Onboarding/UI2/
   fonts:
     - family: Avenir95Black
       fonts:

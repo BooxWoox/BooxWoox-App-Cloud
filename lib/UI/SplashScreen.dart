@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Color(0xFFf8e900),
+
       body: FlareActor(
         "UIAssets/Bookollab.flr",
         alignment: Alignment.center,

@@ -76,12 +76,14 @@ class _OnboardingState extends State<Onboarding> {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.asset('UIAssets/Onboarding/UI1/UI1.png'),
+                    Container(
+
+                        child: Image.asset('UIAssets/Onboarding/UI1/UI1.png')),
                     Text('Lend and take!',
                     style:  TextStyle(
                       fontFamily: 'Avenir95Black',
                       fontSize: 22,
-                      fontWeight: FontWeight.bold
+
                     ),),
                     SizedBox(
                       height: 5,
@@ -103,23 +105,23 @@ class _OnboardingState extends State<Onboarding> {
                 Column(
                   mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('UIAssets/Onboarding/UI1/UI1.png'),
-            Text('Lend and take!',
+            Image.asset('UIAssets/Onboarding/UI2/lab.png'),
+            Text('Mobile App!',
               style:  TextStyle(
                   fontFamily: 'Avenir95Black',
                   fontSize: 22,
-                  fontWeight: FontWeight.bold
+
               ),),
             SizedBox(
               height: 5,
             ),
-            Text('your favourite books and best',
+            Text('Enabling swift performance and',
               style:  TextStyle(
                   fontFamily: 'LeelawUI',
                   fontSize: 16,
                   fontWeight: FontWeight.bold
               ),),
-            Text('content effortlessly',
+            Text('User friendly interface',
               style:  TextStyle(
                   fontFamily: 'LeelawUI',
                   fontSize: 16,
@@ -193,15 +195,18 @@ class _OnboardingState extends State<Onboarding> {
               child: Container(
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    InkWell(
-                        onTap: () => previousFunction(),
-                        child: Text("Previous")),
-                    SizedBox(
-                      width: 50,
-                    ),
-                    InkWell(onTap: () => nextFunction(), child: Text("Next"))
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        radius: 27,
+                        backgroundColor: Color(0xFFFFD500),
+                        child: IconButton(
+
+                            icon:Icon(Icons.arrow_forward_ios,color: Colors.white,), onPressed:() => nextFunction()),
+                      ),
+                    )
                   ],
                 ),
               ),
