@@ -30,7 +30,8 @@ dependencies:
   cupertino_icons: ^0.1.3
   flare_flutter: ^2.0.6
   flutter_svg: ^0.19.1
-
+  introduction_screen: ^1.0.9
+  google_fonts: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -47,3 +48,11 @@ flutter:
   uses-material-design: true
   assets:
     - UIAssets/
+    - UIAssets/Onboarding/UI1/
+  fonts:
+    - family: Avenir95Black
+      fonts:
+        - asset: assets/fonts/AvenirLTProBlack.otf
+    - family: LeelawUI
+      fonts:
+        - asset: assets/fonts/LeelawUI.ttf
