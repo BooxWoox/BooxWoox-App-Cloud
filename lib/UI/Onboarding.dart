@@ -136,8 +136,8 @@ class _OnboardingState extends State<Onboarding> {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
         children: [
-                Image.asset('UIAssets/Onboarding/UI1/UI1.png'),
-                Text('Lend and take!',
+                Image.asset('UIAssets/Onboarding/UI3/UI3.png'),
+                Text('Collaborate!',
                 style:  TextStyle(
                     fontFamily: 'Avenir95Black',
                     fontSize: 22,
@@ -146,18 +146,19 @@ class _OnboardingState extends State<Onboarding> {
                 SizedBox(
                 height: 5,
                 ),
-                Text('your favourite books and best',
+                Text('Collaborate at a single platform',
                 style:  TextStyle(
                     fontFamily: 'LeelawUI',
                     fontSize: 16,
                     fontWeight: FontWeight.bold
                 ),),
-                Text('content effortlessly',
+                Text('making the process seamless.',
                 style:  TextStyle(
                     fontFamily: 'LeelawUI',
                     fontSize: 16,
                     fontWeight: FontWeight.bold
-                ),)
+                ),),
+
         ],
       ),
                   ],
@@ -195,7 +196,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
           ),
-          Positioned(
+          currentIndex!=2?Positioned(
             bottom: 10,
             right: 10,
             child: Center(
@@ -211,11 +212,74 @@ class _OnboardingState extends State<Onboarding> {
                         backgroundColor: Color(0xFFFFD500),
                         child: IconButton(
 
-                            icon:Icon(Icons.arrow_forward_ios,color: Colors.white,), onPressed:() => nextFunction()),
+                            icon:Icon(Icons.arrow_forward_ios,color: Colors.white,),
+                            onPressed:() => nextFunction()),
                       ),
                     )
                   ],
                 ),
+              ),
+            ),
+          ):Positioned(
+            bottom: 15,
+            child: SizedBox(
+              width: size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RaisedButton(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 13,horizontal: 13),
+                      child: Container(
+                        width: 100,
+                        height: 25,
+                        child: Center(
+                          child: Text('Sign In',style: TextStyle(
+                              fontFamily: 'LeelawUI',
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold
+                          ),),
+                        ),
+                      ),
+                    ),
+                    color: Color(0xFFFFCC00),
+                    shape: RoundedRectangleBorder(
+
+                      borderRadius: BorderRadius.circular(21),
+                    ),
+                    onPressed: () {  print("dd");
+                  },
+
+                  ),
+                  RaisedButton(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical:13.0,horizontal: 13),
+                      child: Container(
+                        width: 110,
+                        height: 25,
+                        child: Center(
+                          child: FittedBox(
+                            child: Text('Create Account',style: TextStyle(
+                                fontFamily: 'LeelawUI',
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold
+                            ),),
+                          ),
+                        ),
+                      ),
+                    ),
+                    color: Color(0xFFFFCC00),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(21),
+                    ),
+                    onPressed: () {  print("dd");
+                    },
+
+                  ),
+
+                ],
               ),
             ),
           ),
@@ -233,7 +297,6 @@ class Indicator extends StatelessWidget {
       height: 10,
       width: 10,
       decoration: BoxDecoration(
-
           color: positionIndex == currentIndex
               ? Color(0xFFB67400)
               : Color(0xFFC2C2C2),

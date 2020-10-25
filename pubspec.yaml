@@ -50,6 +50,7 @@ flutter:
     - UIAssets/
     - UIAssets/Onboarding/UI1/
     - UIAssets/Onboarding/UI2/
+    - UIAssets/Onboarding/UI3/
   fonts:
     - family: Avenir95Black
       fonts:
