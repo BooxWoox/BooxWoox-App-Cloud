@@ -43,7 +43,7 @@ class _OnboardingState extends State<Onboarding> {
   Widget build(BuildContext context) {
     var size =MediaQuery.of(context).size;
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,105 +67,111 @@ class _OnboardingState extends State<Onboarding> {
               )
             ],
           ),
-          Expanded(
-            flex: 9,
-            child: PageView(
-              onPageChanged: onChangedFunction,
-              controller: _pageController,
-              children: <Widget>[
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: PageView(
+                  onPageChanged: onChangedFunction,
+                  controller: _pageController,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            child: Image.asset('UIAssets/Onboarding/UI1/UI1.png')),
+                        Text('Lend and take!',
+                        style:  TextStyle(
+                          fontFamily: 'Avenir95Black',
+                          fontSize: 22,
 
-                        child: Image.asset('UIAssets/Onboarding/UI1/UI1.png')),
-                    Text('Lend and take!',
-                    style:  TextStyle(
+                        ),),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text('your favourite books and best',
+                          style:  TextStyle(
+                              fontFamily: 'LeelawUI',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),),
+                        Text('content effortlessly',
+                          style:  TextStyle(
+                              fontFamily: 'LeelawUI',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),)
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Image.asset('UIAssets/Onboarding/UI2/lab.png'),
+                Text('Mobile App!',
+                  style:  TextStyle(
                       fontFamily: 'Avenir95Black',
                       fontSize: 22,
 
-                    ),),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text('your favourite books and best',
-                      style:  TextStyle(
-                          fontFamily: 'LeelawUI',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
-                      ),),
-                    Text('content effortlessly',
-                      style:  TextStyle(
-                          fontFamily: 'LeelawUI',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
-                      ),)
-                  ],
+                  ),),
+                SizedBox(
+                  height: 5,
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset('UIAssets/Onboarding/UI2/lab.png'),
-            Text('Mobile App!',
-              style:  TextStyle(
-                  fontFamily: 'Avenir95Black',
-                  fontSize: 22,
-
-              ),),
-            SizedBox(
-              height: 5,
-            ),
-            Text('Enabling swift performance and',
-              style:  TextStyle(
-                  fontFamily: 'LeelawUI',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold
-              ),),
-            Text('User friendly interface',
-              style:  TextStyle(
-                  fontFamily: 'LeelawUI',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold
-              ),)
-          ],
+                Text('Enabling swift performance and',
+                  style:  TextStyle(
+                      fontFamily: 'LeelawUI',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                  ),),
+                Text('User friendly interface',
+                  style:  TextStyle(
+                      fontFamily: 'LeelawUI',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                  ),)
+                ],
         ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('UIAssets/Onboarding/UI1/UI1.png'),
-          Text('Lend and take!',
-            style:  TextStyle(
-                fontFamily: 'Avenir95Black',
-                fontSize: 22,
-                fontWeight: FontWeight.bold
-            ),),
-          SizedBox(
-            height: 5,
-          ),
-          Text('your favourite books and best',
-            style:  TextStyle(
-                fontFamily: 'LeelawUI',
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),),
-          Text('content effortlessly',
-            style:  TextStyle(
-                fontFamily: 'LeelawUI',
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-            ),)
+                Image.asset('UIAssets/Onboarding/UI1/UI1.png'),
+                Text('Lend and take!',
+                style:  TextStyle(
+                    fontFamily: 'Avenir95Black',
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold
+                ),),
+                SizedBox(
+                height: 5,
+                ),
+                Text('your favourite books and best',
+                style:  TextStyle(
+                    fontFamily: 'LeelawUI',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                ),),
+                Text('content effortlessly',
+                style:  TextStyle(
+                    fontFamily: 'LeelawUI',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                ),)
         ],
       ),
-              ],
-            ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 1,
-            child: Center(
+          Positioned(
+            bottom: size.height*.20,
+            left: size.width*.5-25,
+            child: Align(
+              alignment: Alignment.center,
               child: Row(
-                mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Indicator(
                     positionIndex: 0,
@@ -189,9 +195,10 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: Center(
               child: Container(
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
