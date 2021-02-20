@@ -48,6 +48,7 @@ flutter:
   uses-material-design: true
   assets:
     - UIAssets/
+    - UIAssets/LoginScreen/
     - UIAssets/Onboarding/UI1/
     - UIAssets/Onboarding/UI2/
     - UIAssets/Onboarding/UI3/

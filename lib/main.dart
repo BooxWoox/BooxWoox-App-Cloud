@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'UI/SplashScreen.dart';
 import 'UI/Onboarding.dart';
+import 'UI/LoginPage.dart';
 void main() {
   runApp(bookollab());
 }
@@ -14,6 +15,8 @@ class bookollab extends StatelessWidget {
       routes:{
         SplashScreen.id:(context) => SplashScreen(),
         Onboarding.id:(context) => Onboarding(),
+        LoginPage.id:(context) => LoginPage(),
+
       } ,
     );
   }

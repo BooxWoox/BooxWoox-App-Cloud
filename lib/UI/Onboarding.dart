@@ -5,6 +5,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:bookollab/UI/LoginPage.dart';
 class Onboarding extends StatefulWidget {
   static String id='Onboarding_Screen';
 
@@ -248,7 +249,9 @@ class _OnboardingState extends State<Onboarding> {
 
                       borderRadius: BorderRadius.circular(21),
                     ),
-                    onPressed: () {  print("dd");
+                    onPressed: () {
+                      //goto login screen
+                      Navigator.pushReplacementNamed(context, LoginPage.id);
                   },
 
                   ),
