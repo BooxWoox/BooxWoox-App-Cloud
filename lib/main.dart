@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'UI/SplashScreen.dart';
 import 'UI/Onboarding.dart';
 import 'UI/LoginPage.dart';
+import 'UI/CreateAccountPage.dart';
 void main() {
   runApp(bookollab());
 }
@@ -11,11 +12,12 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute:SplashScreen.id,
+      initialRoute:CreateAccountPage.id,
       routes:{
         SplashScreen.id:(context) => SplashScreen(),
         Onboarding.id:(context) => Onboarding(),
         LoginPage.id:(context) => LoginPage(),
+        CreateAccountPage.id:(context) => CreateAccountPage(),
 
       } ,
     );

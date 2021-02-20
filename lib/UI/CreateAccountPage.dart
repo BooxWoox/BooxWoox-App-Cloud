@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
 
-class LoginPage extends StatefulWidget {
-  static String id='Login_Screen';
+class CreateAccountPage extends StatefulWidget {
+  static String id='CreateAccountPage_Screen';
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _CreateAccountPageState createState() => _CreateAccountPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _CreateAccountPageState extends State<CreateAccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,31 +18,44 @@ class _LoginPageState extends State<LoginPage> {
         shadowColor: Color(0xFFF7C100),
       ),
       body: SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(26.0),
-                child: CircleAvatar(
-                  child: CircleAvatar(
-                      child: Image.asset('UIAssets/LoginScreen/DummyProfile.png'),
-                    radius: 55,
-                    backgroundColor: Colors.white,
-                  ),
-                  backgroundColor: Colors.black12,
-                  radius: 66,
-                ),
-              ),
-              Column(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal:18.0,vertical: 30),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 10),
+                    child: Text('E Mail ID',
+                      style: TextStyle(
+                          fontSize: 16
+                      ),),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:48.0),
+                    child: TextField(
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 10),
                     child: Text('Username',
-                    style: TextStyle(
-                      fontSize: 16
-                    ),),
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal:48.0),
@@ -65,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 10),
                     child: Text('Password',
                       style: TextStyle(
-                          fontSize: 16,
+                        fontSize: 16,
                       ),),
                   ),
                   Padding(
@@ -85,15 +98,29 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 20),
-                        child: Text(
-                          "Forgot Password?"
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 10),
+                    child: Text('Confirm Password',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:48.0),
+                    child: TextField(
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
                         ),
-                      )
-                    ],
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 40,
@@ -127,10 +154,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ],
-              )
-            ],
+              ),
+            )
+          ],
 
-          ),
         ),
       ),
     );
