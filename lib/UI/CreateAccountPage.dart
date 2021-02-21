@@ -39,6 +39,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       autocorrect: false,
                       decoration: InputDecoration(
                         filled: true,
+                        fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.grey),
@@ -62,6 +63,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     child: TextField(
                       autocorrect: false,
                       decoration: InputDecoration(
+                        fillColor: Colors.white,
                         filled: true,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -87,6 +89,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       autocorrect: false,
                       decoration: InputDecoration(
                         filled: true,
+                        fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.grey),
@@ -111,6 +114,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       autocorrect: false,
                       decoration: InputDecoration(
                         filled: true,
+                        fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.grey),
