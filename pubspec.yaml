@@ -31,7 +31,13 @@ dependencies:
   flare_flutter: ^2.0.6
   flutter_svg: ^0.19.1
   introduction_screen: ^1.0.9
+  flutter_otp: ^0.2.6
+  firebase_auth: ^0.20.1
   google_fonts: ^1.1.0
+  pin_code_fields: ^6.1.0
+  firebase_core: ^0.7.0
+  cloud_firestore: ^0.16.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -53,6 +59,7 @@ flutter:
     - UIAssets/Onboarding/UI2/
     - UIAssets/Onboarding/UI3/
     - UIAssets/Homepage/
+    - UIAssets/Profile/
   fonts:
     - family: Avenir95Black
       fonts:

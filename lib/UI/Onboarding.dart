@@ -1,3 +1,4 @@
+import 'package:bookollab/UI/CreateAccountPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -277,7 +278,8 @@ class _OnboardingState extends State<Onboarding> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(21),
                     ),
-                    onPressed: () {  print("dd");
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, CreateAccountPage.id);
                     },
 
                   ),

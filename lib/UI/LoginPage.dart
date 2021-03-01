@@ -1,6 +1,11 @@
+import 'package:bookollab/UI/Homepage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class LoginPage extends StatefulWidget {
   static String id='Login_Screen';
@@ -9,6 +14,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String email_typed="";
+  String pass_typed="";
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +55,9 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal:48.0),
                     child: TextField(
+                      onChanged: (value){
+                        email_typed=value;
+                      },
                       autocorrect: false,
                       decoration: InputDecoration(
                         filled: true,
@@ -71,6 +82,9 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal:48.0),
                     child: TextField(
+                      onChanged: (value){
+                        pass_typed=value;
+                      },
                       autocorrect: false,
                       decoration: InputDecoration(
                         filled: true,
@@ -121,7 +135,19 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(21),
                       ),
-                      onPressed: () {  print("dd");
+                      onPressed: () async{
+                        //login server starts calling API
+                        try{
+                          var user=await _auth.signInWithEmailAndPassword(email: email_typed.trim().toLowerCase(), password: pass_typed).then((value){
+                            print("Successfully Logged in as ${value.user.uid}");
+
+                            Navigator.pushReplacementNamed(context, Homepage.id);
+                          });
+                          ;
+
+                        }catch(e){
+                            print("Error in log in");
+                        }
                       },
 
                     ),
