@@ -21,7 +21,7 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute:ProfilePage.id,
+      initialRoute:LoginPage.id,
       routes:{
         SplashScreen.id:(context) => SplashScreen(),
         Onboarding.id:(context) => Onboarding(),

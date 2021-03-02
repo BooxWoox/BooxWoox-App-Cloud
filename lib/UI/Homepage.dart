@@ -1,3 +1,4 @@
+import 'package:bookollab/UI/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'maindisplaypage.dart';
@@ -39,6 +40,7 @@ class _HomepageState extends State<Homepage> {
           GestureDetector(
             onTap: (){
               print("userprofile click");
+              Navigator.pushNamed(context, ProfilePage.id);
             },
             child: Image.asset('UIAssets/Homepage/user_circle.png',
             color: Colors.white,
