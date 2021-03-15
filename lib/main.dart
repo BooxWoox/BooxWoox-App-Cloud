@@ -8,6 +8,7 @@ import 'UI/maindisplaypage.dart';
 import 'UI/OTPverify.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'UI/ProfilePage.dart';
+import 'UI/Book_info.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class bookollab extends StatelessWidget {
         maindisplaypage.id:(context)=>maindisplaypage(),
         OTPverify.id:(context) => OTPverify(),
         ProfilePage.id:(context) => ProfilePage(),
+        Book_info.id:(context) =>Book_info(),
 
       } ,
     );

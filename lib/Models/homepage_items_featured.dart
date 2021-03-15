@@ -6,6 +6,7 @@ class homepage_items_featured{
   String _Collection_type;
   String _ImageURl;
 
+
   set Author(String value) {
     _Author = value;
   }

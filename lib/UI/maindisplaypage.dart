@@ -1,3 +1,4 @@
+import 'package:bookollab/Models/maindisp_book_info_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
@@ -5,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
+import 'Book_info.dart';
+import '../Models/Book_info_model.dart';
 
 final _firestore=FirebaseFirestore.instance;
 
@@ -19,7 +22,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
   List<homepage_items_featured> featured=[];
   @override
   void initState() {
-    
+
     //initiaise to get list of homepage categories from database
 
     setState(() {
@@ -43,6 +46,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
       );
     }else
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           height: 20,
@@ -74,42 +78,79 @@ class _maindisplaypageState extends State<maindisplaypage> {
             ),
           ),
         ),
-        ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount:Homepage_Cat.length,
-            itemBuilder: (context,index){
-              return Column(
-                children: [
-                  Text(Homepage_Cat[index]),
-                  SizedBox(
-                    height:180,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount:featured.length,
-                        itemBuilder: (context,itemIndex){
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(21),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 180,
-                                  height: 150,
-                                  color: Colors.deepOrange,
-                                  ,
+        Expanded(
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount:Homepage_Cat.length,
+              itemBuilder: (context,index){
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 18),
+                      child: Text(Homepage_Cat[index],
+                      style: TextStyle(
+                        fontFamily: "LeelawUI",
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),),
+                    ),
+                    Container(
+                      height:220,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount:featured.length,
+                          itemBuilder: (context,itemIndex){
+                            return InkWell(
+                              onTap: (){
+                                //goto book info page
+                                Navigator.pushNamed(context,Book_info.id,arguments: maindisp_book_info_model(featured[itemIndex]));
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  elevation: 3,
+                                  color:Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(21),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 140,
+                                          width:150,
+                                          child: Image.asset("UIAssets/Homepage/book_cover_dummy.jpg",
+                                          fit: BoxFit.contain,),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: SizedBox(
+                                            width:150,
+                                            child: Center(child: Text(featured[itemIndex].BookName,
+                                            style: TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 16,
+                                              fontFamily: "LeelawUI",
+
+                                            ),))),
+                                      )
+                                    ],
+                                  )
                                 ),
-                                Text(featured[itemIndex].BookName)
-                              ],
-                            ),
-                          );
-                        }),
-                  )
-                ],
-              );
-            }
+                              ),
+                            );
+                          }),
+                    )
+                  ],
+                );
+              }
+          ),
         ),
       ],
 
