@@ -9,12 +9,7 @@ class Book_info_model{
   String _Imageurl;
   String _Longdescription;
   String _MRP;
-  String _quotedPrice;
-  String _OwnerRatings;
-  String _OwnerUId;
-  String _Quantity;
-  String _Category;
-  String _Conditiondescription;
+  double _quotedDeposit;
 
   String get author => _author;
 
@@ -33,7 +28,7 @@ class Book_info_model{
       this._Imageurl,
       this._Longdescription,
       this._MRP,
-      this._quotedPrice,
+      this._quotedDeposit,
       this._OwnerRatings,
       this._OwnerUId,
       this._Quantity,
@@ -41,6 +36,11 @@ class Book_info_model{
       this._Conditiondescription,
       this._ISBN);
 
+  String _OwnerRatings;
+  String _OwnerUId;
+  String _Quantity;
+  String _Category;
+  String _Conditiondescription;
   String _ISBN;
 
   bool get availability => _availability;
@@ -81,10 +81,10 @@ class Book_info_model{
     _OwnerRatings = value;
   }
 
-  String get quotedPrice => _quotedPrice;
+  double get quotedDeposit => _quotedDeposit;
 
-  set quotedPrice(String value) {
-    _quotedPrice = value;
+  set quotedDeposit(double value) {
+    _quotedDeposit = value;
   }
 
   String get MRP => _MRP;

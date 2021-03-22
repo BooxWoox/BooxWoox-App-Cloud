@@ -75,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 10),
                     child: Text('Password',
+
                       style: TextStyle(
                           fontSize: 16,
                       ),),
@@ -82,9 +83,11 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal:48.0),
                     child: TextField(
+
                       onChanged: (value){
                         pass_typed=value;
                       },
+                      obscureText: true,
                       autocorrect: false,
                       decoration: InputDecoration(
                         filled: true,

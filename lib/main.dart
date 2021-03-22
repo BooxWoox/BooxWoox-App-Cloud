@@ -9,6 +9,9 @@ import 'UI/OTPverify.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'UI/ProfilePage.dart';
 import 'UI/Book_info.dart';
+import 'UI/Chat/chat_homepage.dart';
+import 'UI/Notification/notification.dart';
+import 'UI/Chat/ChatsPage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +33,11 @@ class bookollab extends StatelessWidget {
         CreateAccountPage.id:(context) => CreateAccountPage(),
         Homepage.id:(context) => Homepage(),
         maindisplaypage.id:(context)=>maindisplaypage(),
-        OTPverify.id:(context) => OTPverify(),
         ProfilePage.id:(context) => ProfilePage(),
         Book_info.id:(context) =>Book_info(),
+        Chat_homepage.id:(context) =>Chat_homepage(),
+        notification.id:(context) => notification(),
+        ChatsPage.id:(context) => ChatsPage(),
 
       } ,
     );

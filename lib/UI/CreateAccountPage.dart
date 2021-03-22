@@ -396,6 +396,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         'Username': username,
         'Phone_Number':Phone,
         'Email_Id':email,
+        'Profile_ImageURL':"",
         'Add1':"1",
         'Add2':"2",
       });

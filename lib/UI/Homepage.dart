@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'maindisplaypage.dart';
 import 'dart:async';
+import 'package:bookollab/UI/Chat/chat_homepage.dart';
+import 'package:bookollab/UI/Notification/notification.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
 class Homepage extends StatefulWidget {
@@ -12,11 +14,13 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  int _pageIndex = 0;
+  int _pageIndex = 1;
   PageController _pageController;
 
   List<Widget> tabPages = [
+    Chat_homepage(),
     maindisplaypage(),
+    notification(),
   ];
   @override
   void initState() {
@@ -75,9 +79,13 @@ class _HomepageState extends State<Homepage> {
             onTap: onTabTapped,
             backgroundColor: Colors.white,
             items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem( icon: Image.asset('UIAssets/Homepage/chat_icon.png'), title: Text("Home")),
-              BottomNavigationBarItem(icon: Image.asset('UIAssets/Homepage/bookollab_icon.png'), title: Text("official")),
-              BottomNavigationBarItem(icon: Image.asset('UIAssets/Homepage/notification_icon.png'), title: Text("notifications")),
+              BottomNavigationBarItem( icon: Image.asset('UIAssets/Homepage/chat_icon.png'), title: Text("Home"),
+              activeIcon: Image.asset('UIAssets/Homepage/chat_icon.png',
+              color: Colors.orangeAccent,)),
+              BottomNavigationBarItem(icon: Image.asset('UIAssets/Homepage/bookollab_icon.png'), title: Text("official")
+              ,activeIcon: Image.asset('UIAssets/Homepage/bookollab_icon.png',color: Colors.orangeAccent,)),
+              BottomNavigationBarItem(icon: Image.asset('UIAssets/Homepage/notification_icon.png',), title: Text("notifications"),
+              activeIcon:Image.asset('UIAssets/Homepage/notification_icon.png',color: Colors.orangeAccent,) ),
             ],
 
           ),

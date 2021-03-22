@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
 import 'package:like_button/like_button.dart';
 import '../Models/Book_info_model.dart';
-
+import 'package:intl/intl.dart';
 final _firestore=FirebaseFirestore.instance;
 class Book_info extends StatefulWidget {
   static String id='Book_info_Screen';
@@ -19,7 +19,9 @@ class Book_info extends StatefulWidget {
 
 class _Book_infoState extends State<Book_info> {
   String Book_name="";
+
   String  doc_address="";
+  double _quotedrent=0;
   var result=null;
   Book_info_model Book_item_model;
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
@@ -46,7 +48,11 @@ class _Book_infoState extends State<Book_info> {
 
         });
       });
+      admin_params_get().then((value) {
+        setState(() {
 
+        });
+      });
       return Scaffold(
         body: Center(
           child: Text("Fetching Data!",
@@ -148,6 +154,17 @@ class _Book_infoState extends State<Book_info> {
                               Book_item_model.availability==true?Text("Availability: Yes"):Text("Availability: Yes"),
                               SizedBox(height: 3,),
                               Book_item_model.ISBN!=null||Book_item_model.ISBN!=""?Text("ISBN: ${Book_item_model.ISBN}"):Text("ISBN: Not Provided"),
+                              SizedBox(height: 60,),
+                              Text("Deposit Amt: \u{20B9} ${Book_item_model.quotedDeposit}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 17
+                              ),),
+                              Text("Rent/Month: \u{20B9} $_quotedrent",style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 17
+                              ),)
+
                             ],
                           ),
                         ),
@@ -292,8 +309,21 @@ class _Book_infoState extends State<Book_info> {
 
     try{
       await _firestore.collection("Book_Collection").doc(docname.trim()).get().then((value){
-        Book_item_model=Book_info_model(value.get("Author"), value.get("Availability"), value.get("BookName"), value.get("Condition"), value.get("Dislikes"), value.get("Likes"),value.get("Homepage_category"), value.get("ImageUrl"), value.get("Long Description"), value.get("MRP"), value.get("Quoted Price"), value.get("OwnerRatings"), value.get("OwnerUID"), value.get("Quantity"), value.get("category"), value.get("Condition Description"),value.get("ISBN"));
+        Book_item_model=Book_info_model(value.get("Author"), value.get("Availability"), value.get("BookName"), value.get("Condition"), value.get("Dislikes"), value.get("Likes"),value.get("Homepage_category"), value.get("ImageUrl"), value.get("Long Description"), value.get("MRP"), value.get("QuotedDeposit"), value.get("OwnerRatings"), value.get("OwnerUID"), value.get("Quantity"), value.get("category"), value.get("Condition Description"),value.get("ISBN"));
         print(value.get("BookName"));
+        return true;
+      });
+    }catch(e){
+      print("yohooooooooooooooooo"+e.message);
+
+    }
+    return false;
+  }
+  Future admin_params_get() async{
+
+    try{
+      await _firestore.collection("Admin").doc("Quoted_Parameters").get().then((value){
+        _quotedrent=value.get("Quoted_Rent");
         return true;
       });
     }catch(e){
