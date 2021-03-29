@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:bookollab/UI/Chat/chat_homepage.dart';
 import 'package:bookollab/UI/Notification/notification.dart';
 import 'package:flare_flutter/flare_actor.dart';
-
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'package:flutter/services.dart';
 //import 'package:image_cropper/image_cropper.dart';
@@ -21,12 +21,16 @@ class AddBookPage extends StatefulWidget {
 }
 
 class _AddBookPageState extends State<AddBookPage> {
+  String _scanBarcode = '';
+  TextEditingController _controller;
+
   File _ImageFile;
   String barcoderesult = "";
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
   String BookName="",Author="",condition="",bkdesc="";
   double MRP=0;
   double quotedprice=0;
+
   @override
   Widget build(BuildContext context) {
     double width=MediaQuery.of(context).size.width;
@@ -200,8 +204,9 @@ class _AddBookPageState extends State<AddBookPage> {
                       children: [
                         Flexible(
                           child: TextField(
+                            controller: _controller,
                             onChanged: (value){
-                              barcoderesult =value;
+                              _scanBarcode =value;
                             },
                             autocorrect: false,
                             decoration: InputDecoration(
@@ -221,6 +226,10 @@ class _AddBookPageState extends State<AddBookPage> {
                         ),
                         IconButton(icon: Icon(Icons.camera_alt), onPressed:(){
                           //_scanQR();
+                          scanBarcodeNormal();
+                          setState(() {
+                            
+                          });
                         })
                       ],
                     ),
@@ -387,6 +396,7 @@ class _AddBookPageState extends State<AddBookPage> {
                     },
 
                   ),
+                  SizedBox(height: 50,),
                 ],
               ),
             )
@@ -395,32 +405,42 @@ class _AddBookPageState extends State<AddBookPage> {
       ),
     );
   }
-//  Future _scanQR() async {
-//    try {
-//      String qrResult = await BarcodeScanner.scan();
-//      setState(() {
-//        barcoderesult = qrResult;
-//      });
-//    } on PlatformException catch (ex) {
-//      if (ex.code == BarcodeScanner.CameraAccessDenied) {
-//        setState(() {
-//          barcoderesult = "Camera permission was denied";
-//        });
-//      } else {
-//        setState(() {
-//          barcoderesult = "Unknown Error $ex";
-//        });
-//      }
-//    } on FormatException {
-//      setState(() {
-//        barcoderesult = "You pressed the back button before scanning anything";
-//      });
-//    } catch (ex) {
-//      setState(() {
-//        barcoderesult = "Unknown Error $ex";
-//      });
-//    }
-//  }
+
+  startBarcodeScanStream() async {
+    FlutterBarcodeScanner.getBarcodeStreamReceiver(
+        "#ff6666", "Cancel", true, ScanMode.BARCODE)
+        .listen((barcode) => print(barcode));
+  }
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes="";
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "Cancel", true, ScanMode.BARCODE);
+
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      if(barcodeScanRes=="-1"){
+        _controller.clear();
+      }
+      else{
+        _controller = new TextEditingController(text: barcodeScanRes);
+        _scanBarcode = barcodeScanRes;
+      }
+
+    });
+  }
+
+
 //  Future<void> _pickImage(ImageSource source) async{
 //    File selected=await ImagePicker.pickImage(source: ImageSource.camera);
 //    setState(() {
