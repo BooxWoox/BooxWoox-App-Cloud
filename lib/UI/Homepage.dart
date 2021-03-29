@@ -1,3 +1,4 @@
+import 'package:bookollab/UI/AddBookPage.dart';
 import 'package:bookollab/UI/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
@@ -37,7 +38,38 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(),
+      drawer: Drawer(
+        child:  ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('User'),
+              decoration: BoxDecoration(
+                color: Color(0xFFF7C100),
+              ),
+            ),
+            ListTile(
+              title: Text('Add Book'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pushNamed(context, AddBookPage.id);
+              },
+            ),
+            ListTile(
+              title: Text('Sign out'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                //Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Text ("Welcome"),
         actions: [

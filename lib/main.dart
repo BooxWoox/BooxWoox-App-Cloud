@@ -12,6 +12,7 @@ import 'UI/Book_info.dart';
 import 'UI/Chat/chat_homepage.dart';
 import 'UI/Notification/notification.dart';
 import 'UI/Chat/ChatsPage.dart';
+import 'UI/AddBookPage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute:LoginPage.id,
+      initialRoute:Onboarding.id,
       routes:{
         SplashScreen.id:(context) => SplashScreen(),
         Onboarding.id:(context) => Onboarding(),
@@ -38,6 +39,7 @@ class bookollab extends StatelessWidget {
         Chat_homepage.id:(context) =>Chat_homepage(),
         notification.id:(context) => notification(),
         ChatsPage.id:(context) => ChatsPage(),
+        AddBookPage.id:(context)=>AddBookPage(),
 
       } ,
     );

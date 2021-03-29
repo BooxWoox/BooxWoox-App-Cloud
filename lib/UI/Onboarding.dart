@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:bookollab/UI/LoginPage.dart';
 class Onboarding extends StatefulWidget {

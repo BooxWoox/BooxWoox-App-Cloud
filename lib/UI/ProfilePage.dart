@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:flutter_otp/flutter_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
