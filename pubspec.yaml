@@ -35,6 +35,8 @@ dependencies:
   pin_code_fields: ^7.0.0
   cloud_firestore: ^1.0.0
   barcode_scan: "^1.0.0"
+  image_picker: ^0.6.5+3
+  image_cropper: ^1.4.0
   flutter_barcode_scanner: ^1.0.2
 
 

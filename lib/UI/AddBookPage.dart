@@ -8,10 +8,11 @@ import 'package:bookollab/UI/Chat/chat_homepage.dart';
 import 'package:bookollab/UI/Notification/notification.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
 //import 'package:image_cropper/image_cropper.dart';
-//import 'package:image_picker/image_picker.dart';
+
 
 
 class AddBookPage extends StatefulWidget {
@@ -390,9 +391,7 @@ class _AddBookPageState extends State<AddBookPage> {
                       borderRadius: BorderRadius.circular(21),
                     ),
                     onPressed: () async{
-//                      _pickImage(ImageSource.camera).whenComplete((){
-//                        _cropImage();
-//                      });
+                     _pickImage(ImageSource.camera);
                     },
 
                   ),
@@ -441,19 +440,34 @@ class _AddBookPageState extends State<AddBookPage> {
   }
 
 
-//  Future<void> _pickImage(ImageSource source) async{
-//    File selected=await ImagePicker.pickImage(source: ImageSource.camera);
-//    setState(() {
-//      _ImageFile=selected;
-//    });
-//  }
-//
-//  Future<void> _cropImage() async{
-//    File croppped=await ImageCropper.cropImage(sourcePath: _ImageFile.path,
-//    );
-//    setState(() {
-//      _ImageFile=croppped??_ImageFile;
-//    });
-//  }
+ Future<void> _pickImage(ImageSource source) async{
+   File selected=await ImagePicker.pickImage(source: ImageSource.camera,maxHeight: 500,maxWidth: 500);
+   if(selected!=null){
+     _ImageFile=selected;
+     File _croppedImage = await ImageCropper.cropImage(
+         sourcePath: selected.path,
+         aspectRatioPresets: [
+           CropAspectRatioPreset.square,
+           CropAspectRatioPreset.ratio3x2,
+           CropAspectRatioPreset.original,
+           CropAspectRatioPreset.ratio4x3,
+           CropAspectRatioPreset.ratio16x9
+         ],
+
+         androidUiSettings: AndroidUiSettings(
+             toolbarColor: Colors.blue,
+             toolbarTitle: 'Cropper',
+             statusBarColor: Colors.blue[700],
+             initAspectRatio: CropAspectRatioPreset.original,
+             lockAspectRatio: false
+         )
+     );
+     setState(() {
+       //_ImageFile=_croppedImage??_ImageFile;
+     });
+   }
+ }
+
+
 }
 
