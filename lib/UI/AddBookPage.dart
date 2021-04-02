@@ -1,20 +1,22 @@
+
 import 'package:bookollab/UI/ProfilePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'dart:io';
 import 'maindisplaypage.dart';
 import 'dart:async';
-import 'package:bookollab/UI/Chat/chat_homepage.dart';
-import 'package:bookollab/UI/Notification/notification.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
-//import 'package:image_cropper/image_cropper.dart';
+import 'package:image_crop/image_crop.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-
-
+final _firestore=FirebaseFirestore.instance;
+FirebaseStorage _firebaseStorage=FirebaseStorage.instance;
 class AddBookPage extends StatefulWidget {
   static String id='AddBookPage_Screen';
   @override
@@ -24,7 +26,6 @@ class AddBookPage extends StatefulWidget {
 class _AddBookPageState extends State<AddBookPage> {
   String _scanBarcode = '';
   TextEditingController _controller;
-
   File _ImageFile;
   String barcoderesult = "";
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
@@ -67,7 +68,38 @@ class _AddBookPageState extends State<AddBookPage> {
           color: Color(0xFFFFCC00),
 
           onPressed: () async{
-
+            if(check(BookName,condition,MRP,quotedprice,_ImageFile)){
+              //checks passed
+              //backend starts
+              String useruid=FirebaseAuth.instance.currentUser.uid;
+              String uploadname=useruid+DateTime.now().toString()+BookName;
+              var reference=_firebaseStorage.ref()
+                  .child('BookFrontCovers')
+                  .child('/${uploadname}.jpg');
+              reference.putFile(_ImageFile).then((val){
+                val.ref.getDownloadURL().then((value) {
+                  _firestore.collection("Book_Collection").doc().set({
+                    "Author":Author,
+                    "Availability":true,
+                    "BookName":BookName,
+                    "Condition":"Used",
+                    "Condition Description":condition,
+                    "Dislikes":0,
+                    "Homepage_category":"Best Rated",
+                    "ISBN":_controller.value.text.toString(),
+                    "ImageUrl":value.toString(),
+                    "Likes":0,
+                    "Long Description":bkdesc,
+                    "MRP":MRP,
+                    "OwnerRatings":"5",
+                    "OwnerUID":useruid,
+                    "Quantity":1,
+                    "QuotedDeposit":quotedprice,
+                    "category":"Unknown"
+                  });
+                });
+              });
+            }
           },
 
         ),
@@ -391,7 +423,7 @@ class _AddBookPageState extends State<AddBookPage> {
                       borderRadius: BorderRadius.circular(21),
                     ),
                     onPressed: () async{
-                     _pickImage(ImageSource.camera);
+                     _getFromGallery();
                     },
 
                   ),
@@ -440,33 +472,74 @@ class _AddBookPageState extends State<AddBookPage> {
   }
 
 
- Future<void> _pickImage(ImageSource source) async{
-   File selected=await ImagePicker.pickImage(source: ImageSource.camera,maxHeight: 500,maxWidth: 500);
-   if(selected!=null){
-     _ImageFile=selected;
-     File _croppedImage = await ImageCropper.cropImage(
-         sourcePath: selected.path,
-         aspectRatioPresets: [
-           CropAspectRatioPreset.square,
-           CropAspectRatioPreset.ratio3x2,
-           CropAspectRatioPreset.original,
-           CropAspectRatioPreset.ratio4x3,
-           CropAspectRatioPreset.ratio16x9
-         ],
+  _getFromGallery() async {
+    File pickedFile = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 500,
+      maxHeight: 500,
+    );
+    if(pickedFile!=null){
+      _cropImage(pickedFile.path);
+    }
+  }
 
-         androidUiSettings: AndroidUiSettings(
-             toolbarColor: Colors.blue,
-             toolbarTitle: 'Cropper',
-             statusBarColor: Colors.blue[700],
-             initAspectRatio: CropAspectRatioPreset.original,
-             lockAspectRatio: false
-         )
-     );
-     setState(() {
-       //_ImageFile=_croppedImage??_ImageFile;
-     });
-   }
- }
+  /// Crop Image
+  _cropImage(filePath) async {
+    File croppedImage = await ImageCropper.cropImage(
+      sourcePath: filePath,
+
+
+        aspectRatioPresets: [
+          CropAspectRatioPreset.original,
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Color(0xFFF7C100),
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.ratio5x4,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        )
+    );
+    _ImageFile=croppedImage??_ImageFile;
+    print("Successfully Cropped");
+  }
+
+  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile) {
+    if(bookName.trim()==""||bookName.trim().isEmpty||bookName.trim().length==0){
+      _onBasicWaitingAlertPressed(context,"BookName can't be Empty");
+      return false;
+    }
+    if(condition.trim()==""||condition.trim().isEmpty||condition.trim().length==0){
+      _onBasicWaitingAlertPressed(context,"Condition field can't be Empty");
+      return false;
+    }
+    if(mrp==0||mrp.isNaN){
+      _onBasicWaitingAlertPressed(context,"Recheck MRP Field");
+      return false;
+    }
+    if(quotedprice>(60/100)*mrp){
+      _onBasicWaitingAlertPressed(context,"Quoted Price should be <= 60 % of MRP");
+      return false;
+    }
+    if(imageFile==null){
+      _onBasicWaitingAlertPressed(context,"Please Upload Front cover of Book");
+      return false;
+    }
+    return true;
+  }
+//validating user fields
+  _onBasicWaitingAlertPressed(context,String descrip) async {
+    await Alert(
+      type: AlertType.error,
+      context: context,
+      title: "Warning",
+      desc: descrip,
+    ).show();
+    // Code will continue after alert is closed.
+    debugPrint("Alert closed now.");
+  }
 
 
 }

@@ -1,4 +1,5 @@
 import 'package:bookollab/UI/CreateAccountPage.dart';
+import 'package:bookollab/UI/Homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -6,6 +7,8 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:bookollab/UI/LoginPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 class Onboarding extends StatefulWidget {
   static String id='Onboarding_Screen';
 
@@ -15,11 +18,28 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   PageController _pageController;
+  String userloggedin=null;
   int currentIndex = 0;
   @override
-  void initState() {
+  void initState(){
     super.initState();
+    getuserlogininfo();
     _pageController = PageController();
+  }
+
+  bool getuserlogininfo(){
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((User user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+        setState(() {
+          Navigator.pushReplacementNamed(context, Homepage.id);
+        });
+      }
+    });
   }
   @override
   void dispose() {
@@ -278,7 +298,7 @@ class _OnboardingState extends State<Onboarding> {
                       borderRadius: BorderRadius.circular(21),
                     ),
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, CreateAccountPage.id);
+                      Navigator.pushNamed(context, CreateAccountPage.id);
                     },
 
                   ),

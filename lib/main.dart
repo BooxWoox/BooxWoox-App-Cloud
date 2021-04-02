@@ -12,17 +12,22 @@ import 'UI/Book_info.dart';
 import 'UI/Chat/chat_homepage.dart';
 import 'UI/Notification/notification.dart';
 import 'UI/Chat/ChatsPage.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'UI/AddBookPage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(bookollab());
 }
 
-class bookollab extends StatelessWidget {
-  // This widget is the root of your application.
 
+
+class bookollab extends StatelessWidget {
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

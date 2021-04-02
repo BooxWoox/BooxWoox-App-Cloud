@@ -124,7 +124,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                         child: Container(
                                           height: 140,
                                           width:150,
-                                          child: Image.asset("UIAssets/Homepage/book_cover_dummy.jpg",
+                                          child: Image.network(featured[itemIndex].ImageURl,
                                           fit: BoxFit.contain,),
                                         ),
                                       ),
@@ -159,15 +159,17 @@ class _maindisplaypageState extends State<maindisplaypage> {
 
   void Featured_items_get() async{
     try{
-      await _firestore.collection("Homepage_Books").get().then((value){
+      await _firestore.collection("Book_Collection").get().then((value){
         for(var i in value.docs){
           print(i.get("BookName"));
           String bkname=i.get("BookName");
           String author=i.get("Author");
           String ImageUrl=i.get("ImageUrl");
-          String coll_type=i.get("Collection_type");
-          String original_loc=i.get("Book_Collection_identity");
-          featured.add(homepage_items_featured(author, bkname, coll_type, ImageUrl, original_loc));
+          String coll_type=i.get("Homepage_category");
+          String original_loc=i.id.toString().trim();
+
+          featured.add(homepage_items_featured(author, bkname, coll_type, ImageUrl,original_loc));
+
         }
         setState(() {
           print(featured);

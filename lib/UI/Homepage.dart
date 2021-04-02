@@ -1,5 +1,6 @@
 import 'package:bookollab/UI/AddBookPage.dart';
 import 'package:bookollab/UI/ProfilePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'maindisplaypage.dart';
@@ -61,6 +62,8 @@ class _HomepageState extends State<Homepage> {
             ListTile(
               title: Text('Sign out'),
               onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, LoginPage.id);
                 // Update the state of the app
                 // ...
                 // Then close the drawer

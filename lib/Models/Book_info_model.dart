@@ -3,19 +3,16 @@ class Book_info_model{
   bool _availability;
   String _bookname;
   String _Condition;
-  String _Dislikes;
-  String _Likes;
+  int _Dislikes;
+  int _Likes;
   String _Homepagecat;
   String _Imageurl;
   String _Longdescription;
-  String _MRP;
+  double _MRP;
   double _quotedDeposit;
-
-  String get author => _author;
-
-  set author(String value) {
-    _author = value;
-  }
+  String _OwnerRatings;
+  String _OwnerUId;
+  int _Quantity;
 
   Book_info_model(
       this._author,
@@ -36,9 +33,12 @@ class Book_info_model{
       this._Conditiondescription,
       this._ISBN);
 
-  String _OwnerRatings;
-  String _OwnerUId;
-  String _Quantity;
+  String get author => _author;
+
+  set author(String value) {
+    _author = value;
+  }
+
   String _Category;
   String _Conditiondescription;
   String _ISBN;
@@ -63,9 +63,9 @@ class Book_info_model{
     _Category = value;
   }
 
-  String get Quantity => _Quantity;
+  int get Quantity => _Quantity;
 
-  set Quantity(String value) {
+  set Quantity(int value) {
     _Quantity = value;
   }
 
@@ -87,9 +87,9 @@ class Book_info_model{
     _quotedDeposit = value;
   }
 
-  String get MRP => _MRP;
+  double get MRP => _MRP;
 
-  set MRP(String value) {
+  set MRP(double value) {
     _MRP = value;
   }
 
@@ -111,15 +111,15 @@ class Book_info_model{
     _Homepagecat = value;
   }
 
-  String get Likes => _Likes;
+  int get Likes => _Likes;
 
-  set Likes(String value) {
+  set Likes(int value) {
     _Likes = value;
   }
 
-  String get Dislikes => _Dislikes;
+  int get Dislikes => _Dislikes;
 
-  set Dislikes(String value) {
+  set Dislikes(int value) {
     _Dislikes = value;
   }
 
