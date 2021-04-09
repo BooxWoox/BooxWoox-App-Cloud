@@ -5,13 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'dart:io';
+import 'package:images_picker/images_picker.dart';
 import 'maindisplaypage.dart';
+
 import 'dart:async';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_crop/image_crop.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -23,7 +23,10 @@ class AddBookPage extends StatefulWidget {
   _AddBookPageState createState() => _AddBookPageState();
 }
 
-class _AddBookPageState extends State<AddBookPage> {
+class _AddBookPageState extends State<AddBookPage>  {
+
+
+
   String _scanBarcode = '';
   TextEditingController _controller;
   File _ImageFile;
@@ -95,8 +98,11 @@ class _AddBookPageState extends State<AddBookPage> {
                     "OwnerUID":useruid,
                     "Quantity":1,
                     "QuotedDeposit":quotedprice,
-                    "category":"Unknown"
+                    "category":"Unknown",
                   });
+                }).then((value) {
+                  _onBasicSuccessAlert(context, "Book has been successfully added");
+                  Navigator.pop(context);
                 });
               });
             }
@@ -423,7 +429,19 @@ class _AddBookPageState extends State<AddBookPage> {
                       borderRadius: BorderRadius.circular(21),
                     ),
                     onPressed: () async{
-                     _getFromGallery();
+                      print("camera");
+                      List<Media> res = await ImagesPicker.openCamera(
+                        cropOpt: CropOption(
+                          aspectRatio: CropAspectRatio.custom,
+                          cropType: CropType.rect,
+                        ),
+                        pickType: PickType.image,
+                      );
+                      if(res!=null){
+                        _ImageFile=File(res[0].path);
+                      }else{
+                        print("not wrking or null return");
+                      }
                     },
 
                   ),
@@ -473,37 +491,37 @@ class _AddBookPageState extends State<AddBookPage> {
 
 
   _getFromGallery() async {
-    File pickedFile = await ImagePicker.pickImage(
-      source: ImageSource.camera,
-      maxWidth: 500,
-      maxHeight: 500,
-    );
-    if(pickedFile!=null){
-      _cropImage(pickedFile.path);
-    }
+    // File pickedFile = await ImagePicker.pickImage(
+    //   source: ImageSource.camera,
+    //   maxWidth: 500,
+    //   maxHeight: 500,
+    // );
+    // if(pickedFile!=null){
+    //   // _cropImage(pickedFile.path);
+    // }
   }
 
   /// Crop Image
   _cropImage(filePath) async {
-    File croppedImage = await ImageCropper.cropImage(
-      sourcePath: filePath,
-
-
-        aspectRatioPresets: [
-          CropAspectRatioPreset.original,
-        ],
-        androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Color(0xFFF7C100),
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.ratio5x4,
-            lockAspectRatio: false),
-        iosUiSettings: IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        )
-    );
-    _ImageFile=croppedImage??_ImageFile;
-    print("Successfully Cropped");
+    // File croppedImage = await ImageCropper.cropImage(
+    //   sourcePath: filePath,
+    //
+    //
+    //     aspectRatioPresets: [
+    //       CropAspectRatioPreset.original,
+    //     ],
+    //     androidUiSettings: AndroidUiSettings(
+    //         toolbarTitle: 'Cropper',
+    //         toolbarColor: Color(0xFFF7C100),
+    //         toolbarWidgetColor: Colors.white,
+    //         initAspectRatio: CropAspectRatioPreset.ratio5x4,
+    //         lockAspectRatio: false),
+    //     iosUiSettings: IOSUiSettings(
+    //       minimumAspectRatio: 1.0,
+    //     )
+    // );
+    // _ImageFile=croppedImage??_ImageFile;
+    // print("Successfully Cropped");
   }
 
   bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile) {
@@ -540,7 +558,16 @@ class _AddBookPageState extends State<AddBookPage> {
     // Code will continue after alert is closed.
     debugPrint("Alert closed now.");
   }
-
+  _onBasicSuccessAlert(context,String descrip) async {
+    await Alert(
+      type: AlertType.success,
+      context: context,
+      title: "Success",
+      desc: descrip,
+    ).show();
+    // Code will continue after alert is closed.
+    debugPrint("Alert closed now.");
+  }
 
 }
 

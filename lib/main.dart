@@ -12,7 +12,7 @@ import 'UI/Book_info.dart';
 import 'UI/Chat/chat_homepage.dart';
 import 'UI/Notification/notification.dart';
 import 'UI/Chat/ChatsPage.dart';
-
+import 'UI/Payment/testpayment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'UI/AddBookPage.dart';
 
@@ -31,7 +31,7 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute:Onboarding.id,
+      initialRoute:testpayment.id,
       routes:{
         SplashScreen.id:(context) => SplashScreen(),
         Onboarding.id:(context) => Onboarding(),
@@ -45,6 +45,7 @@ class bookollab extends StatelessWidget {
         notification.id:(context) => notification(),
         ChatsPage.id:(context) => ChatsPage(),
         AddBookPage.id:(context)=>AddBookPage(),
+        testpayment.id:(context) => testpayment(),
 
       } ,
     );

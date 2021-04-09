@@ -21,11 +21,12 @@ class ChatsPage extends StatefulWidget {
 class _ChatsPageState extends State<ChatsPage> {
   String UserUID=_auth.currentUser.uid.toString();
   List<String> chats=[];
-  String p="";
+
   @override
   void initState() {
     // TODO: implement initState
     //loadchats_get(UserUID);
+
     super.initState();
   }
   @override
@@ -63,60 +64,72 @@ class _ChatsPageState extends State<ChatsPage> {
                       itemBuilder: (BuildContext context, int index) {
                         String docID=snapshot.data.docs[index].id;
 
-                        //Stream m=loadmsg_get(UserUID,docID);
+                            print("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+                            return StreamBuilder<QuerySnapshot>(
 
-                            return Container(
-                              margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
-                              padding:
-                              EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                              decoration: BoxDecoration(
-                                color:  Color(0xFFFFEFEE),
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20.0),
-                                  bottomRight: Radius.circular(20.0),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 35.0,
-                                    backgroundImage:AssetImage('UIAssets/LoginScreen/sam.jpg'),
+                              stream: _firestore.collection("Users").doc(UserUID).collection("Chat").doc(snapshot.data.docs[index].id).collection("Messages").orderBy("timestamp",descending: true).snapshots(),
+                              builder: (context,itemsnapshot){
+                                if(!itemsnapshot.hasData)
+                                {
+                                  return Center(
+                                    child: Text('Loading!'),
+                                  );
+                                }
+                                return Container(
+                                  margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
+                                  padding:
+                                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                                  decoration: BoxDecoration(
+                                    color:  Color(0xFFFFEFEE),
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(20.0),
+                                      bottomRight: Radius.circular(20.0),
+                                    ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Utsav",
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 35.0,
+                                        backgroundImage:AssetImage('UIAssets/LoginScreen/sam.jpg'),
                                       ),
-                                      SizedBox(height: 5.0),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal:8.0),
-                                        child: Container(
-                                          width: MediaQuery.of(context).size.width * 0.45,
-                                          child: Text(
-                                            "LOL",
-                                            style: TextStyle(
-                                              color: Colors.blueGrey,
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w600,
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Utsav",
+                                              style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ),
+                                          SizedBox(height: 5.0),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                            child: Container(
+                                              width: MediaQuery.of(context).size.width * 0.45,
+                                              child: Text(
+                                                itemsnapshot.data.docs.first.get("text"),
+                                                style: TextStyle(
+                                                  color: Colors.blueGrey,
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                        );
+                                );
+                              }
+
+                            );
                       },
 
                     ),
@@ -130,9 +143,16 @@ class _ChatsPageState extends State<ChatsPage> {
       ),
     );
   }
- Stream loadmsg_get (String UserID,String DocID)  {
+ void loadmsg_get (String UserID,String DocID,int index)  async {
     try{
-      return _firestore.collection("Users").doc(UserID).collection("Chat").doc(DocID).collection("Messages").orderBy("timestamp",descending: true).snapshots();
+       await _firestore.collection("Users").doc(UserID).collection("Chat").doc(DocID).collection("Messages").orderBy("timestamp",descending: true).snapshots().listen((event) {
+         print(event.docs.first.get("text"));
+         setState(() {
+           chats[index]=event.docs.first.get("text");
+         });
+
+         //chats.add(event.docs.last.get("text"));
+      });
 
     }catch(e){
       print("Error"+e);
