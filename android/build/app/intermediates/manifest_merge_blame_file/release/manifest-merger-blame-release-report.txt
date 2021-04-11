@@ -1,0 +1,107 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.android"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+8-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.CAMERA" />
+11-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:3:5-65
+11-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:3:22-62
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:4:5-67
+12-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:4:22-64
+13
+14    <application
+14-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:5:5-48:19
+15        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+15-->[androidx.core:core:1.1.0] C:\Users\utsav\.gradle\caches\transforms-2\files-2.1\2e94107f30f39be366a17347c2bf100b\core-1.1.0\AndroidManifest.xml:24:18-86
+16        android:extractNativeLibs="false"
+17        android:icon="@mipmap/ic_launcher"
+17-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:7:9-43
+18        android:label="android" >
+18-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:6:9-32
+19        <activity
+19-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:8:9-37:20
+20            android:name="com.example.android.MainActivity"
+20-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:9:13-41
+21            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+21-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:13:13-163
+22            android:hardwareAccelerated="true"
+22-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:14:13-47
+23            android:launchMode="singleTop"
+23-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:10:13-43
+24            android:requestLegacyExternalStorage="true"
+24-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:11:13-56
+25            android:theme="@style/LaunchTheme"
+25-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:12:13-47
+26            android:windowSoftInputMode="adjustResize" >
+26-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:15:13-55
+27
+28            <!--
+29                 Specifies an Android theme to apply to this Activity as soon as
+30                 the Android process has started. This theme is visible to the user
+31                 while the Flutter UI initializes. After that, this theme continues
+32                 to determine the Window background behind the Flutter UI.
+33            -->
+34            <meta-data
+34-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:20:13-23:17
+35                android:name="io.flutter.embedding.android.NormalTheme"
+35-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:21:15-70
+36                android:resource="@style/NormalTheme" />
+36-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:22:15-52
+37            <!--
+38                 Displays an Android View that continues showing the launch screen
+39                 Drawable until Flutter paints its first frame, then this splash
+40                 screen fades out. A splash screen is useful to avoid any visual
+41                 gap between the end of Android's launch screen and the painting of
+42                 Flutter's first frame.
+43            -->
+44            <meta-data
+44-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:29:13-32:17
+45                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+45-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:30:15-79
+46                android:resource="@drawable/launch_background" />
+46-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:31:15-61
+47
+48            <intent-filter>
+48-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:33:13-36:29
+49                <action android:name="android.intent.action.MAIN" />
+49-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:34:17-68
+49-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:34:25-66
+50
+51                <category android:name="android.intent.category.LAUNCHER" />
+51-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:35:17-76
+51-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:35:27-74
+52            </intent-filter>
+53        </activity>
+54        <!--
+55             Don't delete the meta-data below.
+56             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+57        -->
+58        <activity android:name="com.apptreesoftware.barcodescan.BarcodeScannerActivity" />
+58-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:40:8-89
+58-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:40:18-87
+59        <activity
+59-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:41:8-44:70
+60            android:name="com.yalantis.ucrop.UCropActivity"
+60-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:42:12-59
+61            android:screenOrientation="portrait"
+61-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:43:12-48
+62            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+62-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:44:12-68
+63
+64        <meta-data
+64-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:45:9-47:33
+65            android:name="flutterEmbedding"
+65-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:46:13-44
+66            android:value="2" />
+66-->D:\Bookollab Project\APP\bookollab\android\android\app\src\main\AndroidManifest.xml:47:13-30
+67    </application>
+68
+69</manifest>

@@ -7,9 +7,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
-
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../Models/Book_info_model.dart';
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
+import 'package:dio/dio.dart';
+
 final _firestore=FirebaseFirestore.instance;
 class Book_info extends StatefulWidget {
   static String id='Book_info_Screen';
@@ -19,25 +23,66 @@ class Book_info extends StatefulWidget {
 
 class _Book_infoState extends State<Book_info> {
   String Book_name="";
-
   String  doc_address="";
   double _quotedrent=0;
   var result=null;
   Book_info_model Book_item_model;
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
+
+  Razorpay _razorpay;
+
   @override
   void initState() {
     // TODO: implement initState
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     Future.delayed(Duration.zero,(){
       maindisp_book_info_model itemmodel=ModalRoute.of(context).settings.arguments;
       Book_name=itemmodel.item.BookName;
       doc_address=itemmodel.item.BookCollectionidentity;
       print(Book_name);
       setState(() {
-
       });
     });
     super.initState();
+  }
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    Fluttertoast.showToast(
+        msg: "SUCCESS: " + response.paymentId);
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Fluttertoast.showToast(
+      msg: "ERROR: " + response.code.toString() + " - " + response.message,);
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName);
+  }
+  void openCheckout(String id,double amt) async {
+    var options = {
+      'key': 'rzp_test_qlUviOkjQzWXfJ',
+      'amount': amt,
+      'order_id': id,
+      'name': 'Bookollab',
+      'description': Book_name,
+      'prefill': {'contact': '', 'email': ''},
+    };
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint("Error:"+e);
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _razorpay.clear(); // Removes all listeners
   }
   @override
   Widget build(BuildContext context) {
@@ -96,8 +141,12 @@ class _Book_infoState extends State<Book_info> {
               ),
               height: 60,
               width: width/2,
-              child: ElevatedButton(onPressed: () {  },
-                child: Text("INITIATE CHAT",style: TextStyle(color: Colors.white),),
+              child: ElevatedButton(onPressed: () {
+                double totalrent=_quotedrent+Book_item_model.quotedDeposit;
+
+                getOrderID(totalrent*100);
+              },
+                child: Text("RENT NOW",style: TextStyle(color: Colors.white),),
                 style: ElevatedButton.styleFrom(
                   elevation: 10,
                   primary: Color(0xFFFFCC00), // background
@@ -341,6 +390,25 @@ class _Book_infoState extends State<Book_info> {
     }
     return false;
   }
+  void getOrderID(double amt) async{
+    String username="rzp_test_qlUviOkjQzWXfJ";
+    String password="KaQ60n8ZkWPdCN2AeImDoPhr";
+    final url="https://api.razorpay.com/v1/orders";
+    var auth = 'Basic '+base64Encode(utf8.encode('$username:$password'));
+    var dio = Dio();
+    await dio.post(url,
+        data: {
+          "amount":amt,
+          "currency":"INR",
+          "receipt":"Undefined"
+        },
+        options: Options(headers: <String, String>{'authorization': auth})).then((value) {
+      print(value.data['id']);
+      openCheckout(value.data['id'],amt);
+    });
+  }
+
+
   Future admin_params_get() async{
     try{
       await _firestore.collection("Admin").doc("Quoted_Parameters").get().then((value){
