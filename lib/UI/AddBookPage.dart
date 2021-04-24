@@ -14,6 +14,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_dropdown/flutter_dropdown.dart';
 
 final _firestore=FirebaseFirestore.instance;
 FirebaseStorage _firebaseStorage=FirebaseStorage.instance;
@@ -26,7 +27,7 @@ class AddBookPage extends StatefulWidget {
 class _AddBookPageState extends State<AddBookPage>  {
 
 
-
+  int leaseduration=-1;
   String _scanBarcode = '';
   TextEditingController _controller;
   File _ImageFile;
@@ -71,7 +72,7 @@ class _AddBookPageState extends State<AddBookPage>  {
           color: Color(0xFFFFCC00),
 
           onPressed: () async{
-            if(check(BookName,condition,MRP,quotedprice,_ImageFile)){
+            if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration)){
               //checks passed
               //backend starts
               String useruid=FirebaseAuth.instance.currentUser.uid;
@@ -83,26 +84,29 @@ class _AddBookPageState extends State<AddBookPage>  {
                 val.ref.getDownloadURL().then((value) {
                   _firestore.collection("Book_Collection").doc().set({
                     "Author":Author,
+                    "adminapproval":1,
+                    "tags":[""],
                     "Availability":true,
                     "BookName":BookName,
                     "Condition":"Used",
                     "Condition Description":condition,
                     "Dislikes":0,
                     "Homepage_category":"Best Rated",
-                    "ISBN":_controller.value.text.toString(),
+                    "ISBN":_scanBarcode.toString(),
                     "ImageUrl":value.toString(),
                     "Likes":0,
                     "Long Description":bkdesc,
                     "MRP":MRP,
                     "OwnerRatings":"5",
                     "OwnerUID":useruid,
+                    "LeaseDuration":leaseduration,
                     "Quantity":1,
                     "QuotedDeposit":quotedprice,
                     "category":"Unknown",
+                  }).then((value) {
+                    _onBasicSuccessAlert(context, "Book has been successfully added");
+                    Navigator.pop(context);
                   });
-                }).then((value) {
-                  _onBasicSuccessAlert(context, "Book has been successfully added");
-                  Navigator.pop(context);
                 });
               });
             }
@@ -290,7 +294,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                                 ),),
                             ),
                             Container(
-                              width: width/2.5,
+                              width: width/4,
                               child: TextField(
                                 keyboardType: TextInputType.number,
                                 onChanged: (value){
@@ -329,7 +333,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                                 ),),
                             ),
                             Container(
-                              width: width/2.5,
+                              width: width/3.3,
                               child: TextField(
                                 keyboardType: TextInputType.number,
                                 onChanged: (value){
@@ -358,7 +362,36 @@ class _AddBookPageState extends State<AddBookPage>  {
                           ],
                         ),
                       ),
-
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical:8.0),
+                              child: Text("Lease Period",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontFamily: "LeelawUI",
+                                    fontWeight: FontWeight.bold
+                                ),),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical:5.0),
+                              child: Container(
+                                width: width/4,
+                                child: DropDown(
+                                  items: [1, 2, 3, 4],
+                                  hint: Text("Max Time"),
+                                  onChanged: (value){
+                                    print(value);
+                                    leaseduration=value;
+                                  },
+                                ),),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   Padding(
@@ -480,6 +513,7 @@ class _AddBookPageState extends State<AddBookPage>  {
     setState(() {
       if(barcodeScanRes=="-1"){
         _controller.clear();
+        _scanBarcode="";
       }
       else{
         _controller = new TextEditingController(text: barcodeScanRes);
@@ -490,41 +524,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   }
 
 
-  _getFromGallery() async {
-    // File pickedFile = await ImagePicker.pickImage(
-    //   source: ImageSource.camera,
-    //   maxWidth: 500,
-    //   maxHeight: 500,
-    // );
-    // if(pickedFile!=null){
-    //   // _cropImage(pickedFile.path);
-    // }
-  }
-
-  /// Crop Image
-  _cropImage(filePath) async {
-    // File croppedImage = await ImageCropper.cropImage(
-    //   sourcePath: filePath,
-    //
-    //
-    //     aspectRatioPresets: [
-    //       CropAspectRatioPreset.original,
-    //     ],
-    //     androidUiSettings: AndroidUiSettings(
-    //         toolbarTitle: 'Cropper',
-    //         toolbarColor: Color(0xFFF7C100),
-    //         toolbarWidgetColor: Colors.white,
-    //         initAspectRatio: CropAspectRatioPreset.ratio5x4,
-    //         lockAspectRatio: false),
-    //     iosUiSettings: IOSUiSettings(
-    //       minimumAspectRatio: 1.0,
-    //     )
-    // );
-    // _ImageFile=croppedImage??_ImageFile;
-    // print("Successfully Cropped");
-  }
-
-  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile) {
+  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration) {
     if(bookName.trim()==""||bookName.trim().isEmpty||bookName.trim().length==0){
       _onBasicWaitingAlertPressed(context,"BookName can't be Empty");
       return false;
@@ -544,6 +544,11 @@ class _AddBookPageState extends State<AddBookPage>  {
     if(imageFile==null){
       _onBasicWaitingAlertPressed(context,"Please Upload Front cover of Book");
       return false;
+    }
+    if(leaseduration==-1||leaseduration==null){
+      _onBasicWaitingAlertPressed(context,"Please enter Max. period for Lenting");
+      return false;
+
     }
     return true;
   }

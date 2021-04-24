@@ -4,41 +4,47 @@ class homepage_items_featured{
   String _Author;
   String _BookName;
   String _Collection_type;
-  String _ImageURl;
 
+  String get Author => _Author;
 
   set Author(String value) {
     _Author = value;
   }
 
-  homepage_items_featured(this._Author, this._BookName,
-      this._Collection_type, this._ImageURl, this._BookCollectionidentity);
-
+  String _ImageURl;
   String _BookCollectionidentity;
+  String _OwnerUID;
 
-  String get Author => _Author;
+  homepage_items_featured(this._Author, this._BookName, this._Collection_type,
+      this._ImageURl, this._BookCollectionidentity, this._OwnerUID);
 
   String get BookName => _BookName;
-
-  String get Collection_type => _Collection_type;
-
-  String get ImageURl => _ImageURl;
-
-  String get BookCollectionidentity => _BookCollectionidentity;
 
   set BookName(String value) {
     _BookName = value;
   }
 
-  set BookCollectionidentity(String value) {
-    _BookCollectionidentity = value;
+  String get Collection_type => _Collection_type;
+
+  set Collection_type(String value) {
+    _Collection_type = value;
   }
+
+  String get ImageURl => _ImageURl;
 
   set ImageURl(String value) {
     _ImageURl = value;
   }
 
-  set Collection_type(String value) {
-    _Collection_type = value;
+  String get BookCollectionidentity => _BookCollectionidentity;
+
+  set BookCollectionidentity(String value) {
+    _BookCollectionidentity = value;
+  }
+
+  String get OwnerUID => _OwnerUID;
+
+  set OwnerUID(String value) {
+    _OwnerUID = value;
   }
 }

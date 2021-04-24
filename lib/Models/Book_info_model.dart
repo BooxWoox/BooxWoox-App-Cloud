@@ -13,6 +13,16 @@ class Book_info_model{
   String _OwnerRatings;
   String _OwnerUId;
   int _Quantity;
+  String _Category;
+  String _Conditiondescription;
+  String _ISBN;
+  int _leaseduration;
+
+  String get author => _author;
+
+  set author(String value) {
+    _author = value;
+  }
 
   Book_info_model(
       this._author,
@@ -31,19 +41,16 @@ class Book_info_model{
       this._Quantity,
       this._Category,
       this._Conditiondescription,
-      this._ISBN);
-
-  String get author => _author;
-
-  set author(String value) {
-    _author = value;
-  }
-
-  String _Category;
-  String _Conditiondescription;
-  String _ISBN;
+      this._ISBN,
+      this._leaseduration);
 
   bool get availability => _availability;
+
+  int get leaseduration => _leaseduration;
+
+  set leaseduration(int value) {
+    _leaseduration = value;
+  }
 
   String get ISBN => _ISBN;
 

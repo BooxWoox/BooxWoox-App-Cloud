@@ -25,14 +25,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       body: FlareActor(
-        "UIAssets/Bookollab.flr",
+        "UIAssets/BooXjson.flr",
         alignment: Alignment.center,
         fit: BoxFit.contain,
-        animation: "Untitled",
+        animation: "BooX Animation",
       ),
     );
   }

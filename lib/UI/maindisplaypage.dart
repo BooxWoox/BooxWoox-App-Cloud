@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
 import 'Book_info.dart';
+import 'AddBookPage.dart';
 import '../Models/Book_info_model.dart';
 
 final _firestore=FirebaseFirestore.instance;
@@ -45,115 +46,125 @@ class _maindisplaypageState extends State<maindisplaypage> {
         ),
       );
     }else
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 50,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal:20.0),
-              child: TextField(
-                autocorrect: false,
-                decoration: InputDecoration(
-                  suffixIcon: Icon(Icons.search,color: Color(0xff7D7D7D),),
-                  fillColor: Color(0xffEBEBEB),
-                  hintText: "Search",
-                  filled: true,
-                  contentPadding: EdgeInsets.symmetric(vertical:4.0,horizontal: 25),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    borderSide: BorderSide(color: Colors.grey),
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, AddBookPage.id);
+        },
+        child: const Icon(Icons.post_add),
+        backgroundColor: Colors.orangeAccent,
+      ),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 50,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal:20.0),
+                child: TextField(
+                  autocorrect: false,
+                  decoration: InputDecoration(
+                    suffixIcon: Icon(Icons.search,color: Color(0xff7D7D7D),),
+                    fillColor: Color(0xffEBEBEB),
+                    hintText: "Search",
+                    filled: true,
+                    contentPadding: EdgeInsets.symmetric(vertical:4.0,horizontal: 25),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount:Homepage_Cat.length,
-              itemBuilder: (context,index){
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 18),
-                      child: Text(Homepage_Cat[index],
-                      style: TextStyle(
-                        fontFamily: "LeelawUI",
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold
-                      ),),
-                    ),
-                    Container(
-                      height:220,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount:featured.length,
-                          itemBuilder: (context,itemIndex){
-                            return InkWell(
-                              onTap: (){
-                                //goto book info page
-                                Navigator.pushNamed(context,Book_info.id,arguments: maindisp_book_info_model(featured[itemIndex]));
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Card(
-                                  elevation: 3,
-                                  color:Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(21),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 140,
-                                          width:150,
-                                          child: Image.network(featured[itemIndex].ImageURl,
-                                          fit: BoxFit.contain,),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(3.0),
-                                        child: SizedBox(
+          Expanded(
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount:Homepage_Cat.length,
+                itemBuilder: (context,index){
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 18),
+                        child: Text(Homepage_Cat[index],
+                        style: TextStyle(
+                          fontFamily: "LeelawUI",
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold
+                        ),),
+                      ),
+                      Container(
+                        height:220,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount:featured.length,
+                            itemBuilder: (context,itemIndex){
+                              return InkWell(
+                                onTap: (){
+                                  //goto book info page
+                                  Navigator.pushNamed(context,Book_info.id,arguments: maindisp_book_info_model(featured[itemIndex]));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Card(
+                                    elevation: 3,
+                                    color:Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(21),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: 140,
                                             width:150,
-                                            child: Center(child: Text(featured[itemIndex].BookName,
-                                            style: TextStyle(
-                                              color: Colors.black87,
-                                              fontSize: 16,
-                                              fontFamily: "LeelawUI",
+                                            child: Image.network(featured[itemIndex].ImageURl,
+                                            fit: BoxFit.contain,),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: SizedBox(
+                                              width:150,
+                                              child: Center(child: Text(featured[itemIndex].BookName,
+                                              style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 16,
+                                                fontFamily: "LeelawUI",
 
-                                            ),))),
-                                      )
-                                    ],
-                                  )
+                                              ),))),
+                                        )
+                                      ],
+                                    )
+                                  ),
                                 ),
-                              ),
-                            );
-                          }),
-                    )
-                  ],
-                );
-              }
+                              );
+                            }),
+                      )
+                    ],
+                  );
+                }
+            ),
           ),
-        ),
-      ],
+        ],
 
+      ),
     );
   }
 
@@ -167,8 +178,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
           String ImageUrl=i.get("ImageUrl");
           String coll_type=i.get("Homepage_category");
           String original_loc=i.id.toString().trim();
-
-          featured.add(homepage_items_featured(author, bkname, coll_type, ImageUrl,original_loc));
+          String owneruid=i.get("OwnerUID");
+          featured.add(homepage_items_featured(author, bkname, coll_type, ImageUrl,original_loc,owneruid));
 
         }
         setState(() {

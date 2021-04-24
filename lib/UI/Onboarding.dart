@@ -78,12 +78,12 @@ class _OnboardingState extends State<Onboarding> {
               ),
               SafeArea(
                 child: Container(
-                  width: size.width*0.35,
+                  width: size.width*0.30,
                     child: FittedBox(
                       fit: BoxFit.contain,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.asset('UIAssets/Onboarding/UI1/bookollab.png'),
+                          padding: const EdgeInsets.all(38.0),
+                          child: Image.asset('UIAssets/Onboarding/UI1/booX.png'),
                         ))),
               )
             ],

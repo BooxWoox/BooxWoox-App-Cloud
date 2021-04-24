@@ -15,7 +15,11 @@ import 'UI/Chat/ChatsPage.dart';
 import 'UI/Payment/testpayment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'UI/AddBookPage.dart';
-
+import 'UI/Transactions/Transactions_Buyer.dart';
+import 'UI/Transactions/BuyerTransaction_Category/Ongoing_transaction.dart';
+import 'UI/Transactions/BuyerTransaction_Category/Failed_transaction.dart';
+import 'UI/Transactions/BuyerTransaction_Category/Completed_transaction.dart';
+import 'UI/Transactions/Transactions_Seller.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -31,7 +35,7 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute:Onboarding.id,
+      initialRoute:SplashScreen.id,
       routes:{
         SplashScreen.id:(context) => SplashScreen(),
         Onboarding.id:(context) => Onboarding(),
@@ -46,6 +50,10 @@ class bookollab extends StatelessWidget {
         ChatsPage.id:(context) => ChatsPage(),
         AddBookPage.id:(context)=>AddBookPage(),
         testpayment.id:(context) => testpayment(),
+        Transactions_Buyer.id:(context) => Transactions_Buyer(),
+        Ongoing_transaction.id:(context)=>Ongoing_transaction(),
+        Failed_transaction.id:(context) =>Failed_transaction(),
+        Completed_transaction.id:(context) =>Completed_transaction(),
 
       } ,
     );

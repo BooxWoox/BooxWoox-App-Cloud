@@ -1,4 +1,5 @@
 import 'package:bookollab/UI/Homepage.dart';
+import 'package:bookollab/UI/Transactions/Transactions_Buyer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -105,6 +106,35 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(
                         fontSize: 15
                       ),),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:18.0),
+                child: Divider(
+                  height: 20,
+                  thickness: 2,
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushNamed(context, Transactions_Buyer.id);
+                  print("Transactions (As Buyer)");
+                },
+                child: Row(
+                  children: [
+                    SizedBox(width: 25,),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset("UIAssets/Homepage/bookollab_icon.png"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text("Transactions (As Buyer)",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),),
                     )
                   ],
                 ),

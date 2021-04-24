@@ -53,9 +53,6 @@ class _HomepageState extends State<Homepage> {
             ListTile(
               title: Text('Add Book'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
                 Navigator.pushNamed(context, AddBookPage.id);
               },
             ),
