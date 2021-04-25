@@ -32,6 +32,7 @@ class _Book_infoState extends State<Book_info> {
   List<int> _LeasePeriod=[];
   var result=null;
   int leaseduration=0;
+  String OrderID="";
   int _selectedLeaseperiod=0;
   Book_info_model Book_item_model;
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
@@ -119,7 +120,28 @@ class _Book_infoState extends State<Book_info> {
   void _handlePaymentError(PaymentFailureResponse response) {
     Fluttertoast.showToast(
       msg: "ERROR: " + response.code.toString() + " - " + response.message,);
-    _onBasicWaitingAlertPressed(context, "Error:"+response.message);
+    DateTime Leasestartdate=DateTime.now().add(Duration(days:10));
+    _firestore.collection("Transactions").doc(OrderID).set({
+      'BuyerUID':useruid,
+      'ImageURL':itemmodeltemp.item.ImageURl,
+      'SellerUID':itemmodeltemp.item.OwnerUID,
+      'Payment_Status':"Failed",
+      'Order_ID':OrderID,
+      'Payment_ID':"NULL",
+      'Book_Name':Book_name,
+      'Order_Status':"Failed",
+      'Failure_Reason': response.message,
+      'Book_Taken_from_Seller':false,
+      'Book_Taken_from_Buyer':false,
+      'Book_Taken_from_Seller_Timestamp':DateTime.now(),
+      'Book_Taken_from_Buyer_Timestamp':DateTime.now(),
+      'Total_Amt':totalrent,
+      'Lease_Duration':_selectedLeaseperiod,
+      'Lease_Start_Date':Leasestartdate,
+      'Lease_End_Date':Leasestartdate.add(Duration(days:_selectedLeaseperiod*40)),
+    }).then((value) {
+      _onBasicWaitingAlertPressed(context, response.message);
+    });
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -480,6 +502,7 @@ class _Book_infoState extends State<Book_info> {
         },
         options: Options(headers: <String, String>{'authorization': auth})).then((value) {
       print(value.data['id']);
+      OrderID=value.data['id'];
       openCheckout(value.data['id'],amt);
     });
   }

@@ -15,6 +15,9 @@ import 'package:dio/dio.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:jiffy/jiffy.dart';
+import 'BuyerTransaction_Category/Ongoing_transaction.dart';
+import 'BuyerTransaction_Category/Failed_transaction.dart';
+import 'BuyerTransaction_Category/Completed_transaction.dart';
 
 final _firestore=FirebaseFirestore.instance;
 class Transactions_Buyer extends StatefulWidget {
@@ -67,9 +70,9 @@ class _Transactions_BuyerState extends State<Transactions_Buyer> with SingleTick
           Expanded(
             child: TabBarView(
               children: [
-                Center(child: Text("Requests Tab Bar View")),
-                Center(child: Text("Requests Tab Bar View")),
-                Center(child: Text("Requests Tab Bar View")),
+                Ongoing_transaction_Buyer(),
+                Failed_transaction_Buyer(),
+                Completed_transaction_Buyer(),
               ],
               controller: _tabController,
             ),

@@ -51,9 +51,9 @@ class bookollab extends StatelessWidget {
         AddBookPage.id:(context)=>AddBookPage(),
         testpayment.id:(context) => testpayment(),
         Transactions_Buyer.id:(context) => Transactions_Buyer(),
-        Ongoing_transaction.id:(context)=>Ongoing_transaction(),
-        Failed_transaction.id:(context) =>Failed_transaction(),
-        Completed_transaction.id:(context) =>Completed_transaction(),
+        Ongoing_transaction_Buyer.id:(context)=>Ongoing_transaction_Buyer(),
+        Failed_transaction_Buyer.id:(context) =>Failed_transaction_Buyer(),
+        Completed_transaction_Buyer.id:(context) =>Completed_transaction_Buyer(),
 
       } ,
     );
