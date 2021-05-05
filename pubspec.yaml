@@ -45,6 +45,8 @@ dependencies:
   flutter_dropdown: ^0.0.8
   fluttertoast: ^8.0.3
   jiffy: ^4.1.0
+  toggle_switch: ^0.1.9
+  font_awesome_flutter: ^9.0.0
 
 
 dev_dependencies:

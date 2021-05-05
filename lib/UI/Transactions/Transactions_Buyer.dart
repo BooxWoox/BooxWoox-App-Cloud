@@ -18,6 +18,8 @@ import 'package:jiffy/jiffy.dart';
 import 'BuyerTransaction_Category/Ongoing_transaction.dart';
 import 'BuyerTransaction_Category/Failed_transaction.dart';
 import 'BuyerTransaction_Category/Completed_transaction.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final _firestore=FirebaseFirestore.instance;
 class Transactions_Buyer extends StatefulWidget {
@@ -26,59 +28,70 @@ class Transactions_Buyer extends StatefulWidget {
   _Transactions_BuyerState createState() => _Transactions_BuyerState();
 }
 
-class _Transactions_BuyerState extends State<Transactions_Buyer> with SingleTickerProviderStateMixin{
+class _Transactions_BuyerState extends State<Transactions_Buyer> with TickerProviderStateMixin{
   TabController _tabController;
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
+  int _pageIndex = 0;
+  PageController _pageController;
+  List<Widget> tabPages = [
+    Ongoing_transaction_Buyer(),
+    Failed_transaction_Buyer(),
+    Completed_transaction_Buyer(),
+  ];
   @override
   void initState() {
     // TODO: implement initState
-    _tabController = TabController(length: 3, vsync: this);
     super.initState();
+    _pageController = PageController(initialPage: _pageIndex);
+  }
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text ("Buyer's Transactions"),
-        backgroundColor: Color(0xFFFFCC00),
-        shadowColor: Color(0xFFF7C100),
-      ),
       body: Column(
         children: [
-          Container(
-            color: Color(0xFFFFCC00),
-            child: TabBar(
-              unselectedLabelColor: Colors.white,
-              labelColor: Colors.black,
-              tabs: [
-                Tab(
-                  child: Text("Ongoing"),
-                ),
-                Tab(
-                  child: Text("Failed"),
-                ),
-                Tab(
-                  child: Text("Completed"),
-                ),
-              ],
-              controller: _tabController,
-              indicatorColor: Colors.white70,
-              indicatorSize: TabBarIndicatorSize.tab,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ToggleSwitch(
+              minWidth: 115,
+              initialLabelIndex: 0,
+              cornerRadius: 20.0,
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey,
+              inactiveFgColor: Colors.white,
+              labels: ['Ongoing', 'Failed','Completed'],
+              icons: [Icons.circle_notifications, Icons.update,Icons.message],
+              activeBgColors: [Colors.blue,Colors.red,Colors.green],
+              onToggle: (index) {
+                print('switched to: $index');
+
+                 _pageController.jumpToPage(index);
+              },
             ),
           ),
           Expanded(
-            child: TabBarView(
-              children: [
-                Ongoing_transaction_Buyer(),
-                Failed_transaction_Buyer(),
-                Completed_transaction_Buyer(),
-              ],
-              controller: _tabController,
+            child: PageView(
+              physics:new NeverScrollableScrollPhysics(),
+              children: tabPages,
+              controller: _pageController,
             ),
           ),
+
         ],
       ),
     );
+  }
+  void onPageChanged(int page) {
+    setState(() {
+      this._pageIndex = page;
+    });
+  }
+  void onTabTapped(int index) {
+    this._pageController.animateToPage(index,duration: const Duration(milliseconds: 500),curve: Curves.easeInOut);
   }
 }
