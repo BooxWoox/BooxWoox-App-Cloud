@@ -19,19 +19,19 @@ import 'package:jiffy/jiffy.dart';
 
 final _firestore=FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
-class Ongoing_transaction_Buyer extends StatefulWidget {
-  static String id='Ongoing_transaction_Screen';
+class Completed_Seller_Transaction extends StatefulWidget {
+  static String id='Completed_transaction_Seller_Screen';
   @override
-  _Ongoing_transaction_BuyerState createState() => _Ongoing_transaction_BuyerState();
+  _Completed_Seller_TransactionState createState() => _Completed_Seller_TransactionState();
 }
 
-class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
+class _Completed_Seller_TransactionState extends State<Completed_Seller_Transaction> {
+  String UserUID=_auth.currentUser.uid.toString();
   @override
   Widget build(BuildContext context) {
-    String UserUID=_auth.currentUser.uid.toString();
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection("Transactions").where("BuyerUID",isEqualTo:UserUID).where("Payment_Status",isEqualTo: "Success").where("Order_Status",isEqualTo: "Ongoing").snapshots(),
+        stream: _firestore.collection("Transactions").where("SellerUID",isEqualTo:UserUID).where("Book_Taken_from_Buyer",isEqualTo: true).snapshots(),
         builder: (context,snapshot){
           if(!snapshot.hasData)
           {
@@ -65,8 +65,8 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(snapshot.data.docs[index].get("Book_Name"),style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w600
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600
                                       ),),
                                       SizedBox(height: 12,),
                                       Row(
@@ -84,7 +84,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          Text("Paid Amt: "),
+                                          Text("Total Amt: "),
                                           Text(" \u{20B9} ${snapshot.data.docs[index].get("Total_Amt").toString()}"),
                                         ],
                                       ),
@@ -115,6 +115,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
 
                                 ],
                               ),
+
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal:18.0),
                                 child: Divider(
@@ -122,39 +123,18 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                   thickness: 2,
                                 ),
                               ),
-                              snapshot.data.docs[index].get("Book_Taken_from_Seller")==false?
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text("Have you collected the book from seller or want to cancel?"),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          FlatButton(
-                                            color:Colors.greenAccent,
-                                              onPressed: (){
-                                              _confirming_received_from_seller(snapshot.data.docs[index].id);
-                                              }, child: Text("Yes, Received")),
-                                          FlatButton(
-                                              color:Colors.red,
-                                              onPressed: (){
-                                                
-                                              }, child: Text("Cancel Order")),
-                                        ],
-                                      )
+                              Column(
+                                children: [
+                                  Text("Book Received Date: ${getCustomFormattedDateTime(snapshot.data.docs[index].get("Book_Taken_from_Seller_Timestamp").toDate().toString(),'dd MMMM yyyy').toString()}"),
+                                  Text("Book Delivered Date: ${getCustomFormattedDateTime(snapshot.data.docs[index].get("Book_Taken_from_Buyer_Timestamp").toDate().toString(),'dd MMMM yyyy').toString()}"),
+                                ],
+                              )
 
-                                    ],
-                                  ):
-                                  Column(
-                                    children: [
-                                      Text("Book Received Date: ${getCustomFormattedDateTime(snapshot.data.docs[index].get("Book_Taken_from_Seller_Timestamp").toDate().toString(),'dd MMMM yyyy').toString()}"),
-                                    ],
-                                  )
                             ],
                           ),
                         ),
                       );
-                }),
+                    }),
               )
             ],
           );
@@ -163,19 +143,9 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
 
     );
   }
-  void _confirming_received_from_seller(String docID){
-    _firestore.collection("Transactions").doc(docID).update({
-      "Book_Taken_from_Seller":true,
-      "Book_Taken_from_Seller_Timestamp":DateTime.now(),
-    }).then((value) {
-
-    });
-  }
   getCustomFormattedDateTime(String givenDateTime, String dateFormat) {
     // dateFormat = 'MM/dd/yy';
     final DateTime docDateTime = DateTime.parse(givenDateTime);
     return DateFormat(dateFormat).format(docDateTime);
   }
-
 }
-

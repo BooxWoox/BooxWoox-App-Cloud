@@ -20,6 +20,7 @@ import 'UI/Transactions/BuyerTransaction_Category/Ongoing_transaction.dart';
 import 'UI/Transactions/BuyerTransaction_Category/Failed_transaction.dart';
 import 'UI/Transactions/BuyerTransaction_Category/Completed_transaction.dart';
 import 'UI/Transactions/Transactions_Seller.dart';
+import 'UI/Transactions/SellerTransaction_Category/Completed_Seller_Transaction.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -51,9 +52,11 @@ class bookollab extends StatelessWidget {
         AddBookPage.id:(context)=>AddBookPage(),
         testpayment.id:(context) => testpayment(),
         Transactions_Buyer.id:(context) => Transactions_Buyer(),
+        Transactions_Seller.id:(context) =>Transactions_Seller(),
         Ongoing_transaction_Buyer.id:(context)=>Ongoing_transaction_Buyer(),
         Failed_transaction_Buyer.id:(context) =>Failed_transaction_Buyer(),
         Completed_transaction_Buyer.id:(context) =>Completed_transaction_Buyer(),
+        Completed_Seller_Transaction.id:(context) => Completed_Seller_Transaction(),
 
       } ,
     );
