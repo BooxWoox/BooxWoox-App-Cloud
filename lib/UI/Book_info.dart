@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../Models/Book_info_model.dart';
 import 'package:intl/intl.dart';
@@ -27,7 +28,9 @@ class Book_info extends StatefulWidget {
 class _Book_infoState extends State<Book_info> {
 
   String Book_name="";
+  String Buyer_address="";
   String  doc_address="";
+  String Buyer_phnumber="";
   double _quotedrentpercent=0;
   List<int> _LeasePeriod=[];
   var result=null;
@@ -72,6 +75,10 @@ class _Book_infoState extends State<Book_info> {
       'Payment_ID':response.paymentId,
       'Book_Name':Book_name,
       'Order_Status':"Ongoing",
+      'Buyer_Address':Buyer_address,
+      'Buyer_PhoneNumber':Buyer_phnumber,
+      'Seller_Address':itemmodeltemp.item.Seller_address,
+      'Seller_PhoneNumber':itemmodeltemp.item.Seller_phnNumber,
       'Book_Taken_from_Seller':false,
       'Book_Taken_from_Buyer':false,
       'Book_Taken_from_Seller_Timestamp':DateTime.now(),
@@ -107,6 +114,7 @@ class _Book_infoState extends State<Book_info> {
             "SellerUID":itemmodeltemp.item.OwnerUID.trim(),
             "BuyerUID":useruid
           }).then((value) {
+            Navigator.pop(context);
             _onBasicSuccessAlert(context, "Payment Successfully Completed");
           });
 
@@ -130,6 +138,10 @@ class _Book_infoState extends State<Book_info> {
       'Payment_ID':"NULL",
       'Book_Name':Book_name,
       'Order_Status':"Failed",
+      'Buyer_Address':Buyer_address,
+      'Buyer_PhoneNumber':Buyer_phnumber,
+      'Seller_Address':itemmodeltemp.item.Seller_address,
+      'Seller_PhoneNumber':itemmodeltemp.item.Seller_phnNumber,
       'Failure_Reason': response.message,
       'Book_Taken_from_Seller':false,
       'Book_Taken_from_Buyer':false,
@@ -148,12 +160,12 @@ class _Book_infoState extends State<Book_info> {
     Fluttertoast.showToast(
         msg: "EXTERNAL_WALLET: " + response.walletName);
   }
-  void openCheckout(String id,double amt) async {
+  void openCheckout(String id,double amt, String buyer_address,String buyer_phnumber) async {
     var options = {
       'key': 'rzp_test_qlUviOkjQzWXfJ',
       'amount': amt,
       'order_id': id,
-      'name': 'BooX',
+      'name': 'BooxWooX',
       'description': Book_name,
       'prefill': {'contact': '', 'email': ''},
     };
@@ -182,7 +194,7 @@ class _Book_infoState extends State<Book_info> {
       });
       admin_params_get().then((value) {
         setState(() {
-
+          //refreshing views
         });
       });
       return Scaffold(
@@ -228,7 +240,140 @@ class _Book_infoState extends State<Book_info> {
               child: ElevatedButton(onPressed: () {
                 if(checkparameters(_selectedLeaseperiod)){
                   totalrent=(((_quotedrentpercent/100)*Book_item_model.quotedDeposit)*_selectedLeaseperiod)+Book_item_model.quotedDeposit;
-                  getOrderID(totalrent*100);
+                  showModalBottomSheet(context: context,
+                      isScrollControlled: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30.0),
+                            topRight: Radius.circular(30.0)),
+                      ),
+                      builder: (BuildContext context){
+                        return Padding(
+                          padding: MediaQuery.of(context).viewInsets,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircleAvatar(
+                                  radius:35,
+                                  backgroundColor: Colors.black12,
+                                  backgroundImage: AssetImage("UIAssets/BookInfo/map.png"),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(width: 18,),
+                                  Icon(Icons.location_city_rounded),
+                                  Text("Delivery Address",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal:18.0,vertical:8),
+                                child: Container(
+                                  height:55,
+                                  child: TextField(
+                                    onChanged: (value){
+                                      Buyer_address=value;
+                                    },
+                                    autocorrect: false,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey[290],
+                                      hintText: "Type your delivery address..",
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                        borderSide: BorderSide(color: Colors.grey),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                        borderSide: BorderSide(color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10,),
+                              Row(
+                                children: [
+                                  SizedBox(width: 18,),
+                                  Icon(Icons.phone_android),
+                                  Text("Phone Number",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal:18.0,vertical:8),
+                                child: Container(
+                                  height:55,
+                                  child: TextField(
+                                    keyboardType: TextInputType.phone,
+                                    onChanged: (value){
+                                      Buyer_phnumber=value;
+                                    },
+                                    autocorrect: false,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey[290],
+                                      hintText: "Contact Number",
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                        borderSide: BorderSide(color: Colors.grey),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                        borderSide: BorderSide(color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical:12.0,horizontal: 12),
+                                    child: Container(
+                                      width: 110,
+                                      height: 25,
+                                      child: Center(
+                                        child: FittedBox(
+                                          child: Text('Continue',style: TextStyle(
+                                              fontFamily: 'LeelawUI',
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold
+                                          ),),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  color: Color(0xFFFFCC00),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(21),
+                                  ),
+                                  onPressed: () async{
+                                    if(Buyer_address==null||Buyer_address.trim().length==0||Buyer_address==""||Buyer_phnumber==null||Buyer_phnumber==""){
+                                      _onBasicWaitingAlertPressed(context, "All fields are mandatory");
+                                    }else{
+                                      getOrderID(totalrent*100,Buyer_address,Buyer_phnumber);
+                                    }
+
+                                  },
+
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        );
+                      });
+                  //getOrderID(totalrent*100);
                 }
 
               },
@@ -488,7 +633,7 @@ class _Book_infoState extends State<Book_info> {
     }
     return false;
   }
-  void getOrderID(double amt) async{
+  void getOrderID(double amt, String buyer_address,String buyer_phnumber) async{
     String username="rzp_test_qlUviOkjQzWXfJ";
     String password="KaQ60n8ZkWPdCN2AeImDoPhr";
     final url="https://api.razorpay.com/v1/orders";
@@ -503,7 +648,7 @@ class _Book_infoState extends State<Book_info> {
         options: Options(headers: <String, String>{'authorization': auth})).then((value) {
       print(value.data['id']);
       OrderID=value.data['id'];
-      openCheckout(value.data['id'],amt);
+      openCheckout(value.data['id'],amt,buyer_address,buyer_phnumber);
     });
   }
 

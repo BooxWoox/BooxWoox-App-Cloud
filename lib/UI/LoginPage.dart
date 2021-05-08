@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 10),
-                  child: Text('Username',
+                  child: Text('Email',
                   style: TextStyle(
                     fontSize: 16
                   ),),

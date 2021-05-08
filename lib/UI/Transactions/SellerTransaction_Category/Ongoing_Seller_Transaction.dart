@@ -151,7 +151,7 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                                           color:Colors.greenAccent,
                                           onPressed: (){
                                             _confirming_received_from_buyer(snapshot.data.docs[index].id);
-                                          }, child: Text("Yes (Received)")),
+                                          }, child: Text("Yes")),
                                     ],
                                   )
                                 ],

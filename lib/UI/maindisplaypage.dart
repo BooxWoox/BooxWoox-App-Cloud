@@ -9,6 +9,7 @@ import 'package:bookollab/Models/homepage_items_featured.dart';
 import 'Book_info.dart';
 import 'AddBookPage.dart';
 import '../Models/Book_info_model.dart';
+import 'package:unicorndial/unicorndial.dart';
 
 final _firestore=FirebaseFirestore.instance;
 
@@ -23,18 +24,48 @@ class _maindisplaypageState extends State<maindisplaypage> {
   List<homepage_items_featured> featured=[];
   @override
   void initState() {
-
     //initiaise to get list of homepage categories from database
-
     setState(() {
       home_cat_get();
       Featured_items_get();
     });
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
+    var floatingButtons = List<UnicornButton>();
+    floatingButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: "Add Books(Rent)",
+        currentButton: FloatingActionButton(
+          onPressed: () {
+            print('add books rent');
+            Navigator.pushNamed(context,AddBookPage.id);
+          },
+          heroTag: "addrentbooks",
+          backgroundColor: Colors.deepOrange,
+          mini: true,
+          child: Icon(Icons.note_add),
+        ),
+      ),
+    );
+    floatingButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: "Add Books(Sell)",
+        currentButton: FloatingActionButton(
+          onPressed: () {
+            print('addbooksell');
+            Navigator.pushNamed(context,AddBookPage.id);
+          },
+          heroTag: "addbookssell",
+          backgroundColor: Colors.orange,
+          mini: true,
+          child: Icon(Icons.note_add),
+        ),
+      ),
+    );
     if(Homepage_Cat.isEmpty){
       return Scaffold(
         body: Center(
@@ -48,13 +79,12 @@ class _maindisplaypageState extends State<maindisplaypage> {
     }else
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, AddBookPage.id);
-        },
-        child: const Icon(Icons.post_add),
-        backgroundColor: Colors.orangeAccent,
-      ),
+      floatingActionButton: UnicornDialer(
+          backgroundColor: Colors.transparent,
+          parentButtonBackground: Colors.amber,
+          orientation: UnicornOrientation.VERTICAL,
+          parentButton: Icon(Icons.playlist_add_sharp),
+          childButtons: floatingButtons),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -64,7 +94,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: 50,
+              height: 45,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal:20.0),
                 child: TextField(
@@ -77,11 +107,11 @@ class _maindisplaypageState extends State<maindisplaypage> {
                     contentPadding: EdgeInsets.symmetric(vertical:4.0,horizontal: 25),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(color: Colors.grey),
+                      borderSide: BorderSide(color:  Color(0xff707070)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(color: Colors.grey),
+                      borderSide: BorderSide(color: Color(0xff707070)),
                     ),
                   ),
                 ),
@@ -166,7 +196,10 @@ class _maindisplaypageState extends State<maindisplaypage> {
 
       ),
     );
+
   }
+
+
 
   void Featured_items_get() async{
     try{
@@ -179,7 +212,9 @@ class _maindisplaypageState extends State<maindisplaypage> {
           String coll_type=i.get("Homepage_category");
           String original_loc=i.id.toString().trim();
           String owneruid=i.get("OwnerUID");
-          featured.add(homepage_items_featured(author, bkname, coll_type, ImageUrl,original_loc,owneruid));
+          String selleraddress=i.get("seller_address");
+          String sellerphn=i.get("seller_phoneNumber");
+          featured.add(homepage_items_featured(author, bkname, coll_type, ImageUrl,original_loc,owneruid,selleraddress,sellerphn));
 
         }
         setState(() {

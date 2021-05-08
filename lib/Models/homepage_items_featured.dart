@@ -5,18 +5,29 @@ class homepage_items_featured{
   String _BookName;
   String _Collection_type;
 
+
+  String _ImageURl;
+
   String get Author => _Author;
 
   set Author(String value) {
     _Author = value;
   }
 
-  String _ImageURl;
   String _BookCollectionidentity;
   String _OwnerUID;
+  String _Seller_address;
+  String _Seller_phnNumber;
 
-  homepage_items_featured(this._Author, this._BookName, this._Collection_type,
-      this._ImageURl, this._BookCollectionidentity, this._OwnerUID);
+  homepage_items_featured(
+      this._Author,
+      this._BookName,
+      this._Collection_type,
+      this._ImageURl,
+      this._BookCollectionidentity,
+      this._OwnerUID,
+      this._Seller_address,
+      this._Seller_phnNumber);
 
   String get BookName => _BookName;
 
@@ -46,5 +57,17 @@ class homepage_items_featured{
 
   set OwnerUID(String value) {
     _OwnerUID = value;
+  }
+
+  String get Seller_address => _Seller_address;
+
+  set Seller_address(String value) {
+    _Seller_address = value;
+  }
+
+  String get Seller_phnNumber => _Seller_phnNumber;
+
+  set Seller_phnNumber(String value) {
+    _Seller_phnNumber = value;
   }
 }

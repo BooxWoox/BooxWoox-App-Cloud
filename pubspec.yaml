@@ -47,8 +47,8 @@ dependencies:
   jiffy: ^4.1.0
   toggle_switch: ^0.1.9
   font_awesome_flutter: ^9.0.0
-
-
+  flutter_switch: ^0.3.1
+  unicorndial: ^1.1.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -69,6 +69,7 @@ flutter:
     - UIAssets/Onboarding/UI1/
     - UIAssets/Onboarding/UI2/
     - UIAssets/Onboarding/UI3/
+    - UIAssets/BookInfo/
     - UIAssets/Homepage/
     - UIAssets/Profile/
   fonts:

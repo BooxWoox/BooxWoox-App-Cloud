@@ -33,7 +33,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   File _ImageFile;
   String barcoderesult = "";
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
-  String BookName="",Author="",condition="",bkdesc="";
+  String BookName="",Author="",condition="",bkdesc="",pickup_address="";
   double MRP=0;
   double quotedprice=0;
 
@@ -72,7 +72,7 @@ class _AddBookPageState extends State<AddBookPage>  {
           color: Color(0xFFFFCC00),
 
           onPressed: () async{
-            if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration)){
+            if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address)){
               //checks passed
               //backend starts
               String useruid=FirebaseAuth.instance.currentUser.uid;
@@ -102,6 +102,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                     "LeaseDuration":leaseduration,
                     "Quantity":1,
                     "QuotedDeposit":quotedprice,
+                    "seller_address":pickup_address,
                     "category":"Unknown",
                   }).then((value) {
                     _onBasicSuccessAlert(context, "Book has been successfully added");
@@ -111,7 +112,6 @@ class _AddBookPageState extends State<AddBookPage>  {
               });
             }
           },
-
         ),
       body: SingleChildScrollView(
         child: Column(
@@ -427,6 +427,37 @@ class _AddBookPageState extends State<AddBookPage>  {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
+                    child: Text("Pickup Address",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: "LeelawUI",
+                          fontWeight: FontWeight.bold
+                      ),),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      onChanged: (value){
+                        pickup_address =value;
+                      },
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[290],
+                        hintText: "Enter your Pickup Address..",
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Text("Upload Front Book Cover",
                       style: TextStyle(
                           fontSize: 18,
@@ -524,7 +555,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   }
 
 
-  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration) {
+  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address) {
     if(bookName.trim()==""||bookName.trim().isEmpty||bookName.trim().length==0){
       _onBasicWaitingAlertPressed(context,"BookName can't be Empty");
       return false;
@@ -548,7 +579,10 @@ class _AddBookPageState extends State<AddBookPage>  {
     if(leaseduration==-1||leaseduration==null){
       _onBasicWaitingAlertPressed(context,"Please enter Max. period for Lenting");
       return false;
-
+    }
+    if(pickup_address==null||pickup_address.trim()==0||pickup_address.trim()==""){
+      _onBasicWaitingAlertPressed(context,"Please check pickup address");
+      return false;
     }
     return true;
   }
