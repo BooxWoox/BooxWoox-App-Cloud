@@ -32,6 +32,9 @@ class _Book_infoState extends State<Book_info> {
   String  doc_address="";
   String Buyer_phnumber="";
   double _quotedrentpercent=0;
+  double _deliverycharges=0.0;
+  double _commissionpercent=0;
+  double _bankcharges=0;
   List<int> _LeasePeriod=[];
   var result=null;
   int leaseduration=0;
@@ -73,6 +76,7 @@ class _Book_infoState extends State<Book_info> {
       'Payment_Status':"Success",
       'Order_ID':response.orderId,
       'Payment_ID':response.paymentId,
+      'Deposit_Amt':Book_item_model.quotedDeposit,
       'Book_Name':Book_name,
       'Order_Status':"Ongoing",
       'Buyer_Address':Buyer_address,
@@ -239,7 +243,10 @@ class _Book_infoState extends State<Book_info> {
               width: width/2,
               child: ElevatedButton(onPressed: () {
                 if(checkparameters(_selectedLeaseperiod)){
-                  totalrent=(((_quotedrentpercent/100)*Book_item_model.quotedDeposit)*_selectedLeaseperiod)+Book_item_model.quotedDeposit;
+                  totalrent=((((_quotedrentpercent/100)*Book_item_model.quotedDeposit)*_selectedLeaseperiod)+Book_item_model.quotedDeposit+_deliverycharges);
+                  totalrent=totalrent+(_commissionpercent*totalrent/100);//Commission charges
+                  totalrent=totalrent+(_bankcharges*totalrent/100);//bank charges
+                  print("Total Payment= $totalrent");
                   showModalBottomSheet(context: context,
                       isScrollControlled: true,
                       shape: RoundedRectangleBorder(
@@ -248,129 +255,127 @@ class _Book_infoState extends State<Book_info> {
                             topRight: Radius.circular(30.0)),
                       ),
                       builder: (BuildContext context){
-                        return Padding(
-                          padding: MediaQuery.of(context).viewInsets,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CircleAvatar(
-                                  radius:35,
-                                  backgroundColor: Colors.black12,
-                                  backgroundImage: AssetImage("UIAssets/BookInfo/map.png"),
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircleAvatar(
+                                radius:35,
+                                backgroundColor: Colors.black12,
+                                backgroundImage: AssetImage("UIAssets/BookInfo/map.png"),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(width: 18,),
+                                Icon(Icons.location_city_rounded),
+                                Text("Delivery Address",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal:18.0,vertical:8),
+                              child: Container(
+                                height:55,
+                                child: TextField(
+                                  onChanged: (value){
+                                    Buyer_address=value;
+                                  },
+                                  autocorrect: false,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.grey[290],
+                                    hintText: "Type your delivery address..",
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                      borderSide: BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                      borderSide: BorderSide(color: Colors.grey),
+                                    ),
+                                  ),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  SizedBox(width: 18,),
-                                  Icon(Icons.location_city_rounded),
-                                  Text("Delivery Address",
+                            ),
+                            SizedBox(height: 10,),
+                            Row(
+                              children: [
+                                SizedBox(width: 18,),
+                                Icon(Icons.phone_android),
+                                Text("Phone Number",
                                   style: TextStyle(
                                     fontSize: 16,
                                   ),),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal:18.0,vertical:8),
-                                child: Container(
-                                  height:55,
-                                  child: TextField(
-                                    onChanged: (value){
-                                      Buyer_address=value;
-                                    },
-                                    autocorrect: false,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.grey[290],
-                                      hintText: "Type your delivery address..",
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                        borderSide: BorderSide(color: Colors.grey),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                        borderSide: BorderSide(color: Colors.grey),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 10,),
-                              Row(
-                                children: [
-                                  SizedBox(width: 18,),
-                                  Icon(Icons.phone_android),
-                                  Text("Phone Number",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal:18.0,vertical:8),
-                                child: Container(
-                                  height:55,
-                                  child: TextField(
-                                    keyboardType: TextInputType.phone,
-                                    onChanged: (value){
-                                      Buyer_phnumber=value;
-                                    },
-                                    autocorrect: false,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.grey[290],
-                                      hintText: "Contact Number",
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                        borderSide: BorderSide(color: Colors.grey),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                        borderSide: BorderSide(color: Colors.grey),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: RaisedButton(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical:12.0,horizontal: 12),
-                                    child: Container(
-                                      width: 110,
-                                      height: 25,
-                                      child: Center(
-                                        child: FittedBox(
-                                          child: Text('Continue',style: TextStyle(
-                                              fontFamily: 'LeelawUI',
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold
-                                          ),),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  color: Color(0xFFFFCC00),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(21),
-                                  ),
-                                  onPressed: () async{
-                                    if(Buyer_address==null||Buyer_address.trim().length==0||Buyer_address==""||Buyer_phnumber==null||Buyer_phnumber==""){
-                                      _onBasicWaitingAlertPressed(context, "All fields are mandatory");
-                                    }else{
-                                      getOrderID(totalrent*100,Buyer_address,Buyer_phnumber);
-                                    }
-
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal:18.0,vertical:8),
+                              child: Container(
+                                height:55,
+                                child: TextField(
+                                  keyboardType: TextInputType.phone,
+                                  onChanged: (value){
+                                    Buyer_phnumber=value;
                                   },
-
+                                  autocorrect: false,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.grey[290],
+                                    hintText: "Contact Number",
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                      borderSide: BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                      borderSide: BorderSide(color: Colors.grey),
+                                    ),
+                                  ),
                                 ),
                               ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: RaisedButton(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical:12.0,horizontal: 12),
+                                  child: Container(
+                                    width: 110,
+                                    height: 25,
+                                    child: Center(
+                                      child: FittedBox(
+                                        child: Text('Continue',style: TextStyle(
+                                            fontFamily: 'LeelawUI',
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold
+                                        ),),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                color: Color(0xFFFFCC00),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(21),
+                                ),
+                                onPressed: () async{
+                                  if(Buyer_address==null||Buyer_address.trim().length==0||Buyer_address==""||Buyer_phnumber==null||Buyer_phnumber==""){
+                                    _onBasicWaitingAlertPressed(context, "All fields are mandatory");
+                                  }else{
+                                    double finalrent=double.parse((totalrent).toStringAsFixed(2))*100;
+                                    getOrderID(finalrent,Buyer_address,Buyer_phnumber);
+                                  }
 
-                            ],
-                          ),
+                                },
+
+                              ),
+                            ),
+
+                          ],
                         );
                       });
                   //getOrderID(totalrent*100);
@@ -446,6 +451,10 @@ class _Book_infoState extends State<Book_info> {
                                     fontWeight: FontWeight.w800,
                                     fontSize: 17
                                 ),),
+                                Text("*Fixed Delivery charges at \u{20B9} ${_deliverycharges}"),
+                                Text("*2% Convenience fees"),
+
+                                SizedBox(height: 3,),
                                 DropDown(
                                   items: _LeasePeriod,
                                   hint: Text("Select Lent Duration"),
@@ -656,8 +665,11 @@ class _Book_infoState extends State<Book_info> {
   Future admin_params_get() async{
     try{
       await _firestore.collection("Admin").doc("Quoted_Parameters").get().then((value){
-
-        _quotedrentpercent=value["Quoted_Rent_Percent"];
+        _quotedrentpercent=double.parse(value["Quoted_Rent_Percent"].toString());
+        _deliverycharges=double.parse(value["Delivery_Charges"].toString());
+        _commissionpercent=double.parse(value["commission_percent"].toString());
+        _bankcharges=double.parse(value["Bank_charges"].toString());
+        print(_deliverycharges);
         return true;
       });
     }catch(e){
