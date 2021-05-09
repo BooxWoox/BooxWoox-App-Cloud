@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
+import 'package:bookollab/UI/Homepage.dart';
 
 final _firestore=FirebaseFirestore.instance;
 FirebaseStorage _firebaseStorage=FirebaseStorage.instance;
@@ -23,17 +24,14 @@ class AddBookPage extends StatefulWidget {
   @override
   _AddBookPageState createState() => _AddBookPageState();
 }
-
 class _AddBookPageState extends State<AddBookPage>  {
-
-
   int leaseduration=-1;
   String _scanBarcode = '';
   TextEditingController _controller;
   File _ImageFile;
   String barcoderesult = "";
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
-  String BookName="",Author="",condition="",bkdesc="",pickup_address="";
+  String BookName="",Author="",condition="",bkdesc="",pickup_address="",seller_UPI="",seller_phone="";
   double MRP=0;
   double quotedprice=0;
 
@@ -72,17 +70,20 @@ class _AddBookPageState extends State<AddBookPage>  {
           color: Color(0xFFFFCC00),
 
           onPressed: () async{
-            if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address)){
+            if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone)){
               //checks passed
               //backend starts
+
               String useruid=FirebaseAuth.instance.currentUser.uid;
               String uploadname=useruid+DateTime.now().toString()+BookName;
               var reference=_firebaseStorage.ref()
                   .child('BookFrontCovers')
                   .child('/${uploadname}.jpg');
               reference.putFile(_ImageFile).then((val){
+                String docid=(DateTime.now().toString())+useruid;
                 val.ref.getDownloadURL().then((value) {
-                  _firestore.collection("Book_Collection").doc().set({
+                  _firestore.collection("Book_Collection").doc(docid).set({
+                    "Book_Collection_ID":docid,
                     "Author":Author,
                     "adminapproval":1,
                     "tags":[""],
@@ -103,12 +104,17 @@ class _AddBookPageState extends State<AddBookPage>  {
                     "Quantity":1,
                     "QuotedDeposit":quotedprice,
                     "seller_address":pickup_address,
+                    'seller_UPI':seller_UPI,
+                    "seller_phoneNumber":seller_phone,
                     "category":"Unknown",
                   }).then((value) {
-                    _onBasicSuccessAlert(context, "Book has been successfully added");
-                    Navigator.pop(context);
+
                   });
                 });
+              }).then((value) {
+                Navigator.pushNamed(context,Homepage.id);
+                _onBasicSuccessAlert(context, "Book has been successfully added");
+
               });
             }
           },
@@ -456,6 +462,72 @@ class _AddBookPageState extends State<AddBookPage>  {
                       ),
                     ),
                   ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("UPI ID",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: "LeelawUI",
+                          fontWeight: FontWeight.bold
+                      ),),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      onChanged: (value){
+                        seller_UPI =value;
+                      },
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[290],
+                        hintText: "Enter UPI ID..",
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Contact Number",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: "LeelawUI",
+                          fontWeight: FontWeight.bold
+                      ),),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      keyboardType: TextInputType.phone,
+                      onChanged: (value){
+                        seller_phone =value;
+                      },
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[290],
+                        hintText: "Enter your Phone Number.",
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text("Upload Front Book Cover",
@@ -555,7 +627,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   }
 
 
-  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address) {
+  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address, String seller_upi,String sellercontact) {
     if(bookName.trim()==""||bookName.trim().isEmpty||bookName.trim().length==0){
       _onBasicWaitingAlertPressed(context,"BookName can't be Empty");
       return false;
@@ -582,6 +654,14 @@ class _AddBookPageState extends State<AddBookPage>  {
     }
     if(pickup_address==null||pickup_address.trim()==0||pickup_address.trim()==""){
       _onBasicWaitingAlertPressed(context,"Please check pickup address");
+      return false;
+    }
+    if(seller_upi==null||seller_upi.trim().length==0||seller_upi.trim()==""){
+      _onBasicWaitingAlertPressed(context,"UPI ID is mandatory");
+      return false;
+    }
+    if(sellercontact==null||sellercontact.trim().length==0||sellercontact.trim()==""){
+      _onBasicWaitingAlertPressed(context,"Please provide your contact number");
       return false;
     }
     return true;

@@ -121,26 +121,10 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                                   thickness: 2,
                                 ),
                               ),
-                              snapshot.data.docs[index].get("Book_Taken_from_Seller")==false?
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Icon(Icons.warning,color: Colors.red,),
-                                      Text("Please send the book to Buyer before ${getCustomFormattedDateTime(snapshot.data.docs[index].get("Lease_Start_Date").toDate().toString(),'dd MMMM yyyy').toString()} ",style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-
-                                      ),),
-                                    ],
-                                  ),
-                                ],
-                              ):
+                              snapshot.data.docs[index].get("Book_Taken_from_Seller")==true && snapshot.data.docs[index].get("Buyer_Return_Initiation")==true?
                               Column(
                                 children: [
                                   Text("Buyer Received Book Date: ${getCustomFormattedDateTime(snapshot.data.docs[index].get("Book_Taken_from_Seller_Timestamp").toDate().toString(),'dd MMMM yyyy').toString()}",style: TextStyle(
-
                                   ),),
 
                                   Row(
@@ -150,10 +134,26 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                                       FlatButton(
                                           color:Colors.greenAccent,
                                           onPressed: (){
-                                            _confirming_received_from_buyer(snapshot.data.docs[index].id);
+                                            String BookCollectionID=snapshot.data.docs[index].get("BookCollection_ID");
+                                            _confirming_received_from_buyer(snapshot.data.docs[index].id,BookCollectionID);
                                           }, child: Text("Yes")),
                                     ],
                                   )
+                                ],
+                              ):
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(Icons.warning,color: Colors.red,),
+                                      Text("Delivery boy will reach before ${getCustomFormattedDateTime(snapshot.data.docs[index].get("Lease_Start_Date").toDate().toString(),'dd MMMM yyyy').toString()} ",style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+
+                                      ),),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ],
@@ -169,14 +169,16 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
 
     );
   }
-  void _confirming_received_from_buyer(String DocID){
+  void _confirming_received_from_buyer(String DocID,String BookCollection_ID){
 
     _firestore.collection("Transactions").doc(DocID).update({
       "Book_Taken_from_Buyer":true,
       "Book_Taken_from_Buyer_Timestamp":DateTime.now(),
       "Order_Status":"Completed"
     }).then((value) {
-
+      _firestore.collection("Book_Collection").doc(BookCollection_ID).update({
+        'Availability':true,
+      });
     });
   }
   getCustomFormattedDateTime(String givenDateTime, String dateFormat) {

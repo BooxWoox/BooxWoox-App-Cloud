@@ -16,6 +16,7 @@ import 'package:dio/dio.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 final _firestore=FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
@@ -50,9 +51,11 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
+
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
@@ -112,6 +115,28 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                       ),
                                     ],
                                   ),
+                                  snapshot.data.docs[index].get("Book_Taken_from_Seller")?Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                          icon: Icon(Icons.assignment_return,color: Colors.redAccent,size: 24,), onPressed: (){
+                                            String buyeruid=snapshot.data.docs[index].get("BuyerUID");
+                                            String selleruid=snapshot.data.docs[index].get("SellerUID");
+                                            double buyershare=double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString());
+                                            double sellershare=double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString());
+                                            String buyerphn=snapshot.data.docs[index].get("Buyer_PhoneNumber");
+                                            String sellerphn=snapshot.data.docs[index].get("Seller_PhoneNumber");
+                                            String orderid=snapshot.data.docs[index].id;
+                                            double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
+                                            if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
+                                              _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
+                                            }else{
+                                              ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt);
+                                            }
+                                      }),
+                                      Text("Return"),
+                                    ],
+                                  ):SizedBox(),
 
                                 ],
                               ),
@@ -163,6 +188,27 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
 
     );
   }
+  void ReturnInitaiation(String docID,String to_address,String from_address,String BuyerUID,String SellerUID,double Buyershareamt,double Sellershareamt,String buyerphn,String sellerphn,String orderID,double totalamt){
+    _firestore.collection("Transactions").doc(docID).update({
+      "Buyer_Return_Initiation":true,
+    }).then((value) {
+      _firestore.collection("Delivery_System").doc(docID).set({
+        "Order_ID":orderID,
+        "Total_Amt":totalamt,
+        "Status":"Delivering",
+        "BuyerUID":BuyerUID,
+        "SellerUID":SellerUID,
+        "BuyerShare_Amt":Buyershareamt,
+        "SellerShare_Amt":Sellershareamt,
+        "Buyer_PhoneNumber":buyerphn,
+        "Seller_PhoneNumber":sellerphn,
+        "to_address":to_address,
+        "from_address":from_address,
+      });
+    }).then((value) {
+      _onBasicSuccessAlert(context, "Return Request Initiated");
+    });
+  }
   void _confirming_received_from_seller(String docID){
     _firestore.collection("Transactions").doc(docID).update({
       "Book_Taken_from_Seller":true,
@@ -176,6 +222,25 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
     final DateTime docDateTime = DateTime.parse(givenDateTime);
     return DateFormat(dateFormat).format(docDateTime);
   }
-
+  _onBasicSuccessAlert(context,String descrip) async {
+    await Alert(
+      type: AlertType.success,
+      context: context,
+      title: "Success",
+      desc: descrip,
+    ).show();
+    // Code will continue after alert is closed.
+    debugPrint("Alert closed now.");
+  }
+  _onBasicWaitingAlertPressed(context,String descrip) async {
+    await Alert(
+      type: AlertType.error,
+      context: context,
+      title: "Warning",
+      desc: descrip,
+    ).show();
+    // Code will continue after alert is closed.
+    debugPrint("Alert closed now.");
+  }
 }
 

@@ -40,7 +40,6 @@ class _Transactions_SellerState extends State<Transactions_Seller> with SingleTi
   List<Widget> tabPages = [
     Ongoing_Seller_Transaction(),
     Completed_Seller_Transaction(),
-    Text("Pending"),
   ];
   @override
   void initState() {
@@ -68,9 +67,9 @@ class _Transactions_SellerState extends State<Transactions_Seller> with SingleTi
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.grey,
               inactiveFgColor: Colors.white,
-              labels: ['Ongoing', 'Failed','Completed'],
+              labels: ['Ongoing','Completed'],
               icons: [Icons.circle_notifications, Icons.update,Icons.message],
-              activeBgColors: [Colors.blue,Colors.red,Colors.green],
+              activeBgColors: [Colors.blue,Colors.green],
               onToggle: (index) {
                 print('switched to: $index');
                 // onPageChanged(index);

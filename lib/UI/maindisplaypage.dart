@@ -214,7 +214,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
           String owneruid=i.get("OwnerUID");
           String selleraddress=i.get("seller_address");
           String sellerphn=i.get("seller_phoneNumber");
-          featured.add(homepage_items_featured(author, bkname, coll_type, ImageUrl,original_loc,owneruid,selleraddress,sellerphn));
+          bool availability=i.get("Availability");
+          featured.add(homepage_items_featured(author, bkname, coll_type, ImageUrl,original_loc,owneruid,selleraddress,sellerphn,availability));
 
         }
         setState(() {

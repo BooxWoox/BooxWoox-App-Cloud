@@ -44,6 +44,7 @@ class _AllTransactionsState extends State<AllTransactions> with TickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("All Transactions"),
         shadowColor: Colors.transparent,
         backgroundColor: Color(0xFFFFCC00),
       ),

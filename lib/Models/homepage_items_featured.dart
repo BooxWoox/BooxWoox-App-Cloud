@@ -7,6 +7,9 @@ class homepage_items_featured{
 
 
   String _ImageURl;
+  String _BookCollectionidentity;
+  String _OwnerUID;
+  String _Seller_address;
 
   String get Author => _Author;
 
@@ -14,10 +17,8 @@ class homepage_items_featured{
     _Author = value;
   }
 
-  String _BookCollectionidentity;
-  String _OwnerUID;
-  String _Seller_address;
   String _Seller_phnNumber;
+  bool _availability;
 
   homepage_items_featured(
       this._Author,
@@ -27,7 +28,8 @@ class homepage_items_featured{
       this._BookCollectionidentity,
       this._OwnerUID,
       this._Seller_address,
-      this._Seller_phnNumber);
+      this._Seller_phnNumber,
+      this._availability);
 
   String get BookName => _BookName;
 
@@ -69,5 +71,11 @@ class homepage_items_featured{
 
   set Seller_phnNumber(String value) {
     _Seller_phnNumber = value;
+  }
+
+  bool get availability => _availability;
+
+  set availability(bool value) {
+    _availability = value;
   }
 }

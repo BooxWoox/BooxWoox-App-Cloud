@@ -119,65 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   thickness: 2,
                 ),
               ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.pushNamed(context, Transactions_Buyer.id);
-                  print("Transactions (As Buyer)");
-                },
-                child: Row(
-                  children: [
-                    SizedBox(width: 25,),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset("UIAssets/Homepage/bookollab_icon.png"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text("Transactions (As Buyer)",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),),
-                    )
-                  ],
-                ),
-              ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:18.0),
-                child: Divider(
-                  height: 20,
-                  thickness: 2,
-                ),
-              ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.pushNamed(context, Transactions_Seller.id);
-                  print("Transactions (As Seller)");
-                },
-                child: Row(
-                  children: [
-                    SizedBox(width: 25,),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset("UIAssets/Homepage/bookollab_icon.png"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text("Transactions (As Seller)",
-                        style: TextStyle(
-                            fontSize: 15
-                        ),),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal:18.0),
-                child: Divider(
-                  height: 20,
-                  thickness: 2,
-                ),
-              ),
               GestureDetector(
                 onTap: (){
                   Navigator.pushNamed(context, AllTransactions.id);

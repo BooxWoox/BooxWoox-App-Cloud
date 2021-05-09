@@ -34,7 +34,10 @@ class _Book_infoState extends State<Book_info> {
   double _quotedrentpercent=0;
   double _deliverycharges=0.0;
   double _commissionpercent=0;
+  double _sellershare_cut_percent=0;
+  double Sellers_Return_Share=0;
   double _bankcharges=0;
+  double finalrent=0;
   List<int> _LeasePeriod=[];
   var result=null;
   int leaseduration=0;
@@ -70,13 +73,15 @@ class _Book_infoState extends State<Book_info> {
     //Update to database for entries
     DateTime Leasestartdate=DateTime.now().add(Duration(days:10));
     _firestore.collection("Transactions").doc(response.orderId).set({
+      'BookCollection_ID':itemmodeltemp.item.BookCollectionidentity,
       'BuyerUID':useruid,
       'ImageURL':itemmodeltemp.item.ImageURl,
       'SellerUID':itemmodeltemp.item.OwnerUID,
       'Payment_Status':"Success",
       'Order_ID':response.orderId,
       'Payment_ID':response.paymentId,
-      'Deposit_Amt':Book_item_model.quotedDeposit,
+      'BuyerShare_Amt':Book_item_model.quotedDeposit,
+      'SellerShare_Amt':Sellers_Return_Share,
       'Book_Name':Book_name,
       'Order_Status':"Ongoing",
       'Buyer_Address':Buyer_address,
@@ -85,9 +90,10 @@ class _Book_infoState extends State<Book_info> {
       'Seller_PhoneNumber':itemmodeltemp.item.Seller_phnNumber,
       'Book_Taken_from_Seller':false,
       'Book_Taken_from_Buyer':false,
+      'Buyer_Return_Initiation':false,
       'Book_Taken_from_Seller_Timestamp':DateTime.now(),
       'Book_Taken_from_Buyer_Timestamp':DateTime.now(),
-      'Total_Amt':totalrent,
+      'Total_Amt':finalrent,
       'Lease_Duration':_selectedLeaseperiod,
       'Lease_Start_Date':Leasestartdate,
       'Lease_End_Date':Leasestartdate.add(Duration(days:_selectedLeaseperiod*40)),
@@ -118,8 +124,23 @@ class _Book_infoState extends State<Book_info> {
             "SellerUID":itemmodeltemp.item.OwnerUID.trim(),
             "BuyerUID":useruid
           }).then((value) {
-            Navigator.pop(context);
-            _onBasicSuccessAlert(context, "Payment Successfully Completed");
+            _firestore.collection("Delivery_System").doc().set({
+              'BookCollection_ID':itemmodeltemp.item.BookCollectionidentity,
+              'from_address':itemmodeltemp.item.Seller_address,
+              'to_address':Buyer_address,
+              'Buyer_PhoneNumber':Buyer_phnumber,
+              'Seller_PhoneNumber':itemmodeltemp.item.Seller_phnNumber,
+              'Order_ID':response.orderId,
+              "Status":"Delivering",
+              "SellerUID":itemmodeltemp.item.OwnerUID.trim(),
+              'BuyerUID':useruid,
+              'BuyerShare_Amt':Book_item_model.quotedDeposit,
+              'SellerShare_Amt':Sellers_Return_Share,
+              'Total_Amt':finalrent,
+            }).then((value) {
+              Navigator.pop(context);
+              _onBasicSuccessAlert(context, "Payment Successfully Completed");
+            });
           });
 
         });
@@ -134,6 +155,7 @@ class _Book_infoState extends State<Book_info> {
       msg: "ERROR: " + response.code.toString() + " - " + response.message,);
     DateTime Leasestartdate=DateTime.now().add(Duration(days:10));
     _firestore.collection("Transactions").doc(OrderID).set({
+      'BookCollection_ID':itemmodeltemp.item.BookCollectionidentity,
       'BuyerUID':useruid,
       'ImageURL':itemmodeltemp.item.ImageURl,
       'SellerUID':itemmodeltemp.item.OwnerUID,
@@ -242,10 +264,12 @@ class _Book_infoState extends State<Book_info> {
               height: 60,
               width: width/2,
               child: ElevatedButton(onPressed: () {
-                if(checkparameters(_selectedLeaseperiod)){
+                if(checkparameters(_selectedLeaseperiod) && itemmodeltemp.item.availability){
                   totalrent=((((_quotedrentpercent/100)*Book_item_model.quotedDeposit)*_selectedLeaseperiod)+Book_item_model.quotedDeposit+_deliverycharges);
                   totalrent=totalrent+(_commissionpercent*totalrent/100);//Commission charges
                   totalrent=totalrent+(_bankcharges*totalrent/100);//bank charges
+                  Sellers_Return_Share=(((_quotedrentpercent/100)*Book_item_model.quotedDeposit)*_selectedLeaseperiod);
+                  Sellers_Return_Share=Sellers_Return_Share-(_sellershare_cut_percent*Sellers_Return_Share/100);
                   print("Total Payment= $totalrent");
                   showModalBottomSheet(context: context,
                       isScrollControlled: true,
@@ -366,8 +390,8 @@ class _Book_infoState extends State<Book_info> {
                                   if(Buyer_address==null||Buyer_address.trim().length==0||Buyer_address==""||Buyer_phnumber==null||Buyer_phnumber==""){
                                     _onBasicWaitingAlertPressed(context, "All fields are mandatory");
                                   }else{
-                                    double finalrent=double.parse((totalrent).toStringAsFixed(2))*100;
-                                    getOrderID(finalrent,Buyer_address,Buyer_phnumber);
+                                    finalrent=double.parse((totalrent).toStringAsFixed(2));
+                                    getOrderID(finalrent*100,Buyer_address,Buyer_phnumber);
                                   }
 
                                 },
@@ -380,12 +404,11 @@ class _Book_infoState extends State<Book_info> {
                       });
                   //getOrderID(totalrent*100);
                 }
-
               },
-                child: Text("BORROW NOW",style: TextStyle(color: Colors.white),),
+                child: itemmodeltemp.item.availability?Text("BORROW NOW",style: TextStyle(color: Colors.white),):Text("OUT OF STOCK",style: TextStyle(color: Colors.white),),
                 style: ElevatedButton.styleFrom(
                   elevation: 10,
-                  primary: Color(0xFFFFCC00), // background
+                  primary: itemmodeltemp.item.availability?Color(0xFFFFCC00):Colors.red, // background
                   onPrimary: Colors.white, // foreground
                 ),),
             ),
@@ -669,6 +692,7 @@ class _Book_infoState extends State<Book_info> {
         _deliverycharges=double.parse(value["Delivery_Charges"].toString());
         _commissionpercent=double.parse(value["commission_percent"].toString());
         _bankcharges=double.parse(value["Bank_charges"].toString());
+        _sellershare_cut_percent=double.parse(value["SellerShare_Cut_Percent"].toString());
         print(_deliverycharges);
         return true;
       });
@@ -696,6 +720,7 @@ class _Book_infoState extends State<Book_info> {
     // Code will continue after alert is closed.
     debugPrint("Alert closed now.");
   }
+
   _onBasicSuccessAlert(context,String descrip) async {
     await Alert(
       type: AlertType.success,
