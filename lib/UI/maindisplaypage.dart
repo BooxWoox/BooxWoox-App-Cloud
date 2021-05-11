@@ -98,7 +98,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
               child: Container(
                 height: 45,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: TextField(
                     autocorrect: false,
                     decoration: InputDecoration(
@@ -110,7 +110,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                       hintText: "Search",
                       filled: true,
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 25),
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15.0)),
                         borderSide: BorderSide(color: Color(0xff707070)),
@@ -136,7 +136,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 18),
+                              vertical: 4.0, horizontal: 18),
                           child: Text(
                             Homepage_Cat[index],
                             style: TextStyle(
@@ -146,7 +146,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                           ),
                         ),
                         Container(
-                          height: 220,
+                          height: 210,
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: featured.length,
@@ -201,10 +201,9 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                             child: Text(
                                               featured[itemIndex].Author,
                                               style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 14,
-                                                fontFamily: "LeelawUI",
-                                              ),
+                                                  color: Colors.grey,
+                                                  fontSize: 14,
+                                                  fontFamily: "LeelawUI"),
                                             ),
                                           ),
                                         ),
