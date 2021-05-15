@@ -1,4 +1,5 @@
 import 'package:bookollab/Models/maindisp_book_info_model.dart';
+import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Onboarding.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -91,68 +92,72 @@ class _ChatsPageState extends State<ChatsPage> {
                                         child: Text('Loading!'),
                                       );
                                     }
-                                    return Container(
-                                      margin: EdgeInsets.only(
-                                          top: 5.0, bottom: 5.0, right: 20.0),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFFFEFEE),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(20.0),
-                                          bottomRight: Radius.circular(20.0),
+                                    return InkWell(
+                                      onTap: (){Navigator.pushNamed(context, ConversationsPage.id,
+                                          arguments: ChatUser(snapshot.data.docs[index].id,username,photoUrl));},
+                                      child: Container(
+                                        margin: EdgeInsets.only(
+                                            top: 5.0, bottom: 5.0, right: 20.0),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFFFEFEE),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(20.0),
+                                            bottomRight: Radius.circular(20.0),
+                                          ),
                                         ),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 35.0,
-                                            backgroundImage:
-                                                NetworkImage(photoUrl),
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  username,
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 15.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 5.0),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.45,
+                                        child: Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 35.0,
+                                              backgroundImage:
+                                                  NetworkImage(photoUrl),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    itemsnapshot.data.docs.first
-                                                        .get("text"),
+                                                    username,
                                                     style: TextStyle(
-                                                      color: Colors.blueGrey,
+                                                      color: Colors.grey,
                                                       fontSize: 15.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                                SizedBox(height: 5.0),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                          horizontal: 8.0),
+                                                  child: Container(
+                                                    width: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.45,
+                                                    child: Text(
+                                                      itemsnapshot.data.docs.first
+                                                          .get("text"),
+                                                      style: TextStyle(
+                                                        color: Colors.blueGrey,
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   });
@@ -201,4 +206,11 @@ class _ChatsPageState extends State<ChatsPage> {
   Future<DocumentSnapshot> getChatUserInfo(String userId) async {
     return await _firestore.collection("Users").doc(userId).get();
   }
+}
+
+class ChatUser{
+  String id;
+  String username;
+  String photoUrl;
+  ChatUser(this.id,this.username,this.photoUrl);
 }
