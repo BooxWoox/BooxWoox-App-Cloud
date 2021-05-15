@@ -1,4 +1,5 @@
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
+import 'package:bookollab/UI/Chat/RequestsPage.dart';
 import 'package:flutter/material.dart';
 import 'UI/SplashScreen.dart';
 import 'UI/Onboarding.dart';
@@ -31,38 +32,38 @@ void main() async {
   runApp(bookollab());
 }
 
-
 class bookollab extends StatelessWidget {
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: SplashScreen.id,
-      routes:{
-    SplashScreen.id:(context) => SplashScreen(),
-    Onboarding.id:(context) => Onboarding(),
-    LoginPage.id:(context) => LoginPage(),
-    CreateAccountPage.id:(context) => CreateAccountPage(),
-    Homepage.id:(context) => Homepage(),
-    maindisplaypage.id:(context)=>maindisplaypage(),
-    ProfilePage.id:(context) => ProfilePage(),
-    Book_info.id:(context) =>Book_info(),
-    Chat_homepage.id:(context) =>Chat_homepage(),
-    notification.id:(context) => notification(),
-    ChatsPage.id:(context) => ChatsPage(),
-    ConversationsPage.id:(context)=>ConversationsPage(),
-    AddBookPage.id:(context)=>AddBookPage(),
-    testpayment.id:(context) => testpayment(),
-    Transactions_Buyer.id:(context) => Transactions_Buyer(),
-    Transactions_Seller.id:(context) =>Transactions_Seller(),
-    Ongoing_transaction_Buyer.id:(context)=>Ongoing_transaction_Buyer(),
-    Failed_transaction_Buyer.id:(context) =>Failed_transaction_Buyer(),
-    Completed_transaction_Buyer.id:(context) =>Completed_transaction_Buyer(),
-    Completed_Seller_Transaction.id:(context) => Completed_Seller_Transaction(),
-    AllTransactions.id:(context) => AllTransactions(),
-    } ,
+      routes: {
+        SplashScreen.id: (context) => SplashScreen(),
+        Onboarding.id: (context) => Onboarding(),
+        LoginPage.id: (context) => LoginPage(),
+        CreateAccountPage.id: (context) => CreateAccountPage(),
+        Homepage.id: (context) => Homepage(),
+        maindisplaypage.id: (context) => maindisplaypage(),
+        ProfilePage.id: (context) => ProfilePage(),
+        Book_info.id: (context) => Book_info(),
+        Chat_homepage.id: (context) => Chat_homepage(),
+        notification.id: (context) => notification(),
+        ChatsPage.id: (context) => ChatsPage(),
+        ConversationsPage.id: (context) => ConversationsPage(),
+        RequestsPage.id: (context) => RequestsPage(),
+        AddBookPage.id: (context) => AddBookPage(),
+        testpayment.id: (context) => testpayment(),
+        Transactions_Buyer.id: (context) => Transactions_Buyer(),
+        Transactions_Seller.id: (context) => Transactions_Seller(),
+        Ongoing_transaction_Buyer.id: (context) => Ongoing_transaction_Buyer(),
+        Failed_transaction_Buyer.id: (context) => Failed_transaction_Buyer(),
+        Completed_transaction_Buyer.id: (context) =>
+            Completed_transaction_Buyer(),
+        Completed_Seller_Transaction.id: (context) =>
+            Completed_Seller_Transaction(),
+        AllTransactions.id: (context) => AllTransactions(),
+      },
     );
   }
 }
-
