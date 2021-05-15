@@ -20,20 +20,28 @@ class _ConversationsPageState extends State<ConversationsPage> {
 
   ChatUser first_user, second_user;
 
+  final messageController = TextEditingController();
+
   @override
   void initState() {
     _firestore.collection("Users").doc(UserUID).get().then((querySnapshot) {
       var doc = querySnapshot.data();
-      print(doc);
-      String username=doc['Username'];
-      String profile_url=doc['Profile_ImageURL'];
+      String username = doc['Username'];
+      String profile_url = doc['Profile_ImageURL'];
       if (profile_url.isEmpty)
-        profile_url="https://i.pinimg.com/originals/77/5b/91/775b91d4b1bfcac2aa3292b47763c1b1.jpg";
-      first_user = ChatUser(UserUID, username,profile_url );
-      print(first_user.username);
+        profile_url =
+            "https://i.pinimg.com/originals/77/5b/91/775b91d4b1bfcac2aa3292b47763c1b1.jpg";
+      first_user = ChatUser(UserUID, username, profile_url);
       setState(() {});
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    messageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,6 +69,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                 .collection("Chat")
                 .doc(second_user.id)
                 .collection("Messages")
+                .orderBy("timestamp", descending: false)
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -68,79 +77,158 @@ class _ConversationsPageState extends State<ConversationsPage> {
                   child: Text('Loading!'),
                 );
               }
-              return ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var doc = snapshot.data.docs[index];
-                  var chat = doc.data();
-                  return Container(
-                    padding: EdgeInsets.all(4.0),
-                    child: chat['from'] == second_user.id
-                        ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircleAvatar(
-                                radius: 24.0,
-                                backgroundImage:
-                                    NetworkImage(second_user.photoUrl),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    constraints: BoxConstraints(maxWidth: width/2),
-                                    child: Card(
-                                      shape:RoundedRectangleBorder(
-                                        side: BorderSide(color: Colors.white70, width: 1),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(6.0),
-                                        child: Text(chat['text'],),
-                                      ),
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        var doc = snapshot.data.docs[index];
+                        var chat = doc.data();
+                        return Container(
+                          padding: EdgeInsets.all(4.0),
+                          child: chat['from'] == second_user.id
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 24.0,
+                                      backgroundImage:
+                                          NetworkImage(second_user.photoUrl),
                                     ),
-                                  ),
-                                  Text(DateFormat.yMMMd().add_jm().format(chat['timestamp'].toDate()))
-                                ],
-                              ),
-                            ],
-                          )
-                        : Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    constraints: BoxConstraints(maxWidth: width/2),
-                                    child: Card(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text(chat['text'],),
-                                      ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          constraints: BoxConstraints(
+                                              maxWidth: width / 2),
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                  color: Colors.white70,
+                                                  width: 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(6.0),
+                                              child: Text(
+                                                chat['text'],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Text(DateFormat.yMMMd()
+                                            .add_jm()
+                                            .format(chat['timestamp'].toDate()))
+                                      ],
                                     ),
-                                  ),
-                                  Text(DateFormat.yMMMd().add_jm().format(chat['timestamp'].toDate()))
-                                ],
-                              ),
-                              CircleAvatar(
-                                radius: 24.0,
-                                backgroundImage:
-                                    NetworkImage(first_user==null?"https://i.pinimg.com/originals/77/5b/91/775b91d4b1bfcac2aa3292b47763c1b1.jpg":first_user.photoUrl),
-                              ),
-                            ],
-                          ),
-                  );
-                },
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          constraints: BoxConstraints(
+                                              maxWidth: width / 2),
+                                          child: Card(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Text(
+                                                chat['text'],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Text(DateFormat.yMMMd()
+                                            .add_jm()
+                                            .format(chat['timestamp'].toDate()))
+                                      ],
+                                    ),
+                                    CircleAvatar(
+                                      radius: 24.0,
+                                      backgroundImage: NetworkImage(first_user ==
+                                              null
+                                          ? "https://i.pinimg.com/originals/77/5b/91/775b91d4b1bfcac2aa3292b47763c1b1.jpg"
+                                          : first_user.photoUrl),
+                                    ),
+                                  ],
+                                ),
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 8,horizontal: 4),
+                    child: TextField(
+                      controller: messageController,
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                        fillColor: Color(0xffffffff),
+                        filled: true,
+                        suffixIcon: IconButton(
+                          icon:Icon(
+                            Icons.send,
+                          color: Colors.black,),
+                          onPressed: (){
+                           send_message();
+                          },
+                        ),
+                        contentPadding:
+                        EdgeInsets.symmetric( vertical: 8,horizontal: 24),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                      ),
+                      onSubmitted: (a){
+                        send_message();
+                      },
+                    ),
+                  )
+                ],
               );
-            })
-    );
+            }));
+  }
+
+  void send_message(){
+    String message=messageController.text;
+    if(message.trim().isNotEmpty) {
+      _firestore.collection("Users").doc(first_user.id).collection("Chat").doc(
+          second_user.id).collection("Messages").add(
+          {
+            "to": second_user.id,
+            "from": first_user.id,
+            "text": message,
+            "timestamp": DateTime.now()
+          }).then((value) {
+        print(value);
+      });
+      _firestore.collection("Users").doc(second_user.id).collection("Chat")
+          .doc(first_user.id).collection("Messages").add(
+          {
+            "to": second_user.id,
+            "from": first_user.id,
+            "text": message,
+            "timestamp": DateTime.now()
+          })
+          .then((value) {
+        print(value);
+      });
+    }
+    messageController.clear();
   }
 }
 
 
-void readTimestamp(int timestamp) {
-
- var time=DateTime.fromMicrosecondsSinceEpoch(timestamp);
-print(time);
-}
