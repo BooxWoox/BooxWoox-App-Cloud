@@ -30,7 +30,7 @@ class _RequestsPageState extends State<RequestsPage> {
         stream: _firestore
             .collection("Users")
             .doc(UserUID)
-            .collection("Correspondents")
+            .collection("Chat")
             .where('first_user_req_accepted', isEqualTo: false)
             .snapshots(),
         builder: (context, snapshot) {
@@ -133,11 +133,19 @@ class _RequestsPageState extends State<RequestsPage> {
     _firestore
         .collection("Users")
         .doc(UserUID)
-        .collection("Correspondents")
+        .collection("Chat")
         .doc(docId)
         .update({"first_user_req_accepted": true}).then((_) {
-      print("success!");
+      _firestore
+          .collection("Users")
+          .doc(docId)
+          .collection("Chat")
+          .doc(UserUID)
+          .update({"second_user_req_accepted": true}).then((_) {
+        print("success!");
+      });
     });
+
   }
 
   Future<DocumentSnapshot> getChatUserInfo(String userId) async {
