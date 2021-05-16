@@ -27,12 +27,18 @@ class Ongoing_transaction_Buyer extends StatefulWidget {
 }
 
 class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
+  String Buyer_fullname="";
+  String Seller_fullname="";
   @override
   Widget build(BuildContext context) {
     String UserUID=_auth.currentUser.uid.toString();
     return Scaffold(
         body: StreamBuilder<QuerySnapshot>(
-          stream: _firestore.collection("Transactions").where("BuyerUID",isEqualTo:UserUID).where("Payment_Status",isEqualTo: "Success").where("Order_Status",isEqualTo: "Ongoing").snapshots(),
+          stream: _firestore.collection("Transactions")
+              .where("BuyerUID",isEqualTo:UserUID)
+              .where("Payment_Status",isEqualTo: "Success")
+              .where("Order_Status",isEqualTo: "Ongoing")
+              .snapshots(),
           builder: (context,snapshot){
             if(!snapshot.hasData)
             {
@@ -163,7 +169,15 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                             FlatButton(
                                                 color:Colors.red,
                                                 onPressed: (){
-
+                                                  String buyeruid=snapshot.data.docs[index].get("BuyerUID");
+                                                  String selleruid=snapshot.data.docs[index].get("SellerUID");
+                                                  double buyershare=double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString());
+                                                  double sellershare=double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString());
+                                                  String buyerphn=snapshot.data.docs[index].get("Buyer_PhoneNumber");
+                                                  String sellerphn=snapshot.data.docs[index].get("Seller_PhoneNumber");
+                                                  String orderid=snapshot.data.docs[index].id;
+                                                  double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
+                                                  cancelorderrequest(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt);
                                                 }, child: Text("Cancel Order")),
                                           ],
                                         )
@@ -192,19 +206,33 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
     _firestore.collection("Transactions").doc(docID).update({
       "Buyer_Return_Initiation":true,
     }).then((value) {
-      _firestore.collection("Delivery_System").doc(docID).set({
-        "Order_ID":orderID,
-        "Total_Amt":totalamt,
-        "Status":"Delivering",
-        "BuyerUID":BuyerUID,
-        "SellerUID":SellerUID,
-        "BuyerShare_Amt":Buyershareamt,
-        "SellerShare_Amt":Sellershareamt,
-        "Buyer_PhoneNumber":buyerphn,
-        "Seller_PhoneNumber":sellerphn,
-        "to_address":to_address,
-        "from_address":from_address,
+      _firestore.collection("Transactions").doc(orderID).get().then((value) {
+        setState(() {
+          Buyer_fullname=value.get("BuyerFullName");
+          Seller_fullname=value.get("SellerFullName");
+        });
+      }).then((value) {
+        countDocuments("Delivery_System").then((value) {
+          _firestore.collection("Delivery_System").doc(orderID+SellerUID).set({
+            "Seq_No":value.toInt()+1,
+            "Order_ID":orderID,
+            "Total_Amt":totalamt,
+            "Status":"Delivering",
+            "BuyerUID":BuyerUID,
+            "SellerUID":SellerUID,
+            "BuyerShare_Amt":Buyershareamt,
+            "SellerShare_Amt":Sellershareamt,
+            "from_Name":Buyer_fullname,
+            "to_Name":Seller_fullname,
+            "Buyer_PhoneNumber":buyerphn,
+            "Seller_PhoneNumber":sellerphn,
+            "to_address":to_address,
+            "order_creation_date":DateTime.now(),
+            "from_address":from_address,
+          });
+        });
       });
+
     }).then((value) {
       _onBasicSuccessAlert(context, "Return Request Initiated");
     });
@@ -222,6 +250,40 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
     final DateTime docDateTime = DateTime.parse(givenDateTime);
     return DateFormat(dateFormat).format(docDateTime);
   }
+  void cancelorderrequest(String docID,String to_address,String from_address,String BuyerUID,String SellerUID,double Buyershareamt,double Sellershareamt,String buyerphn,String sellerphn,String orderID,double totalamt){
+    _firestore.collection("Transactions").doc(docID).get().then((value) {
+      Buyer_fullname=value.get("BuyerFullName");
+      Seller_fullname=value.get("SellerFullName");
+    }).then((value) {
+      _firestore.collection("Transactions").doc(docID).delete().then((value) {
+        _firestore.collection("Admin_Refund_Transactions").doc().set({
+          "Order_ID":orderID,
+          "Total_Amt":totalamt,
+          "Status":"Delivering",
+          "BuyerUID":BuyerUID,
+          "SellerUID":SellerUID,
+          "BuyerShare_Amt":Buyershareamt,
+          "SellerShare_Amt":Sellershareamt,
+          "BuyerFullName":Buyer_fullname,
+          "SellerFullName":Seller_fullname,
+          "Buyer_PhoneNumber":buyerphn,
+          "Seller_PhoneNumber":sellerphn,
+          "Buyer_Address":from_address,
+          "order_creation_date":DateTime.now(),
+          "Seller_Address":to_address,
+        }).then((value){
+          _firestore.collection("Delivery_System").doc(orderID+BuyerUID).delete().then((value) {
+            _onBasicSuccessAlert(context, "Order cancelled and money will be refunded with 3-4 working days");
+          });
+        });
+      });
+    });
+
+
+
+    // _firestore.collection("Admin_Refund_Transactions").doc().
+  }
+
   _onBasicSuccessAlert(context,String descrip) async {
     await Alert(
       type: AlertType.success,
@@ -241,6 +303,11 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
     ).show();
     // Code will continue after alert is closed.
     debugPrint("Alert closed now.");
+  }
+  Future<int> countDocuments(String collectionID) async {
+    QuerySnapshot _myDoc = await _firestore.collection(collectionID).get();
+    List<DocumentSnapshot> _myDocCount = _myDoc.docs;
+    return (_myDocCount.length);  // Count of Documents in Collection
   }
 }
 

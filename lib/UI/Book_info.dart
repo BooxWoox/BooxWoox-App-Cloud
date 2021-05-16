@@ -74,7 +74,7 @@ class _Book_infoState extends State<Book_info> {
     // Fluttertoast.showToast(
     //     msg: "SUCCESS: " + response.paymentId);
     //Update to database for entries
-    DateTime Leasestartdate = DateTime.now().add(Duration(days: 10));
+    DateTime Leasestartdate = DateTime.now().add(Duration(days: 4));
     _firestore.collection("Transactions").doc(response.orderId).set({
       'BookCollection_ID': itemmodeltemp.item.BookCollectionidentity,
       'BuyerUID': useruid,
@@ -102,7 +102,7 @@ class _Book_infoState extends State<Book_info> {
       'Lease_Duration': _selectedLeaseperiod,
       'Lease_Start_Date': Leasestartdate,
       'Lease_End_Date':
-          Leasestartdate.add(Duration(days: _selectedLeaseperiod * 40)),
+          Leasestartdate.add(Duration(days: _selectedLeaseperiod * 34)),
     }).then((value) {
       print(itemmodeltemp.item.BookCollectionidentity);
       _firestore
@@ -145,21 +145,25 @@ class _Book_infoState extends State<Book_info> {
             "SellerUID": itemmodeltemp.item.OwnerUID.trim(),
             "BuyerUID": useruid
           }).then((value) {
-            _firestore.collection("Delivery_System").doc().set({
-              'to_Name':Buyer_Fullname,
-              'from_Name':itemmodeltemp.item.Seller_FullName,
-              'BookCollection_ID': itemmodeltemp.item.BookCollectionidentity,
-              'from_address': itemmodeltemp.item.Seller_address,
-              'to_address': Buyer_address,
-              'Buyer_PhoneNumber': Buyer_phnumber,
-              'Seller_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
-              'Order_ID': response.orderId,
-              "Status": "Delivering",
-              "SellerUID": itemmodeltemp.item.OwnerUID.trim(),
-              'BuyerUID': useruid,
-              'BuyerShare_Amt': Book_item_model.quotedDeposit,
-              'SellerShare_Amt': Sellers_Return_Share,
-              'Total_Amt': finalrent,
+            countDocuments("Delivery_System").then((value) {
+              _firestore.collection("Delivery_System").doc(response.orderId+useruid).set({
+                'Seq_No':value.toInt()+1,
+                'to_Name':Buyer_Fullname,
+                'from_Name':itemmodeltemp.item.Seller_FullName,
+                "order_creation_date":DateTime.now(),
+                'BookCollection_ID': itemmodeltemp.item.BookCollectionidentity,
+                'from_address': itemmodeltemp.item.Seller_address,
+                'to_address': Buyer_address,
+                'Buyer_PhoneNumber': Buyer_phnumber,
+                'Seller_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
+                'Order_ID': response.orderId,
+                "Status": "Delivering",
+                "SellerUID": itemmodeltemp.item.OwnerUID.trim(),
+                'BuyerUID': useruid,
+                'BuyerShare_Amt': Book_item_model.quotedDeposit,
+                'SellerShare_Amt': Sellers_Return_Share,
+                'Total_Amt': finalrent,
+              });
             }).then((value) {
               Navigator.pop(context);
               _onBasicSuccessAlert(context, "Payment Successfully Completed");
@@ -1022,5 +1026,10 @@ class _Book_infoState extends State<Book_info> {
 - If there is no issue and the book has been safely returned, the lender will have to confirm the receiving of the book in the app and thereafter the deposit will be returned to the borrower. It is suggested that the book verification and receiving be done in front of the lender to avoid any issues later. Once, the receiving is confirmed, the transfer will be considered closed and complete and no further issues for that transaction will be entertained.
   ''';
     return text;
+  }
+  Future<int> countDocuments(String collectionID) async {
+    QuerySnapshot _myDoc = await _firestore.collection(collectionID).get();
+    List<DocumentSnapshot> _myDocCount = _myDoc.docs;
+    return (_myDocCount.length);  // Count of Documents in Collection
   }
 }
