@@ -37,6 +37,8 @@ class _ChatsPageState extends State<ChatsPage> {
             .collection("Users")
             .doc(UserUID)
             .collection("Chat")
+            .where('first_user_req_accepted', isEqualTo: true)
+            .where('second_user_req_accepted', isEqualTo: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

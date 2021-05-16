@@ -1,4 +1,5 @@
 import 'package:bookollab/Models/maindisp_book_info_model.dart';
+import 'package:bookollab/UI/Chat/RequestsPage.dart';
 import 'package:bookollab/UI/Onboarding.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -53,7 +54,7 @@ class _Chat_homepageState extends State<Chat_homepage> with SingleTickerProvider
             child: TabBarView(
               children: [
                 ChatsPage(),
-                Center(child: Text("Requests Tab Bar View")),
+                RequestsPage(),
               ],
               controller: _tabController,
             ),
