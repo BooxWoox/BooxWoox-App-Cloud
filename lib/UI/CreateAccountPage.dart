@@ -27,6 +27,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   String otp_typed="";
   String email_typed="";
   String username_typed="";
+  String fullname_typed="";
   String phonenumber_typed="";
   String password_typed="";
   String confirmpassword_typed="";
@@ -127,6 +128,34 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 10),
+                    child: Text('Full Name',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:48.0),
+                    child: TextField(
+                      onChanged: (value){
+                        fullname_typed=value;
+                      },
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           borderSide: BorderSide(color: Colors.grey),
@@ -251,7 +280,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         borderRadius: BorderRadius.circular(21),
                       ),
                       onPressed: () {
-                        if(check_parameters(username_typed, phoneNumber, email_typed, password_typed, confirmpassword_typed)){
+                        if(check_parameters(username_typed, phoneNumber, email_typed, password_typed, confirmpassword_typed,fullname_typed)){
                           _verifyPhone();
                           //show bottomsheet with otp verification
                           showModalBottomSheet(context: context,
@@ -331,9 +360,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                                 if (value.user != null) {
                                                   print("Hola");
                                                   print(value.user.uid);
-                                                  setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed);
+                                                  setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed,fullname_typed);
                                                   value.user.linkWithCredential(credential).then((user) {
-                                                    print("$user Success fully merged");
+                                                    print("$user Successfully merged");
                                                     print("Registration Successful");
                                                     _onBasicWaitingAlertPressed(context, "Successfully Created");
                                                   }).catchError((error) {
@@ -396,7 +425,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         },
         timeout: Duration(seconds: 120));
   }
-  setvaluesofuser_database(String uid,String username,String Phone,String email) async{
+  setvaluesofuser_database(String uid,String username,String Phone,String email, String fullname_typed) async{
     try{
       await _firestore.collection('Users').doc(uid).set({
         'Username': username.trim(),
@@ -404,7 +433,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         'Email_Id':email.trim(),
         'Profile_ImageURL':"",
         'Ratings':'5',
-        'Add1':"1",
+        'FullName':fullname_typed.trim(),
         'Add2':"2",
       }).then((value) {
         _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
@@ -415,7 +444,15 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     }
 
   }
-  bool check_parameters(String username,String Phone,String email,String pass,String comf_pass){
+  bool check_parameters(String username,String Phone,String email,String pass,String comf_pass, String fullname_typed){
+    if(!email.trim().contains('@')){
+      _onBasicErrorPressed(context, "Invalid Email Address");
+      return false;
+    }
+    if(fullname_typed.trim().isEmpty||fullname_typed.trim().length==0){
+      _onBasicErrorPressed(context, "Fullname field is not valid or empty");
+      return false;
+    }
     if(username.trim().isEmpty||username.trim().length==0){
       _onBasicErrorPressed(context, "Username is not valid or empty");
       return false;
@@ -428,10 +465,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       _onBasicErrorPressed(context, "Passwords do not match");
       return false;
     }
-    if(!email.trim().contains('@')){
-      _onBasicErrorPressed(context, "Invalid Email Address");
-      return false;
-    }
+
     return true;
   }
   _onBasicWaitingAlertPressed(context,String descrip) async {

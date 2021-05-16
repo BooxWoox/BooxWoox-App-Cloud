@@ -31,6 +31,7 @@ class Book_info extends StatefulWidget {
 class _Book_infoState extends State<Book_info> {
   String Book_name = "";
   String Buyer_address = "";
+  String Buyer_Fullname="";
   String doc_address = "";
   String Buyer_phnumber = "";
   double _quotedrentpercent = 0;
@@ -77,6 +78,7 @@ class _Book_infoState extends State<Book_info> {
     _firestore.collection("Transactions").doc(response.orderId).set({
       'BookCollection_ID': itemmodeltemp.item.BookCollectionidentity,
       'BuyerUID': useruid,
+      'BuyerFullName':Buyer_Fullname.trim(),
       'ImageURL': itemmodeltemp.item.ImageURl,
       'SellerUID': itemmodeltemp.item.OwnerUID,
       'Payment_Status': "Success",
@@ -88,6 +90,7 @@ class _Book_infoState extends State<Book_info> {
       'Order_Status': "Ongoing",
       'Buyer_Address': Buyer_address,
       'Buyer_PhoneNumber': Buyer_phnumber,
+      'SellerFullName':itemmodeltemp.item.Seller_FullName,
       'Seller_Address': itemmodeltemp.item.Seller_address,
       'Seller_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
       'Book_Taken_from_Seller': false,
@@ -143,6 +146,8 @@ class _Book_infoState extends State<Book_info> {
             "BuyerUID": useruid
           }).then((value) {
             _firestore.collection("Delivery_System").doc().set({
+              'to_Name':Buyer_Fullname,
+              'from_Name':itemmodeltemp.item.Seller_FullName,
               'BookCollection_ID': itemmodeltemp.item.BookCollectionidentity,
               'from_address': itemmodeltemp.item.Seller_address,
               'to_address': Buyer_address,
@@ -180,8 +185,10 @@ class _Book_infoState extends State<Book_info> {
       'Payment_ID': "NULL",
       'Book_Name': Book_name,
       'Order_Status': "Failed",
+      'BuyerFullName':Buyer_Fullname,
       'Buyer_Address': Buyer_address,
       'Buyer_PhoneNumber': Buyer_phnumber,
+      'SellerFullName':itemmodeltemp.item.Seller_FullName,
       'Seller_Address': itemmodeltemp.item.Seller_address,
       'Seller_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
       'Failure_Reason': response.message,
@@ -329,6 +336,50 @@ class _Book_infoState extends State<Book_info> {
                                   ),
                                   Icon(Icons.location_city_rounded),
                                   Text(
+                                    "Full Name",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 18.0, vertical: 8),
+                                child: Container(
+                                  height: 55,
+                                  child: TextField(
+                                    onChanged: (value) {
+                                      Buyer_Fullname = value;
+                                    },
+                                    autocorrect: false,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey[290],
+                                      hintText: "Type your delivery address..",
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0)),
+                                        borderSide:
+                                        BorderSide(color: Colors.grey),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0)),
+                                        borderSide:
+                                        BorderSide(color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 18,
+                                  ),
+                                  Icon(Icons.location_city_rounded),
+                                  Text(
                                     "Delivery Address",
                                     style: TextStyle(
                                       fontSize: 16,
@@ -446,7 +497,9 @@ class _Book_infoState extends State<Book_info> {
                                         Buyer_address.trim().length == 0 ||
                                         Buyer_address == "" ||
                                         Buyer_phnumber == null ||
-                                        Buyer_phnumber == "") {
+                                        Buyer_phnumber == ""||
+                                    Buyer_Fullname==null||
+                                    Buyer_Fullname.trim().length==0) {
                                       _onBasicWaitingAlertPressed(
                                           context, "All fields are mandatory");
                                     } else {

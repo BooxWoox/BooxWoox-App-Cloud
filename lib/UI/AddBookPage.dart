@@ -31,10 +31,15 @@ class _AddBookPageState extends State<AddBookPage>  {
   File _ImageFile;
   String barcoderesult = "";
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
-  String BookName="",Author="",condition="",bkdesc="",pickup_address="",seller_UPI="",seller_phone="";
+  String BookName="",Author="",condition="",bkdesc="",pickup_address="",seller_UPI="",seller_phone="",Seller_fullname="";
   double MRP=0;
   double quotedprice=0;
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getSellerDetails(FirebaseAuth.instance.currentUser.uid);
+  }
   @override
   Widget build(BuildContext context) {
     double width=MediaQuery.of(context).size.width;
@@ -68,9 +73,8 @@ class _AddBookPageState extends State<AddBookPage>  {
             ),
           ),
           color: Color(0xFFFFCC00),
-
           onPressed: () async{
-            if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone)){
+            if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone,Seller_fullname)){
               //checks passed
               //backend starts
 
@@ -103,6 +107,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                     "LeaseDuration":leaseduration,
                     "Quantity":1,
                     "QuotedDeposit":quotedprice,
+                    'SellerFullName':Seller_fullname.trim(),
                     "seller_address":pickup_address,
                     'seller_UPI':seller_UPI,
                     "seller_phoneNumber":seller_phone,
@@ -627,7 +632,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   }
 
 
-  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address, String seller_upi,String sellercontact) {
+  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address, String seller_upi,String sellercontact, String seller_fullname) {
     if(bookName.trim()==""||bookName.trim().isEmpty||bookName.trim().length==0){
       _onBasicWaitingAlertPressed(context,"BookName can't be Empty");
       return false;
@@ -664,6 +669,10 @@ class _AddBookPageState extends State<AddBookPage>  {
       _onBasicWaitingAlertPressed(context,"Please provide your contact number");
       return false;
     }
+    if(seller_fullname.isEmpty||seller_fullname.trim().length==0||seller_fullname==null)
+      {
+        _onBasicWaitingAlertPressed(context, "Some unknown error has occured :(");
+      }
     return true;
   }
 //validating user fields
@@ -687,6 +696,14 @@ class _AddBookPageState extends State<AddBookPage>  {
     // Code will continue after alert is closed.
     debugPrint("Alert closed now.");
   }
+  void getSellerDetails(String uid) {
+    _firestore.collection("Users").doc(uid.trim()).get().then((value) {
+          setState(() {
+            Seller_fullname=value.get("FullName");
+          });
+    });
+  }
 
 }
+
 

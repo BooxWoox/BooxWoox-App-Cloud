@@ -236,6 +236,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
           String selleraddress = i.get("seller_address");
           String sellerphn = i.get("seller_phoneNumber");
           bool availability = i.get("Availability");
+          String sellerFullname=i.get("SellerFullName");
           featured.add(homepage_items_featured(
               author,
               bkname,
@@ -245,7 +246,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
               owneruid,
               selleraddress,
               sellerphn,
-              availability));
+              availability,
+              sellerFullname));
         }
         setState(() {
           print(featured);

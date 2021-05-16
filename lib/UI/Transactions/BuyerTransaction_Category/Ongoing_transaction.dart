@@ -31,160 +31,160 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
   Widget build(BuildContext context) {
     String UserUID=_auth.currentUser.uid.toString();
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection("Transactions").where("BuyerUID",isEqualTo:UserUID).where("Payment_Status",isEqualTo: "Success").where("Order_Status",isEqualTo: "Ongoing").snapshots(),
-        builder: (context,snapshot){
-          if(!snapshot.hasData)
-          {
-            return Center(
-              child: Text('Loading!'),
-            );
-          }
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: ListView.builder(
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (BuildContext context, int index){
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
+        body: StreamBuilder<QuerySnapshot>(
+          stream: _firestore.collection("Transactions").where("BuyerUID",isEqualTo:UserUID).where("Payment_Status",isEqualTo: "Success").where("Order_Status",isEqualTo: "Ongoing").snapshots(),
+          builder: (context,snapshot){
+            if(!snapshot.hasData)
+            {
+              return Center(
+                child: Text('Loading!'),
+              );
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: snapshot.data.docs.length,
+                      itemBuilder: (BuildContext context, int index){
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
 
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 120,
-                                    width: 90,
-                                    child: Image.network(snapshot.data.docs[index].get("ImageURL"),fit: BoxFit.fill,),
-                                  ),
-                                  SizedBox(width: 20,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(snapshot.data.docs[index].get("Book_Name"),style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w600
-                                      ),),
-                                      SizedBox(height: 12,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text("Payment Status: "),
-                                          snapshot.data.docs[index].get("Payment_Status")=="Success"?Text("Success",style:
-                                          TextStyle(
-                                            color: Colors.green,
-                                          ),):Text("Failure",style: TextStyle(
-                                              color: Colors.red
-                                          ),),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text("Paid Amt: "),
-                                          Text(" \u{20B9} ${snapshot.data.docs[index].get("Total_Amt").toString()}"),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text("Order ID: "),
-                                          Text(snapshot.data.docs[index].get("Order_ID")),
-                                        ],
-                                      ),
-                                      SizedBox(height: 8,),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text("Rent Start Date: ",style: TextStyle(fontWeight: FontWeight.w500),),
-                                          Text(getCustomFormattedDateTime(snapshot.data.docs[index].get("Lease_Start_Date").toDate().toString(),'dd MMMM yyyy').toString(),)
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text("Rent End Date: ",style: TextStyle(fontWeight: FontWeight.w500),),
-                                          Text(getCustomFormattedDateTime(snapshot.data.docs[index].get("Lease_End_Date").toDate().toString(),'dd MMMM yyyy').toString(),)
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  snapshot.data.docs[index].get("Book_Taken_from_Seller")?Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      IconButton(
-                                          icon: Icon(Icons.assignment_return,color: Colors.redAccent,size: 24,), onPressed: (){
-                                            String buyeruid=snapshot.data.docs[index].get("BuyerUID");
-                                            String selleruid=snapshot.data.docs[index].get("SellerUID");
-                                            double buyershare=double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString());
-                                            double sellershare=double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString());
-                                            String buyerphn=snapshot.data.docs[index].get("Buyer_PhoneNumber");
-                                            String sellerphn=snapshot.data.docs[index].get("Seller_PhoneNumber");
-                                            String orderid=snapshot.data.docs[index].id;
-                                            double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
-                                            if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
-                                              _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
-                                            }else{
-                                              ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt);
-                                            }
-                                      }),
-                                      Text("Return"),
-                                    ],
-                                  ):SizedBox(),
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      width: 90,
+                                      child: Image.network(snapshot.data.docs[index].get("ImageURL"),fit: BoxFit.fill,),
+                                    ),
+                                    SizedBox(width: 20,),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(snapshot.data.docs[index].get("Book_Name"),style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600
+                                        ),),
+                                        SizedBox(height: 12,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text("Payment Status: "),
+                                            snapshot.data.docs[index].get("Payment_Status")=="Success"?Text("Success",style:
+                                            TextStyle(
+                                              color: Colors.green,
+                                            ),):Text("Failure",style: TextStyle(
+                                                color: Colors.red
+                                            ),),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text("Paid Amt: "),
+                                            Text(" \u{20B9} ${snapshot.data.docs[index].get("Total_Amt").toString()}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text("Order ID: "),
+                                            Text(snapshot.data.docs[index].get("Order_ID")),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text("Rent Start Date: ",style: TextStyle(fontWeight: FontWeight.w500),),
+                                            Text(getCustomFormattedDateTime(snapshot.data.docs[index].get("Lease_Start_Date").toDate().toString(),'dd MMMM yyyy').toString(),)
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text("Rent End Date: ",style: TextStyle(fontWeight: FontWeight.w500),),
+                                            Text(getCustomFormattedDateTime(snapshot.data.docs[index].get("Lease_End_Date").toDate().toString(),'dd MMMM yyyy').toString(),)
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    snapshot.data.docs[index].get("Book_Taken_from_Seller")?Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                            icon: Icon(Icons.assignment_return,color: Colors.redAccent,size: 24,), onPressed: (){
+                                              String buyeruid=snapshot.data.docs[index].get("BuyerUID");
+                                              String selleruid=snapshot.data.docs[index].get("SellerUID");
+                                              double buyershare=double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString());
+                                              double sellershare=double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString());
+                                              String buyerphn=snapshot.data.docs[index].get("Buyer_PhoneNumber");
+                                              String sellerphn=snapshot.data.docs[index].get("Seller_PhoneNumber");
+                                              String orderid=snapshot.data.docs[index].id;
+                                              double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
+                                              if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
+                                                _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
+                                              }else{
+                                                ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt);
+                                              }
+                                        }),
+                                        Text("Return"),
+                                      ],
+                                    ):SizedBox(),
 
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal:18.0),
-                                child: Divider(
-                                  height: 20,
-                                  thickness: 2,
+                                  ],
                                 ),
-                              ),
-                              snapshot.data.docs[index].get("Book_Taken_from_Seller")==false?
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text("Have you collected the book from seller or want to cancel?"),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          FlatButton(
-                                            color:Colors.greenAccent,
-                                              onPressed: (){
-                                              _confirming_received_from_seller(snapshot.data.docs[index].id);
-                                              }, child: Text("Yes, Received")),
-                                          FlatButton(
-                                              color:Colors.red,
-                                              onPressed: (){
-                                                
-                                              }, child: Text("Cancel Order")),
-                                        ],
-                                      )
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal:18.0),
+                                  child: Divider(
+                                    height: 20,
+                                    thickness: 2,
+                                  ),
+                                ),
+                                snapshot.data.docs[index].get("Book_Taken_from_Seller")==false?
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("Have you collected the book from seller or want to cancel?"),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            FlatButton(
+                                              color:Colors.greenAccent,
+                                                onPressed: (){
+                                                _confirming_received_from_seller(snapshot.data.docs[index].id);
+                                                }, child: Text("Yes, Received")),
+                                            FlatButton(
+                                                color:Colors.red,
+                                                onPressed: (){
 
-                                    ],
-                                  ):
-                                  Column(
-                                    children: [
-                                      Text("Book Received Date: ${getCustomFormattedDateTime(snapshot.data.docs[index].get("Book_Taken_from_Seller_Timestamp").toDate().toString(),'dd MMMM yyyy').toString()}"),
-                                    ],
-                                  )
-                            ],
+                                                }, child: Text("Cancel Order")),
+                                          ],
+                                        )
+
+                                      ],
+                                    ):
+                                    Column(
+                                      children: [
+                                        Text("Book Received Date: ${getCustomFormattedDateTime(snapshot.data.docs[index].get("Book_Taken_from_Seller_Timestamp").toDate().toString(),'dd MMMM yyyy').toString()}"),
+                                      ],
+                                    )
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                }),
-              )
-            ],
-          );
-        },
-      ),
+                        );
+                  }),
+                )
+              ],
+            );
+          },
+        ),
 
     );
   }
