@@ -90,6 +90,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                           child: chat['from'] == second_user.id
                               ? Row(
                                   mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CircleAvatar(
                                       radius: 24.0,
@@ -129,6 +130,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                 )
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Column(
                                       crossAxisAlignment:
