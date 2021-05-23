@@ -24,7 +24,8 @@ import 'UI/Transactions/BuyerTransaction_Category/Completed_transaction.dart';
 import 'UI/Transactions/Transactions_Seller.dart';
 import 'UI/Transactions/SellerTransaction_Category/Completed_Seller_Transaction.dart';
 import 'UI/Transactions/AllTransactions.dart';
-
+import 'UI/Profile/Aboutus.dart';
+import 'UI/Profile/ContactUs.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -63,6 +64,8 @@ class bookollab extends StatelessWidget {
         Completed_Seller_Transaction.id: (context) =>
             Completed_Seller_Transaction(),
         AllTransactions.id: (context) => AllTransactions(),
+        Aboutus.id:(context) => Aboutus(),
+        ContactUs.id:(context) =>ContactUs(),
       },
     );
   }

@@ -1,4 +1,6 @@
 import 'package:bookollab/UI/Homepage.dart';
+import 'package:bookollab/UI/Profile/Aboutus.dart';
+import 'package:bookollab/UI/Profile/ContactUs.dart';
 import 'package:bookollab/UI/Transactions/AllTransactions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -135,6 +137,63 @@ class _ProfilePageState extends State<ProfilePage> {
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: Text("All Transactions",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:18.0),
+                child: Divider(
+                  height: 20,
+                  thickness: 2,
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushNamed(context, Aboutus.id);
+                },
+                child: Row(
+                  children: [
+                    SizedBox(width: 25,),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset("UIAssets/Profile/Iconfeatherinfo.png"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text("About Us",
+                        style: TextStyle(
+                            fontSize: 15
+                        ),),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:18.0),
+                child: Divider(
+                  height: 20,
+                  thickness: 2,
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  Navigator.pushNamed(context, ContactUs.id);
+
+                },
+                child: Row(
+                  children: [
+                    SizedBox(width: 25,),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset("UIAssets/Profile/Iconcall.png"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text("Need Support ?",
                         style: TextStyle(
                             fontSize: 15
                         ),),

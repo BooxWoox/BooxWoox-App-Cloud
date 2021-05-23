@@ -8,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 final _firestore=FirebaseFirestore.instance;
 class CreateAccountPage extends StatefulWidget {
   static String id='CreateAccountPage_Screen';
@@ -16,12 +18,13 @@ class CreateAccountPage extends StatefulWidget {
 }
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
-
+  bool checkValueBox=false;
   String _verificationCode;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String phoneNumber = ""; //enter your 10 digit number
   int minNumber = 1000;
   int maxNumber = 9999;
+
   String countryCode ="+91";
 
   String otp_typed="";
@@ -256,6 +259,33 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   SizedBox(
                     height: 40,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        value: checkValueBox,
+                        onChanged: (value) {
+                          setState(() {
+                            checkValueBox=value;
+                          });
+
+                      },
+                      ),
+                      Text("I accept all "),
+                      GestureDetector(
+                        onTap: (){
+                          launch('https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
+                        },
+                          child: Text("Terms & conditions",
+                          style: TextStyle(
+                            color: Colors.amber
+                          ),))
+                      
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Center(
                     child: RaisedButton(
                       child: Padding(
@@ -280,7 +310,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         borderRadius: BorderRadius.circular(21),
                       ),
                       onPressed: () {
-                        if(check_parameters(username_typed, phoneNumber, email_typed, password_typed, confirmpassword_typed,fullname_typed)){
+                        if(check_parameters(username_typed, phoneNumber, email_typed, password_typed, confirmpassword_typed,fullname_typed,checkValueBox)){
                           _verifyPhone();
                           //show bottomsheet with otp verification
                           showModalBottomSheet(context: context,
@@ -444,7 +474,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     }
 
   }
-  bool check_parameters(String username,String Phone,String email,String pass,String comf_pass, String fullname_typed){
+  bool check_parameters(String username,String Phone,String email,String pass,String comf_pass, String fullname_typed,bool termsCheckBox){
     if(!email.trim().contains('@')){
       _onBasicErrorPressed(context, "Invalid Email Address");
       return false;
@@ -465,7 +495,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       _onBasicErrorPressed(context, "Passwords do not match");
       return false;
     }
+    if(pass.length<6){
+      _onBasicErrorPressed(context, "Minimum length of Password is 6 characters");
+      return false;
+    }
 
+    if(termsCheckBox==false||termsCheckBox==null){
+      _onBasicWaitingAlertPressed(context, "Please accept the terms and conditions");
+    }
     return true;
   }
   _onBasicWaitingAlertPressed(context,String descrip) async {

@@ -50,6 +50,8 @@ dependencies:
   flutter_switch: ^0.3.1
   unicorndial: ^1.1.5
   flutter_rating_bar: ^4.0.0
+  url_launcher: ^6.0.4
+  webviewx: ^0.0.4
   intl: ^0.17.0
 dev_dependencies:
   flutter_test:
