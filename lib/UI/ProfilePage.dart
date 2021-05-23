@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Transactions/Transactions_Seller.dart';
 import 'Transactions/Transactions_Buyer.dart';
+import 'package:bookollab/UI/LoginPage.dart';
 final FirebaseAuth _auth=FirebaseAuth.instance;
 final _firestore=FirebaseFirestore.instance;
 class ProfilePage extends StatefulWidget {
@@ -131,8 +132,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     SizedBox(width: 25,),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset("UIAssets/Homepage/bookollab_icon.png"),
+                      padding: const EdgeInsets.all(3.0),
+                      child: CircleAvatar(child: Icon(Icons.attach_money,color: Colors.black54,),backgroundColor: Colors.black26,),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -211,6 +212,8 @@ class _ProfilePageState extends State<ProfilePage> {
               GestureDetector(
                 onTap: (){
                   print("Logout");
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacementNamed(context, LoginPage.id);
                 },
                 child: Row(
                   children: [

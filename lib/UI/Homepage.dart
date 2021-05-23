@@ -39,39 +39,18 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child:  ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text('User'),
-              decoration: BoxDecoration(
-                color: Color(0xFFF7C100),
-              ),
+
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.person_pin_sharp),
             ),
-            ListTile(
-              title: Text('Add Book'),
-              onTap: () {
-                Navigator.pushNamed(context, AddBookPage.id);
-              },
-            ),
-            ListTile(
-              title: Text('Sign out'),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(context, LoginPage.id);
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                //Navigator.pop(context);
-              },
-            ),
+            Text ("Welcome"),
           ],
         ),
-      ),
-      appBar: AppBar(
-        title: Text ("Welcome"),
         actions: [
           GestureDetector(
             onTap: (){
