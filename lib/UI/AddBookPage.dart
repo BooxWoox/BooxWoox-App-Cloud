@@ -78,8 +78,15 @@ class _AddBookPageState extends State<AddBookPage>  {
           onPressed: () async{
             if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone,Seller_fullname)){
               //checks passed
+              //TEMPORARY SEARCHING ALGORITHM(SPLITIING STRING METHOD)
+              List<String> splitList=BookName.split(' ');
+              List<String> indexList=[];
+              for(int i=0;i<splitList.length;i++){
+                for(int j=0;j<splitList[i].length + i;j++){
+                  indexList.add(splitList[i].substring(0,j).toLowerCase());
+                }
+              }
               //backend starts
-
               String useruid=FirebaseAuth.instance.currentUser.uid;
               String uploadname=useruid+DateTime.now().toString()+BookName;
               var reference=_firebaseStorage.ref()
@@ -113,6 +120,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                     "seller_address":pickup_address,
                     'seller_UPI':seller_UPI,
                     "seller_phoneNumber":seller_phone,
+                    "SearchingIndex":indexList,
                     "category":"Unknown",
                   }).then((value) {
 
@@ -719,6 +727,7 @@ class _AddBookPageState extends State<AddBookPage>  {
       });
     });
   }
+
 
 }
 

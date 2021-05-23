@@ -10,6 +10,7 @@ import 'Book_info.dart';
 import 'AddBookPage.dart';
 import '../Models/Book_info_model.dart';
 import 'package:unicorndial/unicorndial.dart';
+import 'package:getwidget/getwidget.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -23,13 +24,16 @@ class maindisplaypage extends StatefulWidget {
 class _maindisplaypageState extends State<maindisplaypage> {
   List<String> Homepage_Cat = [];
   List<homepage_items_featured> featured = [];
-
+  List<homepage_items_featured> latestbooks = [];
+  List<homepage_items_featured> BestRated = [];
+  List TotalBookName = [];
+  List TotalBookCollID=[];
   @override
   void initState() {
     //initiaise to get list of homepage categories from database
     setState(() {
       home_cat_get();
-      Featured_items_get();
+      Category_items();
     });
     super.initState();
   }
@@ -95,33 +99,52 @@ class _maindisplaypageState extends State<maindisplaypage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 45,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: TextField(
-                    autocorrect: false,
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(
-                        Icons.search,
-                        color: Color(0xff7D7D7D),
-                      ),
-                      fillColor: Color(0xffEBEBEB),
-                      hintText: "Search",
-                      filled: true,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Color(0xff707070)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Color(0xff707070)),
-                      ),
+              child: GFSearchBar(
+                searchList: TotalBookName,
+                searchQueryBuilder: (query, list) {
+                  return list
+                      .where((item) =>
+                      item.toLowerCase().contains(query.toLowerCase()))
+                      .toList();
+                },
+                overlaySearchListItemBuilder: (item) {
+                  return Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      item,
+                      style: const TextStyle(fontSize: 18),
                     ),
-                  ),
-                ),
+                  );
+                },
+                onItemSelected: (item) {
+
+                  int index=TotalBookName.indexOf(item);
+                  _firestore.collection("Book_Collection").doc(TotalBookCollID[index]).get().then((value) {
+                    String bkname = value.get("BookName");
+                    String author = value.get("Author");
+                    String ImageUrl = value.get("ImageUrl");
+                    String coll_type = value.get("Homepage_category");
+                    String original_loc = value.id.toString().trim();
+                    String owneruid = value.get("OwnerUID");
+                    String selleraddress = value.get("seller_address");
+                    String sellerphn = value.get("seller_phoneNumber");
+                    bool availability = value.get("Availability");
+                    String sellerFullname=value.get("SellerFullName");
+                    Navigator.pushNamed(context, Book_info.id,
+                        arguments: maindisp_book_info_model(
+                            homepage_items_featured(
+                                author,
+                                bkname,
+                                coll_type,
+                                ImageUrl,
+                                original_loc,
+                                owneruid,
+                                selleraddress,
+                                sellerphn,
+                                availability,
+                                sellerFullname)));
+                  });
+                },
               ),
             ),
             Expanded(
@@ -145,13 +168,39 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Container(
+                        Homepage_Cat[index]=="Featured"?Container(
                           height: 210,
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: featured.length,
+                              itemCount: featured.length+1,
                               itemBuilder: (context, itemIndex) {
-                                return InkWell(
+                                return itemIndex>featured.length-1?Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap:(){
+                                          //GOTO VIEW ALL PAGE
+                                           },
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.amberAccent,
+                                              child: Icon(Icons.remove_red_eye_rounded,color: Colors.white,),
+                                              radius: 35,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("See all"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10,)
+                                  ],
+                                ):InkWell(
                                   onTap: () {
                                     //goto book info page
                                     Navigator.pushNamed(context, Book_info.id,
@@ -212,7 +261,196 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                   ),
                                 );
                               }),
-                        )
+                        ):Homepage_Cat[index]=="Latest Books"?
+                        Container(
+                          height: 210,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: latestbooks.length+1,
+                              itemBuilder: (context, itemIndex) {
+                                return itemIndex>latestbooks.length-1?Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap:(){
+                                          //GOTO VIEW ALL PAGE
+                                        },
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.amberAccent,
+                                              child: Icon(Icons.remove_red_eye_rounded,color: Colors.white,),
+                                              radius: 35,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("See all"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10,)
+                                  ],
+                                ):InkWell(
+                                  onTap: () {
+                                    //goto book info page
+                                    Navigator.pushNamed(context, Book_info.id,
+                                        arguments: maindisp_book_info_model(
+                                            latestbooks[itemIndex]));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Card(
+                                          elevation: 3,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(16),
+                                          ),
+                                          child: Container(
+                                            height: 140,
+                                            width: 100,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(16),
+                                              child: Image.network(
+                                                latestbooks[itemIndex].ImageURl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              latestbooks[itemIndex].BookName,
+                                              style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 16,
+                                                fontFamily: "LeelawUI",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              latestbooks[itemIndex].Author,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14,
+                                                  fontFamily: "LeelawUI"),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ):
+                        Container(
+                          height: 210,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: BestRated.length+1,
+                              itemBuilder: (context, itemIndex) {
+                                return itemIndex>BestRated.length-1?Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap:(){
+                                          //GOTO VIEW ALL PAGE
+                                        },
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.amberAccent,
+                                              child: Icon(Icons.remove_red_eye_rounded,color: Colors.white,),
+                                              radius: 35,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("See all"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10,)
+                                  ],
+                                ): InkWell(
+                                  onTap: () {
+                                    //goto book info page
+                                    Navigator.pushNamed(context, Book_info.id,
+                                        arguments: maindisp_book_info_model(
+                                            BestRated[itemIndex]));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Card(
+                                          elevation: 3,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(16),
+                                          ),
+                                          child: Container(
+                                            height: 140,
+                                            width: 100,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(16),
+                                              child: Image.network(
+                                                BestRated[itemIndex].ImageURl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              BestRated[itemIndex].BookName,
+                                              style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 16,
+                                                fontFamily: "LeelawUI",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              BestRated[itemIndex].Author,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14,
+                                                  fontFamily: "LeelawUI"),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+
                       ],
                     );
                   }),
@@ -222,7 +460,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
       );
   }
 
-  void Featured_items_get() async {
+  void Category_items() async {
     try {
       await _firestore.collection("Book_Collection").get().then((value) {
         for (var i in value.docs) {
@@ -237,27 +475,57 @@ class _maindisplaypageState extends State<maindisplaypage> {
           String sellerphn = i.get("seller_phoneNumber");
           bool availability = i.get("Availability");
           String sellerFullname=i.get("SellerFullName");
-          featured.add(homepage_items_featured(
-              author,
-              bkname,
-              coll_type,
-              ImageUrl,
-              original_loc,
-              owneruid,
-              selleraddress,
-              sellerphn,
-              availability,
-              sellerFullname));
+          List homepage_tag_cat=i.get("tags");
+          TotalBookName.add(bkname);
+          TotalBookCollID.add(i.id);
+          if(homepage_tag_cat.contains("featured")){
+            featured.add(homepage_items_featured(
+                author,
+                bkname,
+                coll_type,
+                ImageUrl,
+                original_loc,
+                owneruid,
+                selleraddress,
+                sellerphn,
+                availability,
+                sellerFullname));
+          }
+          if(homepage_tag_cat.contains("latest books")){
+            latestbooks.add(homepage_items_featured(
+                author,
+                bkname,
+                coll_type,
+                ImageUrl,
+                original_loc,
+                owneruid,
+                selleraddress,
+                sellerphn,
+                availability,
+                sellerFullname));
+          }
+          if(homepage_tag_cat.contains("best rated")){
+            BestRated.add(homepage_items_featured(
+                author,
+                bkname,
+                coll_type,
+                ImageUrl,
+                original_loc,
+                owneruid,
+                selleraddress,
+                sellerphn,
+                availability,
+                sellerFullname));
+          }
         }
         setState(() {
-          print(featured);
+
         });
       });
     } catch (e) {
       print(e.message);
     }
   }
-
   void home_cat_get() async {
     try {
       await _firestore.collection("Homepage_item_list").get().then((value) {
