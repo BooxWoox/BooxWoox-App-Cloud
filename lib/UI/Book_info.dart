@@ -167,11 +167,20 @@ class _Book_infoState extends State<Book_info> {
             }).then((value) {
               Navigator.pop(context);
               _onBasicSuccessAlert(context, "Payment Successfully Completed");
+              _createChat(useruid,itemmodeltemp.item.OwnerUID.trim());
             });
           });
         });
       });
     });
+  }
+
+  void _createChat(firstUser,secondUser){
+    var fsDoc=_firestore.collection("Users").doc(firstUser).collection("Chat").doc(secondUser);
+    fsDoc.set({"is_active":true});
+
+    var sfDoc=_firestore.collection("Users").doc(secondUser).collection("Chat").doc(firstUser);
+    sfDoc.set({"is_active":true});
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -360,7 +369,7 @@ class _Book_infoState extends State<Book_info> {
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Colors.grey[290],
-                                      hintText: "Type your delivery address..",
+                                      hintText: "Type your full name..",
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(20.0)),
