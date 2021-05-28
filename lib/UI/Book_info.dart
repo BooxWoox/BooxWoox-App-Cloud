@@ -148,14 +148,15 @@ class _Book_infoState extends State<Book_info> {
             countDocuments("Delivery_System").then((value) {
               _firestore.collection("Delivery_System").doc(response.orderId+useruid).set({
                 'Seq_No':value.toInt()+1,
+                'BookName':itemmodeltemp.item.BookName,
                 'to_Name':Buyer_Fullname,
                 'from_Name':itemmodeltemp.item.Seller_FullName,
                 "order_creation_date":DateTime.now(),
                 'BookCollection_ID': itemmodeltemp.item.BookCollectionidentity,
                 'from_address': itemmodeltemp.item.Seller_address,
                 'to_address': Buyer_address,
-                'Buyer_PhoneNumber': Buyer_phnumber,
-                'Seller_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
+                'to_PhoneNumber': Buyer_phnumber,
+                'from_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
                 'Order_ID': response.orderId,
                 "Status": "Delivering",
                 "SellerUID": itemmodeltemp.item.OwnerUID.trim(),

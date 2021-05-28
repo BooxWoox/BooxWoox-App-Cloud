@@ -54,6 +54,7 @@ dependencies:
   webviewx: ^0.0.4
   getwidget: ^2.0.2
   intl: ^0.17.0
+  awesome_notifications: ^0.0.6+7
 dev_dependencies:
   flutter_test:
     sdk: flutter

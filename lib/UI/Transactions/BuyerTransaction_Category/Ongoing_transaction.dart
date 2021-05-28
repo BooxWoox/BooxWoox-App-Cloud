@@ -16,7 +16,7 @@ import 'package:dio/dio.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+
 
 final _firestore=FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
@@ -137,7 +137,8 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                               if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
                                                 _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
                                               }else{
-                                                ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt);
+                                                ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt,
+                                                    snapshot.data.docs[index].get("Book_Name"));
                                               }
                                         }),
                                         Text("Return"),
@@ -202,7 +203,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
 
     );
   }
-  void ReturnInitaiation(String docID,String to_address,String from_address,String BuyerUID,String SellerUID,double Buyershareamt,double Sellershareamt,String buyerphn,String sellerphn,String orderID,double totalamt){
+  void ReturnInitaiation(String docID,String to_address,String from_address,String BuyerUID,String SellerUID,double Buyershareamt,double Sellershareamt,String buyerphn,String sellerphn,String orderID,double totalamt,String bookname){
     _firestore.collection("Transactions").doc(docID).update({
       "Buyer_Return_Initiation":true,
     }).then((value) {
@@ -215,6 +216,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
         countDocuments("Delivery_System").then((value) {
           _firestore.collection("Delivery_System").doc(orderID+SellerUID).set({
             "Seq_No":value.toInt()+1,
+            "BookName":bookname,
             "Order_ID":orderID,
             "Total_Amt":totalamt,
             "Status":"Delivering",
@@ -224,8 +226,8 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
             "SellerShare_Amt":Sellershareamt,
             "from_Name":Buyer_fullname,
             "to_Name":Seller_fullname,
-            "Buyer_PhoneNumber":buyerphn,
-            "Seller_PhoneNumber":sellerphn,
+            "from_PhoneNumber":buyerphn,
+            "to_PhoneNumber":sellerphn,
             "to_address":to_address,
             "order_creation_date":DateTime.now(),
             "from_address":from_address,

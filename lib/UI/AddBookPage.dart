@@ -98,7 +98,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                   _firestore.collection("Book_Collection").doc(docid).set({
                     "Book_Collection_ID":docid,
                     "Author":Author,
-                    "adminapproval":1,
+                    "adminapproval":0,//by default false
                     "tags":[""],
                     "Availability":true,
                     "BookName":BookName,
@@ -153,7 +153,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(
+                    child: TextField( 
                       onChanged: (value){
                         BookName =value;
                       },

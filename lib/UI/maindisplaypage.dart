@@ -462,7 +462,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
 
   void Category_items() async {
     try {
-      await _firestore.collection("Book_Collection").get().then((value) {
+      await _firestore.collection("Book_Collection").where("adminapproval",isEqualTo: 1).get().then((value) {
         for (var i in value.docs) {
           print(i.get("BookName"));
           String bkname = i.get("BookName");
