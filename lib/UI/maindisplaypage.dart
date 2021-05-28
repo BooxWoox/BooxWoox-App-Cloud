@@ -11,6 +11,10 @@ import 'AddBookPage.dart';
 import '../Models/Book_info_model.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../Notifications.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -28,9 +32,30 @@ class _maindisplaypageState extends State<maindisplaypage> {
   List<homepage_items_featured> BestRated = [];
   List TotalBookName = [];
   List TotalBookCollID=[];
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
   @override
   void initState() {
     //initiaise to get list of homepage categories from database
+    AwesomeNotifications().initialize(
+        'resource://drawable/res_app_icon',
+        [
+          // Your notification channels go here
+          NotificationChannel(
+              channelKey: 'basic_channel',
+              channelName: 'Basic notifications',
+              channelDescription: 'Notification channel for basic tests',
+              defaultColor: Color(0xFF9D50DD),
+              ledColor: Colors.white
+          )
+        ]
+    );
+    FirebaseMessaging.onMessage.listen(_firebaseonforegrounfHandler);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    Notifications.init();
     setState(() {
       home_cat_get();
       Category_items();
@@ -539,5 +564,25 @@ class _maindisplaypageState extends State<maindisplaypage> {
     }
 
     print(Homepage_Cat);
+  }
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+  // Use this method to automatically convert the push data, in case you gonna use our data standard
+  AwesomeNotifications().createNotificationFromJsonData(message.data);
+
+}
+
+Future<void> _firebaseonforegrounfHandler(RemoteMessage message) async{
+  print('Got a message whilst in the foreground!');
+  print('Message data: ${message.data}');
+  if (message.notification != null) {
+    print('Message also contained a notification: ${message.notification}');
   }
 }
