@@ -17,7 +17,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../Notifications.dart';
 
 final _firestore = FirebaseFirestore.instance;
-
 class maindisplaypage extends StatefulWidget {
   static String id = 'maindisplaypage_Screen';
 
@@ -26,6 +25,7 @@ class maindisplaypage extends StatefulWidget {
 }
 
 class _maindisplaypageState extends State<maindisplaypage> {
+
   List<String> Homepage_Cat = [];
   List<homepage_items_featured> featured = [];
   List<homepage_items_featured> latestbooks = [];
@@ -39,6 +39,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
   @override
   void initState() {
     //initiaise to get list of homepage categories from database
+
     AwesomeNotifications().initialize(
         'resource://drawable/res_app_icon',
         [
@@ -52,10 +53,13 @@ class _maindisplaypageState extends State<maindisplaypage> {
           )
         ]
     );
+
     FirebaseMessaging.onMessage.listen(_firebaseonforegrounfHandler);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+
     Notifications.init();
+
     setState(() {
       home_cat_get();
       Category_items();
@@ -567,6 +571,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
   }
 }
 
+
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -585,4 +591,5 @@ Future<void> _firebaseonforegrounfHandler(RemoteMessage message) async{
   if (message.notification != null) {
     print('Message also contained a notification: ${message.notification}');
   }
+
 }

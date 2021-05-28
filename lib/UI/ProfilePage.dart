@@ -13,6 +13,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Transactions/Transactions_Seller.dart';
 import 'Transactions/Transactions_Buyer.dart';
 import 'package:bookollab/UI/LoginPage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 final FirebaseAuth _auth=FirebaseAuth.instance;
 final _firestore=FirebaseFirestore.instance;
 class ProfilePage extends StatefulWidget {
@@ -212,6 +215,8 @@ class _ProfilePageState extends State<ProfilePage> {
               GestureDetector(
                 onTap: (){
                   print("Logout");
+                  String useruid=_auth.currentUser.uid;
+                  notificationUserDeactive(useruid);
                   FirebaseAuth.instance.signOut();
                   Navigator.pushReplacementNamed(context, LoginPage.id);
                 },
@@ -238,5 +243,16 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  void notificationUserDeactive(String uid) {
+    FirebaseMessaging firebaseMessaging=FirebaseMessaging.instance;
+    firebaseMessaging.getToken().then((deviceToken) {
+      print(deviceToken);
+      _firestore.collection("Notification_token").doc(deviceToken).update({
+        'isActive':false,
+        'Timestamp':DateTime.now(),
+      });
+    });
   }
 }

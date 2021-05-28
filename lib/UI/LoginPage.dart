@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
-
+final _firestore=FirebaseFirestore.instance;
 class LoginPage extends StatefulWidget {
   static String id='Login_Screen';
   @override
@@ -151,8 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                       //login server starts calling API
                       try{
                         var user=await _auth.signInWithEmailAndPassword(email: email_typed.trim().toLowerCase(), password: pass_typed).then((value){
-                          print("Successfully Logged in as ${value.user.uid}");
 
+                          print("Successfully Logged in as ${value.user.uid}");
                           Navigator.pushReplacementNamed(context, Homepage.id);
                         });
                         ;

@@ -8,7 +8,13 @@ import 'dart:async';
 import 'package:bookollab/UI/Chat/chat_homepage.dart';
 import 'package:bookollab/UI/Notification/notification.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+final _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
 class Homepage extends StatefulWidget {
   static String id='Homepage_Screen';
   @override
@@ -28,6 +34,8 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    String useruid=_auth.currentUser.uid;
+    notificationUserActive(useruid);
     _pageController = PageController(initialPage: _pageIndex);
   }
   @override
@@ -112,5 +120,18 @@ class _HomepageState extends State<Homepage> {
   }
   void onTabTapped(int index) {
     this._pageController.animateToPage(index,duration: const Duration(milliseconds: 500),curve: Curves.easeInOut);
+  }
+  void notificationUserActive(String uid) {
+
+    FirebaseMessaging firebaseMessaging=FirebaseMessaging.instance;
+    firebaseMessaging.getToken().then((deviceToken) {
+      print(deviceToken);
+      _firestore.collection("Notification_token").doc(deviceToken).set({
+        'device_Token':deviceToken,
+        'UserUID':uid.trim(),
+        'isActive':true,
+        'Timestamp':DateTime.now(),
+      });
+    });
   }
 }
