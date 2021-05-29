@@ -1,4 +1,5 @@
 import 'package:bookollab/Models/maindisp_book_info_model.dart';
+import 'package:bookollab/UI/seeAllpage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
@@ -86,22 +87,22 @@ class _maindisplaypageState extends State<maindisplaypage> {
         ),
       ),
     );
-    floatingButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Books(Sell)",
-        currentButton: FloatingActionButton(
-          onPressed: () {
-            print('addbooksell');
-            Navigator.pushNamed(context, AddBookPage.id);
-          },
-          heroTag: "addbookssell",
-          backgroundColor: Colors.orange,
-          mini: true,
-          child: Icon(Icons.note_add),
-        ),
-      ),
-    );
+    // floatingButtons.add(
+    //   UnicornButton(
+    //     hasLabel: true,
+    //     labelText: "Add Books(Sell)",
+    //     currentButton: FloatingActionButton(
+    //       onPressed: () {
+    //         print('addbooksell');
+    //         Navigator.pushNamed(context, AddBookPage.id);
+    //       },
+    //       heroTag: "addbookssell",
+    //       backgroundColor: Colors.orange,
+    //       mini: true,
+    //       child: Icon(Icons.note_add),
+    //     ),
+    //   ),
+    // );
     if (Homepage_Cat.isEmpty) {
       return Scaffold(
         body: Center(
@@ -211,6 +212,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                       child: InkWell(
                                         onTap:(){
                                           //GOTO VIEW ALL PAGE
+                                          Navigator.pushNamed(context, seeAllpage.id);
                                            },
                                         child: Column(
                                           children: [
@@ -305,6 +307,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                       child: InkWell(
                                         onTap:(){
                                           //GOTO VIEW ALL PAGE
+                                          Navigator.pushNamed(context, seeAllpage.id);
+
                                         },
                                         child: Column(
                                           children: [
@@ -399,6 +403,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                       child: InkWell(
                                         onTap:(){
                                           //GOTO VIEW ALL PAGE
+                                          Navigator.pushNamed(context, seeAllpage.id);
+
                                         },
                                         child: Column(
                                           children: [
