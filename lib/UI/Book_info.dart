@@ -31,7 +31,7 @@ class Book_info extends StatefulWidget {
 class _Book_infoState extends State<Book_info> {
   String Book_name = "";
   String Buyer_address = "";
-  String Buyer_Fullname="";
+  String Buyer_Fullname = "";
   String doc_address = "";
   String Buyer_phnumber = "";
   double _quotedrentpercent = 0;
@@ -78,7 +78,7 @@ class _Book_infoState extends State<Book_info> {
     _firestore.collection("Transactions").doc(response.orderId).set({
       'BookCollection_ID': itemmodeltemp.item.BookCollectionidentity,
       'BuyerUID': useruid,
-      'BuyerFullName':Buyer_Fullname.trim(),
+      'BuyerFullName': Buyer_Fullname.trim(),
       'ImageURL': itemmodeltemp.item.ImageURl,
       'SellerUID': itemmodeltemp.item.OwnerUID,
       'Payment_Status': "Success",
@@ -90,7 +90,7 @@ class _Book_infoState extends State<Book_info> {
       'Order_Status': "Ongoing",
       'Buyer_Address': Buyer_address,
       'Buyer_PhoneNumber': Buyer_phnumber,
-      'SellerFullName':itemmodeltemp.item.Seller_FullName,
+      'SellerFullName': itemmodeltemp.item.Seller_FullName,
       'Seller_Address': itemmodeltemp.item.Seller_address,
       'Seller_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
       'Book_Taken_from_Seller': false,
@@ -146,12 +146,15 @@ class _Book_infoState extends State<Book_info> {
             "BuyerUID": useruid
           }).then((value) {
             countDocuments("Delivery_System").then((value) {
-              _firestore.collection("Delivery_System").doc(response.orderId+useruid).set({
-                'Seq_No':value.toInt()+1,
-                'BookName':itemmodeltemp.item.BookName,
-                'to_Name':Buyer_Fullname,
-                'from_Name':itemmodeltemp.item.Seller_FullName,
-                "order_creation_date":DateTime.now(),
+              _firestore
+                  .collection("Delivery_System")
+                  .doc(response.orderId + useruid)
+                  .set({
+                'Seq_No': value.toInt() + 1,
+                'BookName': itemmodeltemp.item.BookName,
+                'to_Name': Buyer_Fullname,
+                'from_Name': itemmodeltemp.item.Seller_FullName,
+                "order_creation_date": DateTime.now(),
                 'BookCollection_ID': itemmodeltemp.item.BookCollectionidentity,
                 'from_address': itemmodeltemp.item.Seller_address,
                 'to_address': Buyer_address,
@@ -168,7 +171,7 @@ class _Book_infoState extends State<Book_info> {
             }).then((value) {
               Navigator.pop(context);
               _onBasicSuccessAlert(context, "Payment Successfully Completed");
-              _createChat(useruid,itemmodeltemp.item.OwnerUID.trim());
+              _createChat(useruid, itemmodeltemp.item.OwnerUID.trim());
             });
           });
         });
@@ -176,12 +179,20 @@ class _Book_infoState extends State<Book_info> {
     });
   }
 
-  void _createChat(firstUser,secondUser){
-    var fsDoc=_firestore.collection("Users").doc(firstUser).collection("Chat").doc(secondUser);
-    fsDoc.set({"is_active":true});
+  void _createChat(firstUser, secondUser) {
+    var fsDoc = _firestore
+        .collection("Users")
+        .doc(firstUser)
+        .collection("Chat")
+        .doc(secondUser);
+    fsDoc.set({"is_active": true});
 
-    var sfDoc=_firestore.collection("Users").doc(secondUser).collection("Chat").doc(firstUser);
-    sfDoc.set({"is_active":true});
+    var sfDoc = _firestore
+        .collection("Users")
+        .doc(secondUser)
+        .collection("Chat")
+        .doc(firstUser);
+    sfDoc.set({"is_active": true});
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -199,10 +210,10 @@ class _Book_infoState extends State<Book_info> {
       'Payment_ID': "NULL",
       'Book_Name': Book_name,
       'Order_Status': "Failed",
-      'BuyerFullName':Buyer_Fullname,
+      'BuyerFullName': Buyer_Fullname,
       'Buyer_Address': Buyer_address,
       'Buyer_PhoneNumber': Buyer_phnumber,
-      'SellerFullName':itemmodeltemp.item.Seller_FullName,
+      'SellerFullName': itemmodeltemp.item.Seller_FullName,
       'Seller_Address': itemmodeltemp.item.Seller_address,
       'Seller_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
       'Failure_Reason': response.message,
@@ -375,13 +386,13 @@ class _Book_infoState extends State<Book_info> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(20.0)),
                                         borderSide:
-                                        BorderSide(color: Colors.grey),
+                                            BorderSide(color: Colors.grey),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(20.0)),
                                         borderSide:
-                                        BorderSide(color: Colors.grey),
+                                            BorderSide(color: Colors.grey),
                                       ),
                                     ),
                                   ),
@@ -511,9 +522,9 @@ class _Book_infoState extends State<Book_info> {
                                         Buyer_address.trim().length == 0 ||
                                         Buyer_address == "" ||
                                         Buyer_phnumber == null ||
-                                        Buyer_phnumber == ""||
-                                    Buyer_Fullname==null||
-                                    Buyer_Fullname.trim().length==0) {
+                                        Buyer_phnumber == "" ||
+                                        Buyer_Fullname == null ||
+                                        Buyer_Fullname.trim().length == 0) {
                                       _onBasicWaitingAlertPressed(
                                           context, "All fields are mandatory");
                                     } else {
@@ -618,8 +629,14 @@ class _Book_infoState extends State<Book_info> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RatingBarIndicator(
-                      rating: 2.5,
-                      //TODO: Include actual ratings
+                      rating:
+                          ((Book_item_model.Likes + Book_item_model.Dislikes) >
+                                  0)
+                              ? (5 *
+                                  Book_item_model.Likes /
+                                  (Book_item_model.Likes +
+                                      Book_item_model.Dislikes))
+                              : 0,
                       itemBuilder: (context, index) => Icon(
                         Icons.star,
                         color: Colors.amber,
@@ -641,7 +658,7 @@ class _Book_infoState extends State<Book_info> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '\u{20B9}${_quotedrentpercent * Book_item_model.quotedDeposit / 100} ',
+                      '\u{20B9}${(_quotedrentpercent * Book_item_model.quotedDeposit / 100).toStringAsFixed(2)} ',
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
                     ),
@@ -665,33 +682,39 @@ class _Book_infoState extends State<Book_info> {
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 0),
                 child: Row(
                   children: [
-                    Book_item_model.availability
-                        ? InputChip(
-                            avatar: Icon(Icons.check),
-                            label: Text(
-                              'Available',
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Book_item_model.availability
+                          ? Text(
+                              ' AVAILABLE ',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'LeelawUI',
+                                  backgroundColor: Colors.green,
+                                  color: Colors.white),
+                            )
+                          : Text(
+                              ' OUT OF STOCK ',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'LeelawUI',
+                                  backgroundColor: Colors.redAccent,
+                                  color: Colors.white),
                             ),
-                            selectedColor: Colors.green,
-                            selected: true,
-                          )
-                        : InputChip(
-                            avatar: Icon(Icons.clear),
-                            label: Text(
-                              'Out of stock',
-                            ),
-                            selectedColor: Colors.red,
-                            selected: true,
-                          ),
+                    ),
                     SizedBox(
                       width: 4,
                     ),
-                    ChoiceChip(
-                      label: Text(
-                        Book_item_model.Condition,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Text(
+                        ' ${Book_item_model.Condition.toUpperCase()} ',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'LeelawUI',
+                            backgroundColor: Colors.blue,
+                            color: Colors.white),
                       ),
-                      labelStyle: TextStyle(color: Colors.white),
-                      selectedColor: Colors.blue,
-                      selected: true,
                     ),
                   ],
                 ),
@@ -704,7 +727,7 @@ class _Book_infoState extends State<Book_info> {
                 ),
               ),
               Card(
-                margin: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -728,14 +751,14 @@ class _Book_infoState extends State<Book_info> {
                               fontWeight: FontWeight.w600,
                               color: Colors.grey)),
                       Text(
-                          "Rent/Month: \u{20B9} ${_quotedrentpercent * Book_item_model.quotedDeposit / 100}",
+                          "Rent/Month: \u{20B9} ${(_quotedrentpercent * Book_item_model.quotedDeposit / 100).toStringAsFixed(2)}",
                           style: TextStyle(fontSize: 16)),
                       Text("Delivery charges: \u{20B9} ${_deliverycharges}",
                           style: TextStyle(fontSize: 16)),
                       Text(
-                          "Convenience fee: \u{20B9} ${0.02 * (Book_item_model.quotedDeposit + (_quotedrentpercent * Book_item_model.quotedDeposit / 100) + _deliverycharges)}",
+                          "Convenience fee: \u{20B9} ${(_commissionpercent/100 * (Book_item_model.quotedDeposit + (_quotedrentpercent * Book_item_model.quotedDeposit / 100) + _deliverycharges)).toStringAsFixed(2)}",
                           style: TextStyle(fontSize: 16)),
-                      Text("*2% of deposit + rent + delivery charges.",
+                      Text("*${_commissionpercent}% of deposit + rent + delivery charges.",
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -756,10 +779,10 @@ class _Book_infoState extends State<Book_info> {
                 ),
               ),
               Card(
-                margin: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal:16),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -777,7 +800,7 @@ class _Book_infoState extends State<Book_info> {
                 ),
               ),
               Card(
-                margin: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -795,7 +818,7 @@ class _Book_infoState extends State<Book_info> {
                 ),
               ),
               Card(
-                margin: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -1037,9 +1060,10 @@ class _Book_infoState extends State<Book_info> {
   ''';
     return text;
   }
+
   Future<int> countDocuments(String collectionID) async {
     QuerySnapshot _myDoc = await _firestore.collection(collectionID).get();
     List<DocumentSnapshot> _myDocCount = _myDoc.docs;
-    return (_myDocCount.length);  // Count of Documents in Collection
+    return (_myDocCount.length); // Count of Documents in Collection
   }
 }
