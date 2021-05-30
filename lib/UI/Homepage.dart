@@ -12,11 +12,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
+
 class Homepage extends StatefulWidget {
-  static String id='Homepage_Screen';
+  static String id = 'Homepage_Screen';
+
   @override
   _HomepageState createState() => _HomepageState();
 }
@@ -30,14 +31,16 @@ class _HomepageState extends State<Homepage> {
     maindisplaypage(),
     notification(),
   ];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    String useruid=_auth.currentUser.uid;
+    String useruid = _auth.currentUser.uid;
     notificationUserActive(useruid);
     _pageController = PageController(initialPage: _pageIndex);
   }
+
   @override
   void dispose() {
     _pageController.dispose();
@@ -47,27 +50,30 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
-          automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.person_pin_sharp),
-            ),
-            Text ("Welcome"),
-          ],
+        automaticallyImplyLeading: false,
+        title: InkWell(
+          onTap: (){
+            Navigator.pushNamed(context, Homepage.id);
+          },
+          child: Image.asset(
+            'UIAssets/title.png',
+            width: MediaQuery.of(context).size.width*0.45,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.centerLeft,
+          ),
         ),
         actions: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               print("userprofile click");
               Navigator.pushNamed(context, ProfilePage.id);
             },
-            child: Image.asset('UIAssets/Homepage/user_circle.png',
-            color: Colors.white,
-            fit: BoxFit.scaleDown,),
+            child: Image.asset(
+              'UIAssets/Homepage/user_circle.png',
+              color: Colors.white,
+              fit: BoxFit.scaleDown,
+            ),
           ),
         ],
         backgroundColor: Color(0xFFFFCC00),
@@ -98,39 +104,56 @@ class _HomepageState extends State<Homepage> {
             onTap: onTabTapped,
             backgroundColor: Colors.white,
             items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem( icon: Image.asset('UIAssets/Homepage/chat_icon.png'), title: Text("Home"),
-              activeIcon: Image.asset('UIAssets/Homepage/chat_icon.png',
-              color: Colors.orangeAccent,)),
-              BottomNavigationBarItem(icon: Image.asset('UIAssets/Homepage/bookollab_icon.png'), title: Text("official")
-              ,activeIcon: Image.asset('UIAssets/Homepage/bookollab_icon.png',color: Colors.orangeAccent,)),
-              BottomNavigationBarItem(icon: Image.asset('UIAssets/Homepage/notification_icon.png',), title: Text("notifications"),
-              activeIcon:Image.asset('UIAssets/Homepage/notification_icon.png',color: Colors.orangeAccent,) ),
+              BottomNavigationBarItem(
+                  icon: Image.asset('UIAssets/Homepage/chat_icon.png'),
+                  title: Text("Home"),
+                  activeIcon: Image.asset(
+                    'UIAssets/Homepage/chat_icon.png',
+                    color: Colors.orangeAccent,
+                  )),
+              BottomNavigationBarItem(
+                  icon: Image.asset('UIAssets/Homepage/bookollab_icon.png'),
+                  title: Text("official"),
+                  activeIcon: Image.asset(
+                    'UIAssets/Homepage/bookollab_icon.png',
+                    color: Colors.orangeAccent,
+                  )),
+              BottomNavigationBarItem(
+                  icon: Image.asset(
+                    'UIAssets/Homepage/notification_icon.png',
+                  ),
+                  title: Text("notifications"),
+                  activeIcon: Image.asset(
+                    'UIAssets/Homepage/notification_icon.png',
+                    color: Colors.orangeAccent,
+                  )),
             ],
-
           ),
         ),
       ),
-
     );
   }
+
   void onPageChanged(int page) {
     setState(() {
       this._pageIndex = page;
     });
   }
-  void onTabTapped(int index) {
-    this._pageController.animateToPage(index,duration: const Duration(milliseconds: 500),curve: Curves.easeInOut);
-  }
-  void notificationUserActive(String uid) {
 
-    FirebaseMessaging firebaseMessaging=FirebaseMessaging.instance;
+  void onTabTapped(int index) {
+    this._pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+  }
+
+  void notificationUserActive(String uid) {
+    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.getToken().then((deviceToken) {
       print(deviceToken);
       _firestore.collection("Notification_token").doc(deviceToken).set({
-        'device_Token':deviceToken,
-        'UserUID':uid.trim(),
-        'isActive':true,
-        'Timestamp':DateTime.now(),
+        'device_Token': deviceToken,
+        'UserUID': uid.trim(),
+        'isActive': true,
+        'Timestamp': DateTime.now(),
       });
     });
   }
