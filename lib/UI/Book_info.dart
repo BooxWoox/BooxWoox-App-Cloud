@@ -169,9 +169,18 @@ class _Book_infoState extends State<Book_info> {
                 'Total_Amt': finalrent,
               });
             }).then((value) {
-              Navigator.pop(context);
-              _onBasicSuccessAlert(context, "Payment Successfully Completed");
-              _createChat(useruid, itemmodeltemp.item.OwnerUID.trim());
+              //Notification setup to inform seller that somebody has purchased a book
+              
+              _firestore.collection("Notification_Messages").doc().set({
+                'userUID':itemmodeltemp.item.OwnerUID.trim(),
+                'isSeen':false,
+                'Timestamp':DateTime.now(),
+                'Message': "Your book ${itemmodeltemp.item.BookName} has been borrowed \n Please see in seller transaction about the details."
+              }).then((value) {
+                Navigator.pop(context);
+                _onBasicSuccessAlert(context, "Payment Successfully Completed");
+                _createChat(useruid,itemmodeltemp.item.OwnerUID.trim());
+              });
             });
           });
         });

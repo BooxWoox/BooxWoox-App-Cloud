@@ -51,7 +51,6 @@ class _Transactions_BuyerState extends State<Transactions_Buyer> with TickerProv
   }
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Column(
         children: [

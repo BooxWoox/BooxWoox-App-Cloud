@@ -29,6 +29,7 @@ class Ongoing_transaction_Buyer extends StatefulWidget {
 class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
   String Buyer_fullname="";
   String Seller_fullname="";
+  String Bkname="";
   @override
   Widget build(BuildContext context) {
     String UserUID=_auth.currentUser.uid.toString();
@@ -232,9 +233,15 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
             "order_creation_date":DateTime.now(),
             "from_address":from_address,
           });
+        }).then((value){
+          _firestore.collection("Notification_Messages").doc().set({
+            'userUID':SellerUID,
+            'isSeen':false,
+            'Timestamp':DateTime.now(),
+            'Message': "Borrower has initiated a return request for book ${bookname} \n It will take 5-6 days to be delivered to you."
+          });
         });
       });
-
     }).then((value) {
       _onBasicSuccessAlert(context, "Return Request Initiated");
     });
@@ -253,9 +260,12 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
     return DateFormat(dateFormat).format(docDateTime);
   }
   void cancelorderrequest(String docID,String to_address,String from_address,String BuyerUID,String SellerUID,double Buyershareamt,double Sellershareamt,String buyerphn,String sellerphn,String orderID,double totalamt){
+    String bkcollectionId="";
     _firestore.collection("Transactions").doc(docID).get().then((value) {
       Buyer_fullname=value.get("BuyerFullName");
       Seller_fullname=value.get("SellerFullName");
+      Bkname=value.get("Book_Name");
+      bkcollectionId=value.get("BookCollection_ID");
     }).then((value) {
       _firestore.collection("Transactions").doc(docID).delete().then((value) {
         _firestore.collection("Admin_Refund_Transactions").doc().set({
@@ -275,7 +285,19 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
           "Seller_Address":to_address,
         }).then((value){
           _firestore.collection("Delivery_System").doc(orderID+BuyerUID).delete().then((value) {
-            _onBasicSuccessAlert(context, "Order cancelled and money will be refunded with 3-4 working days");
+          }).then((value) {
+            _firestore.collection("Notification_Messages").doc().set({
+              'userUID':SellerUID,
+              'isSeen':false,
+              'Timestamp':DateTime.now(),
+              'Message': "Borrower has cancelled the request for book ${Bkname}"
+            });
+          }).then((value) {
+            _firestore.collection("Book_Collection").doc(bkcollectionId).update({
+              'Availability':true,
+            }).then((value){
+              _onBasicSuccessAlert(context, "Order cancelled and money will be refunded with 3-4 working days");
+            });
           });
         });
       });
