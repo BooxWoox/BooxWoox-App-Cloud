@@ -1,3 +1,4 @@
+import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,7 @@ class bookollab extends StatelessWidget {
         ConversationsPage.id: (context) => ConversationsPage(),
         RequestsPage.id: (context) => RequestsPage(),
         AddBookPage.id: (context) => AddBookPage(),
+        AllBooksPage.id: (context) => AllBooksPage(),
         testpayment.id: (context) => testpayment(),
         Transactions_Buyer.id: (context) => Transactions_Buyer(),
         Transactions_Seller.id: (context) => Transactions_Seller(),

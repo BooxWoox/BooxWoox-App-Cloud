@@ -4,8 +4,10 @@ class homepage_items_featured{
   String _Author;
   String _BookName;
   String _Collection_type;
-
-
+  int _Likes;
+  int _Dislikes;
+  double _Mrp;
+  double _QuotedPrice;
   String _ImageURl;
   String _BookCollectionidentity;
   String _OwnerUID;
@@ -26,6 +28,10 @@ class homepage_items_featured{
       this._BookName,
       this._Collection_type,
       this._ImageURl,
+      this._Likes,
+      this._Dislikes,
+      this._Mrp,
+      this._QuotedPrice,
       this._BookCollectionidentity,
       this._OwnerUID,
       this._Seller_address,
@@ -51,6 +57,8 @@ class homepage_items_featured{
     _ImageURl = value;
   }
 
+  double get QuotedPrice => _QuotedPrice;
+
   String get BookCollectionidentity => _BookCollectionidentity;
 
   set BookCollectionidentity(String value) {
@@ -58,6 +66,8 @@ class homepage_items_featured{
   }
 
   String get OwnerUID => _OwnerUID;
+
+  int get Likes => _Likes;
 
   set OwnerUID(String value) {
     _OwnerUID = value;
@@ -86,4 +96,8 @@ class homepage_items_featured{
   set Seller_FullName(String value) {
     _Seller_FullName = value;
   }
+
+  int get Dislikes => _Dislikes;
+
+  double get Mrp => _Mrp;
 }
