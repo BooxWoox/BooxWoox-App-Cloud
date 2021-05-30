@@ -128,8 +128,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                 });
               }).then((value) {
                 Navigator.pushNamed(context,Homepage.id);
-                _onBasicSuccessAlert(context, "Book has been successfully added");
-
+                _onBasicSuccessAlert(context, "Book has been successfully added for admin approval");
               });
             }
           },

@@ -1,5 +1,6 @@
 import 'package:bookollab/Models/maindisp_book_info_model.dart';
 import 'package:bookollab/UI/AllBooksPage.dart';
+import 'package:bookollab/UI/seeAllpage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
@@ -83,22 +84,22 @@ class _maindisplaypageState extends State<maindisplaypage> {
         ),
       ),
     );
-    floatingButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Books(Sell)",
-        currentButton: FloatingActionButton(
-          onPressed: () {
-            print('addbooksell');
-            Navigator.pushNamed(context, AddBookPage.id);
-          },
-          heroTag: "addbookssell",
-          backgroundColor: Colors.orange,
-          mini: true,
-          child: Icon(Icons.note_add),
-        ),
-      ),
-    );
+    // floatingButtons.add(
+    //   UnicornButton(
+    //     hasLabel: true,
+    //     labelText: "Add Books(Sell)",
+    //     currentButton: FloatingActionButton(
+    //       onPressed: () {
+    //         print('addbooksell');
+    //         Navigator.pushNamed(context, AddBookPage.id);
+    //       },
+    //       heroTag: "addbookssell",
+    //       backgroundColor: Colors.orange,
+    //       mini: true,
+    //       child: Icon(Icons.note_add),
+    //     ),
+    //   ),
+    // );
     if (Homepage_Cat.isEmpty) {
       return Scaffold(
         body: Center(
@@ -205,55 +206,224 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Homepage_Cat[index] == "Featured"
-                            ? Container(
-                                height: 210,
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: featured.length + 1,
-                                    itemBuilder: (context, itemIndex) {
-                                      return itemIndex > featured.length - 1
-                                          ? Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      Navigator.pushNamed(
-                                                          context,
-                                                          AllBooksPage.id);
-                                                    },
-                                                    child: Column(
-                                                      children: [
-                                                        CircleAvatar(
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .amberAccent,
-                                                          child: Icon(
-                                                            Icons
-                                                                .remove_red_eye_rounded,
-                                                            color: Colors.white,
-                                                          ),
-                                                          radius: 35,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child:
-                                                              Text("See all"),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                )
-                                              ],
+                        Homepage_Cat[index]=="Featured"?Container(
+                          height: 210,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: featured.length+1,
+                              itemBuilder: (context, itemIndex) {
+                                return itemIndex>featured.length-1?Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap:(){
+                                          //GOTO VIEW ALL PAGE
+                                          Navigator.pushNamed(context, seeAllpage.id);
+                                           },
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.amberAccent,
+                                              child: Icon(Icons.remove_red_eye_rounded,color: Colors.white,),
+                                              radius: 35,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("See all"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10,)
+                                  ],
+                                ):InkWell(
+                                  onTap: () {
+                                    //goto book info page
+                                    Navigator.pushNamed(context, Book_info.id,
+                                        arguments: maindisp_book_info_model(
+                                            featured[itemIndex]));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Card(
+                                          elevation: 3,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          ),
+                                          child: Container(
+                                            height: 140,
+                                            width: 100,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              child: Image.network(
+                                                featured[itemIndex].ImageURl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              featured[itemIndex].BookName,
+                                              style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 16,
+                                                fontFamily: "LeelawUI",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              featured[itemIndex].Author,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14,
+                                                  fontFamily: "LeelawUI"),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ):Homepage_Cat[index]=="Latest Books"?
+                        Container(
+                          height: 210,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: latestbooks.length+1,
+                              itemBuilder: (context, itemIndex) {
+                                return itemIndex>latestbooks.length-1?Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap:(){
+                                          //GOTO VIEW ALL PAGE
+                                          Navigator.pushNamed(context, seeAllpage.id);
+
+                                        },
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.amberAccent,
+                                              child: Icon(Icons.remove_red_eye_rounded,color: Colors.white,),
+                                              radius: 35,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("See all"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10,)
+                                  ],
+                                ):InkWell(
+                                  onTap: () {
+                                    //goto book info page
+                                    Navigator.pushNamed(context, Book_info.id,
+                                        arguments: maindisp_book_info_model(
+                                            latestbooks[itemIndex]));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Card(
+                                          elevation: 3,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(16),
+                                          ),
+                                          child: Container(
+                                            height: 140,
+                                            width: 100,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(16),
+                                              child: Image.network(
+                                                latestbooks[itemIndex].ImageURl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              latestbooks[itemIndex].BookName,
+                                              style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 16,
+                                                fontFamily: "LeelawUI",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              latestbooks[itemIndex].Author,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14,
+                                                  fontFamily: "LeelawUI"),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ):
+                        Container(
+                          height: 210,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: BestRated.length+1,
+                              itemBuilder: (context, itemIndex) {
+                                return itemIndex>BestRated.length-1?Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap:(){
+                                          //GOTO VIEW ALL PAGE
+                                          Navigator.pushNamed(context, seeAllpage.id);
+
+                                        },
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.amberAccent,
+                                              child: Icon(Icons.remove_red_eye_rounded,color: Colors.white,),
+                                              radius: 35,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("See all"),
                                             )
                                           : InkWell(
                                               onTap: () {
