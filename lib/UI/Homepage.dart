@@ -52,16 +52,11 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: InkWell(
-          onTap: (){
-            Navigator.pushNamed(context, Homepage.id);
-          },
-          child: Image.asset(
-            'UIAssets/title.png',
-            width: MediaQuery.of(context).size.width*0.45,
-            fit: BoxFit.fitWidth,
-            alignment: Alignment.centerLeft,
-          ),
+        title: Image.asset(
+          'UIAssets/title.png',
+          width: MediaQuery.of(context).size.width*0.35,
+          fit: BoxFit.fitWidth,
+          alignment: Alignment.centerLeft,
         ),
         actions: [
           GestureDetector(

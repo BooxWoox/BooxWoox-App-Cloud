@@ -1,6 +1,5 @@
 import 'package:bookollab/Models/maindisp_book_info_model.dart';
 import 'package:bookollab/UI/AllBooksPage.dart';
-import 'package:bookollab/UI/seeAllpage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
@@ -19,7 +18,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../Notifications.dart';
 
 final _firestore = FirebaseFirestore.instance;
-
 class maindisplaypage extends StatefulWidget {
   static String id = 'maindisplaypage_Screen';
 
@@ -28,33 +26,38 @@ class maindisplaypage extends StatefulWidget {
 }
 
 class _maindisplaypageState extends State<maindisplaypage> {
+
   List<String> Homepage_Cat = [];
   List<homepage_items_featured> featured = [];
   List<homepage_items_featured> latestbooks = [];
   List<homepage_items_featured> BestRated = [];
   List TotalBookName = [];
-  List TotalBookCollID = [];
+  List TotalBookCollID=[];
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
+  FlutterLocalNotificationsPlugin();
   @override
   void initState() {
     //initiaise to get list of homepage categories from database
 
-    AwesomeNotifications().initialize('resource://drawable/res_app_icon', [
-      // Your notification channels go here
-      NotificationChannel(
-          channelKey: 'basic_channel',
-          channelName: 'Basic notifications',
-          channelDescription: 'Notification channel for basic tests',
-          defaultColor: Color(0xFF9D50DD),
-          ledColor: Colors.white)
-    ]);
+    AwesomeNotifications().initialize(
+        'resource://drawable/res_app_icon',
+        [
+          // Your notification channels go here
+          NotificationChannel(
+              channelKey: 'basic_channel',
+              channelName: 'Basic notifications',
+              channelDescription: 'Notification channel for basic tests',
+              defaultColor: Color(0xFF9D50DD),
+              ledColor: Colors.white
+          )
+        ]
+    );
 
     FirebaseMessaging.onMessage.listen(_firebaseonforegrounfHandler);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
 
     Notifications.init();
 
@@ -131,7 +134,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                 searchQueryBuilder: (query, list) {
                   return list
                       .where((item) =>
-                          item.toLowerCase().contains(query.toLowerCase()))
+                      item.toLowerCase().contains(query.toLowerCase()))
                       .toList();
                 },
                 overlaySearchListItemBuilder: (item) {
@@ -144,26 +147,24 @@ class _maindisplaypageState extends State<maindisplaypage> {
                   );
                 },
                 onItemSelected: (item) {
-                  int index = TotalBookName.indexOf(item);
-                  _firestore
-                      .collection("Book_Collection")
-                      .doc(TotalBookCollID[index])
-                      .get()
-                      .then((value) {
-                    String bkname = value.get("BookName");
-                    String author = value.get("Author");
-                    String ImageUrl = value.get("ImageUrl");
-                    int likes = value.get("Likes");
-                    int dislikes = value.get("Dislikes");
-                    double mrp = value.get("MRP");
-                    double quotedPrice=value.get("QuotedDeposit");
-                    String coll_type = value.get("Homepage_category");
-                    String original_loc = value.id.toString().trim();
-                    String owneruid = value.get("OwnerUID");
-                    String selleraddress = value.get("seller_address");
-                    String sellerphn = value.get("seller_phoneNumber");
-                    bool availability = value.get("Availability");
-                    String sellerFullname = value.get("SellerFullName");
+
+                  int index=TotalBookName.indexOf(item);
+                  _firestore.collection("Book_Collection").doc(TotalBookCollID[index]).get().then((i) {
+                    String bkname = i.get("BookName");
+                    String author = i.get("Author");
+                    String ImageUrl = i.get("ImageUrl");
+                    int likes = i.get("Likes");
+                    int dislikes = i.get("Dislikes");
+                    double mrp = i.get("MRP");
+                    double quotedPrice=i.get("QuotedDeposit");
+                    String coll_type = i.get("Homepage_category");
+                    String original_loc = i.id.toString().trim();
+                    String owneruid = i.get("OwnerUID");
+                    String selleraddress = i.get("seller_address");
+                    String sellerphn = i.get("seller_phoneNumber");
+                    bool availability = i.get("Availability");
+                    String sellerFullname = i.get("SellerFullName");
+                    List homepage_tag_cat = i.get("tags");
                     Navigator.pushNamed(context, Book_info.id,
                         arguments: maindisp_book_info_model(
                             homepage_items_featured(
@@ -220,8 +221,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                       child: InkWell(
                                         onTap:(){
                                           //GOTO VIEW ALL PAGE
-                                          Navigator.pushNamed(context, seeAllpage.id);
-                                           },
+                                          Navigator.pushNamed(context, AllBooksPage.id);
+                                        },
                                         child: Column(
                                           children: [
                                             CircleAvatar(
@@ -255,14 +256,14 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                           elevation: 3,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(16),
+                                            BorderRadius.circular(16),
                                           ),
                                           child: Container(
                                             height: 140,
                                             width: 100,
                                             child: ClipRRect(
                                               borderRadius:
-                                                  BorderRadius.circular(16),
+                                              BorderRadius.circular(16),
                                               child: Image.network(
                                                 featured[itemIndex].ImageURl,
                                                 fit: BoxFit.cover,
@@ -315,7 +316,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                       child: InkWell(
                                         onTap:(){
                                           //GOTO VIEW ALL PAGE
-                                          Navigator.pushNamed(context, seeAllpage.id);
+                                          Navigator.pushNamed(context, AllBooksPage.id);
 
                                         },
                                         child: Column(
@@ -411,7 +412,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                       child: InkWell(
                                         onTap:(){
                                           //GOTO VIEW ALL PAGE
-                                          Navigator.pushNamed(context, seeAllpage.id);
+                                          Navigator.pushNamed(context, AllBooksPage.id);
 
                                         },
                                         child: Column(
@@ -425,360 +426,75 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                               padding: const EdgeInsets.all(8.0),
                                               child: Text("See all"),
                                             )
-                                          : InkWell(
-                                              onTap: () {
-                                                //goto book info page
-                                                Navigator.pushNamed(
-                                                    context, Book_info.id,
-                                                    arguments:
-                                                        maindisp_book_info_model(
-                                                            featured[
-                                                                itemIndex]));
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Card(
-                                                      elevation: 3,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16),
-                                                      ),
-                                                      child: Container(
-                                                        height: 140,
-                                                        width: 100,
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(16),
-                                                          child: Image.network(
-                                                            featured[itemIndex]
-                                                                .ImageURl,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 100,
-                                                      child: Center(
-                                                        child: Text(
-                                                          featured[itemIndex]
-                                                              .BookName,
-                                                          style: TextStyle(
-                                                            color:
-                                                                Colors.black87,
-                                                            fontSize: 16,
-                                                            fontFamily:
-                                                                "LeelawUI",
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 100,
-                                                      child: Center(
-                                                        child: Text(
-                                                          featured[itemIndex]
-                                                              .Author,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  "LeelawUI"),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10,)
+                                  ],
+                                ): InkWell(
+                                  onTap: () {
+                                    //goto book info page
+                                    Navigator.pushNamed(context, Book_info.id,
+                                        arguments: maindisp_book_info_model(
+                                            BestRated[itemIndex]));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Card(
+                                          elevation: 3,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(16),
+                                          ),
+                                          child: Container(
+                                            height: 140,
+                                            width: 100,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(16),
+                                              child: Image.network(
+                                                BestRated[itemIndex].ImageURl,
+                                                fit: BoxFit.cover,
                                               ),
-                                            );
-                                    }),
-                              )
-                            : Homepage_Cat[index] == "Latest Books"
-                                ? Container(
-                                    height: 210,
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: latestbooks.length + 1,
-                                        itemBuilder: (context, itemIndex) {
-                                          return itemIndex >
-                                                  latestbooks.length - 1
-                                              ? Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              AllBooksPage.id);
-                                                        },
-                                                        child: Column(
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .amberAccent,
-                                                              child: Icon(
-                                                                Icons
-                                                                    .remove_red_eye_rounded,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                              radius: 35,
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: Text(
-                                                                  "See all"),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    )
-                                                  ],
-                                                )
-                                              : InkWell(
-                                                  onTap: () {
-                                                    //goto book info page
-                                                    Navigator.pushNamed(
-                                                        context, Book_info.id,
-                                                        arguments:
-                                                            maindisp_book_info_model(
-                                                                latestbooks[
-                                                                    itemIndex]));
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Card(
-                                                          elevation: 3,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        16),
-                                                          ),
-                                                          child: Container(
-                                                            height: 140,
-                                                            width: 100,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          16),
-                                                              child:
-                                                                  Image.network(
-                                                                latestbooks[
-                                                                        itemIndex]
-                                                                    .ImageURl,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 100,
-                                                          child: Center(
-                                                            child: Text(
-                                                              latestbooks[
-                                                                      itemIndex]
-                                                                  .BookName,
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .black87,
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    "LeelawUI",
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 100,
-                                                          child: Center(
-                                                            child: Text(
-                                                              latestbooks[
-                                                                      itemIndex]
-                                                                  .Author,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 14,
-                                                                  fontFamily:
-                                                                      "LeelawUI"),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                        }),
-                                  )
-                                : Container(
-                                    height: 210,
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: BestRated.length + 1,
-                                        itemBuilder: (context, itemIndex) {
-                                          return itemIndex >
-                                                  BestRated.length - 1
-                                              ? Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              AllBooksPage.id);
-                                                        },
-                                                        child: Column(
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .amberAccent,
-                                                              child: Icon(
-                                                                Icons
-                                                                    .remove_red_eye_rounded,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                              radius: 35,
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: Text(
-                                                                  "See all"),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    )
-                                                  ],
-                                                )
-                                              : InkWell(
-                                                  onTap: () {
-                                                    //goto book info page
-                                                    Navigator.pushNamed(
-                                                        context, Book_info.id,
-                                                        arguments:
-                                                            maindisp_book_info_model(
-                                                                BestRated[
-                                                                    itemIndex]));
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Card(
-                                                          elevation: 3,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        16),
-                                                          ),
-                                                          child: Container(
-                                                            height: 140,
-                                                            width: 100,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          16),
-                                                              child:
-                                                                  Image.network(
-                                                                BestRated[
-                                                                        itemIndex]
-                                                                    .ImageURl,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 100,
-                                                          child: Center(
-                                                            child: Text(
-                                                              BestRated[
-                                                                      itemIndex]
-                                                                  .BookName,
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .black87,
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    "LeelawUI",
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 100,
-                                                          child: Center(
-                                                            child: Text(
-                                                              BestRated[
-                                                                      itemIndex]
-                                                                  .Author,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 14,
-                                                                  fontFamily:
-                                                                      "LeelawUI"),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                        }),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              BestRated[itemIndex].BookName,
+                                              style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 16,
+                                                fontFamily: "LeelawUI",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              BestRated[itemIndex].Author,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14,
+                                                  fontFamily: "LeelawUI"),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                );
+                              }),
+                        ),
+
                       ],
                     );
                   }),
@@ -872,7 +588,6 @@ class _maindisplaypageState extends State<maindisplaypage> {
       print(e);
     }
   }
-
   void home_cat_get() async {
     try {
       await _firestore.collection("Homepage_item_list").get().then((value) {
@@ -889,7 +604,10 @@ class _maindisplaypageState extends State<maindisplaypage> {
   }
 }
 
+
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
@@ -897,12 +615,14 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
   // Use this method to automatically convert the push data, in case you gonna use our data standard
   AwesomeNotifications().createNotificationFromJsonData(message.data);
+
 }
 
-Future<void> _firebaseonforegrounfHandler(RemoteMessage message) async {
+Future<void> _firebaseonforegrounfHandler(RemoteMessage message) async{
   print('Got a message whilst in the foreground!');
   print('Message data: ${message.data}');
   if (message.notification != null) {
     print('Message also contained a notification: ${message.notification}');
   }
+
 }
