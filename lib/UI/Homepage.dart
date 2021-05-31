@@ -54,7 +54,7 @@ class _HomepageState extends State<Homepage> {
         automaticallyImplyLeading: false,
         title: Image.asset(
           'UIAssets/title.png',
-          width: MediaQuery.of(context).size.width*0.35,
+          width: MediaQuery.of(context).size.width*0.3,
           fit: BoxFit.fitWidth,
           alignment: Alignment.centerLeft,
         ),

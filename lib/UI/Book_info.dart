@@ -692,7 +692,7 @@ class _Book_infoState extends State<Book_info> {
                 child: Row(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(9),
                       child: Book_item_model.availability
                           ? Text(
                               ' AVAILABLE ',
@@ -715,7 +715,7 @@ class _Book_infoState extends State<Book_info> {
                       width: 4,
                     ),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(9),
                       child: Text(
                         ' ${Book_item_model.Condition.toUpperCase()} ',
                         style: TextStyle(
@@ -768,6 +768,11 @@ class _Book_infoState extends State<Book_info> {
                           "Convenience fee: \u{20B9} ${(_commissionpercent/100 * (Book_item_model.quotedDeposit + (_quotedrentpercent * Book_item_model.quotedDeposit / 100) + _deliverycharges)).toStringAsFixed(2)}",
                           style: TextStyle(fontSize: 16)),
                       Text("*${_commissionpercent}% of deposit + rent + delivery charges.",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey)),
+                      Text("*Bank charges will be applicable.",
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -1035,17 +1040,20 @@ class _Book_infoState extends State<Book_info> {
   Your transaction for book $BookName with Order ID :$OrderID has been successful.
   Now please read the below provided instructions and complete the further process as mentioned.
   Instructions
-- Post the payment, you have a 1 week duration (Transfer Window) within which the transfer of the book must be made from the lender to borrower. Any delay from the lenders end, will result in a penalty to the lender. Once the one week duration ends, the borrowing period will begin and hence, the borrower must make sure he/she receives the book before that. If the borrower receives the book within the one week duration, he/she would be required to accept the receiving of the borrowed book in the app.
 
-- The borrower and lender are requested to follow all Covid Guidelines when making the transfer for your and your family's safety and good health.
+- Post the payment, you have a 5-6 days duration (Transfer Window) within which the transfer of the book will be made from the lender to borrower. Any delay from the lenders end, will result in a penalty to the lender. Once the delivery duration ends or the book gets received by the borrower, whichever is earlier, the borrowing period will begin and hence, the borrower must make sure he/she receives the book before that. If the borrower receives the book within the one week duration, he/she would be required to accept the receiving of the borrowed book in the app.
 
-- Towards the end of the borrowing period, another extra 1 week duration will be provided to both parties and the lender must make sure to receive the book back before that period ends. In case of any delay from the borrower's end, a penalty will be applicable on the borrower.
+- The borrower and lender are requested to follow all Covid Guidelines when making the transfer to the delivery personal for your and your family's safety and good health. Our delivery personal will carry a zip bag in which the book will be placed after a minor check and hence, will be transferred in that. The delivery personal will be following all Covid Protocols and incase of failure from the delivery personal's end, or incase of any misconduct, either party can report the case to us in the app and then the issue will be investigated and resolved further.
+
+- Towards the end of the borrowing period, another extra 1 week duration will be provided to both parties and the borrower must send the book return request before this duration ends. The lender must make sure to receive the book back and complete the transaction in the app as well. In case of any delay from the borrower's end, a penalty will be applicable on the borrower.
 
 - If the borrower wishes to extend the borrowing period, he/she will have to initiate a request from 'My Borrowed Books' section regarding the same. Once the lender approves the request, the borrower will have to make a payment for borrowing the book for the next period. Please note that, the period won't be extended unless the payment has been made before the borrowing period ends. In any such case, the extension request will be rejected automatically.
 
 - If upon returning the book, there is any issue regarding condition of book or if any damage is done to the book, the lender can raise an issue through the app and the matter will be looked into by our team and resolved accordingly. If any penalties are induced then an amount will be deducted from the security deposited which will be decided by our team.
 
 - If there is no issue and the book has been safely returned, the lender will have to confirm the receiving of the book in the app and thereafter the deposit will be returned to the borrower. It is suggested that the book verification and receiving be done in front of the lender to avoid any issues later. Once, the receiving is confirmed, the transfer will be considered closed and complete and no further issues for that transaction will be entertained.
+
+- All books put up on the BooxWoox platform to borrow or to lend, will be assumed to be in the complete ownership of the user account and user that uploads it. Incase of any such issue, the BooxWoox team will not be responsible for the user's misconduct and will not take any responsibility for such an act. It will solely be the fault of the user who uploads such books and required actions will be taken hence.
   ''';
     return text;
   }
@@ -1055,17 +1063,25 @@ class _Book_infoState extends State<Book_info> {
   A transaction for book $BookName with Order ID :$OrderID has been initiated with a confirmed payment.
   Now please read the below provided instructions and complete the further process as mentioned as a SELLER.
   Instructions
-- Post the payment, you have a 1 week duration (Transfer Window) within which the transfer of the book must be made from the lender to borrower. Any delay from the lenders end, will result in a penalty to the lender. Once the one week duration ends, the borrowing period will begin and hence, the borrower must make sure he/she receives the book before that. If the borrower receives the book within the one week duration, he/she would be required to accept the receiving of the borrowed book in the app.
+  Your transaction has been successful.
 
-- The borrower and lender are requested to follow all Covid Guidelines when making the transfer for your and your family's safety and good health.
+Now please read the below provided instructions and please follow the guidelines for a safe and fun experience!
 
-- Towards the end of the borrowing period, another extra 1 week duration will be provided to both parties and the lender must make sure to receive the book back before that period ends. In case of any delay from the borrower's end, a penalty will be applicable on the borrower.
+Instructions
+
+- Post the payment, you have a 5-6 days duration (Transfer Window) within which the transfer of the book will be made from the lender to borrower. Any delay from the lenders end, will result in a penalty to the lender. Once the delivery duration ends or the book gets received by the borrower, whichever is earlier, the borrowing period will begin and hence, the borrower must make sure he/she receives the book before that. If the borrower receives the book within the one week duration, he/she would be required to accept the receiving of the borrowed book in the app.
+
+- The borrower and lender are requested to follow all Covid Guidelines when making the transfer to the delivery personal for your and your family's safety and good health. Our delivery personal will carry a zip bag in which the book will be placed after a minor check and hence, will be transferred in that. The delivery personal will be following all Covid Protocols and incase of failure from the delivery personal's end, or incase of any misconduct, either party can report the case to us in the app and then the issue will be investigated and resolved further.
+
+- Towards the end of the borrowing period, another extra 1 week duration will be provided to both parties and the borrower must send the book return request before this duration ends. The lender must make sure to receive the book back and complete the transaction in the app as well. In case of any delay from the borrower's end, a penalty will be applicable on the borrower.
 
 - If the borrower wishes to extend the borrowing period, he/she will have to initiate a request from 'My Borrowed Books' section regarding the same. Once the lender approves the request, the borrower will have to make a payment for borrowing the book for the next period. Please note that, the period won't be extended unless the payment has been made before the borrowing period ends. In any such case, the extension request will be rejected automatically.
 
 - If upon returning the book, there is any issue regarding condition of book or if any damage is done to the book, the lender can raise an issue through the app and the matter will be looked into by our team and resolved accordingly. If any penalties are induced then an amount will be deducted from the security deposited which will be decided by our team.
 
 - If there is no issue and the book has been safely returned, the lender will have to confirm the receiving of the book in the app and thereafter the deposit will be returned to the borrower. It is suggested that the book verification and receiving be done in front of the lender to avoid any issues later. Once, the receiving is confirmed, the transfer will be considered closed and complete and no further issues for that transaction will be entertained.
+
+- All books put up on the BooxWoox platform to borrow or to lend, will be assumed to be in the complete ownership of the user account and user that uploads it. Incase of any such issue, the BooxWoox team will not be responsible for the user's misconduct and will not take any responsibility for such an act. It will solely be the fault of the user who uploads such books and required actions will be taken hence.
   ''';
     return text;
   }

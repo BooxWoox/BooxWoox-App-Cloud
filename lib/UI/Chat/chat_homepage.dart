@@ -24,7 +24,7 @@ class _Chat_homepageState extends State<Chat_homepage> with SingleTickerProvider
   @override
   void initState() {
     // TODO: implement initState
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
     super.initState();
   }
   @override
@@ -39,10 +39,18 @@ class _Chat_homepageState extends State<Chat_homepage> with SingleTickerProvider
               labelColor: Colors.black,
               tabs: [
                 Tab(
-                  child: Text("CHATS"),
-                ),
-                Tab(
-                  child: Text("REQUESTS"),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.chat_bubble_outlined,
+                      color: Colors.white,),
+                      SizedBox(width: 5,),
+                      Text("CHATS",
+                      style: TextStyle(
+                        color: Colors.white
+                      ),),
+                    ],
+                  ),
                 ),
               ],
               controller: _tabController,
@@ -54,7 +62,6 @@ class _Chat_homepageState extends State<Chat_homepage> with SingleTickerProvider
             child: TabBarView(
               children: [
                 ChatsPage(),
-                RequestsPage(),
               ],
               controller: _tabController,
             ),

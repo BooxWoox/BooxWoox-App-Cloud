@@ -34,7 +34,8 @@ class _AddBookPageState extends State<AddBookPage>  {
   String BookName="",Author="",condition="",bkdesc="",pickup_address="",seller_UPI="",seller_phone="",Seller_fullname="";
   double MRP=0;
   double quotedprice=0;
-  int convenience_fee=10; //By default
+  double rentprice=0;
+  double commission_fee=10; //By default
 @override
   void initState() {
     // TODO: implement initState
@@ -105,7 +106,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                     "Condition":"Used",
                     "Condition Description":condition,
                     "Dislikes":0,
-                    "Homepage_category":"Best Rated",
+                    "Homepage_category":"",
                     "ISBN":_scanBarcode.toString(),
                     "ImageUrl":value.toString(),
                     "Likes":0,
@@ -345,7 +346,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("Quoted Price",
+                              child: Text("Quoted Deposit",
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontFamily: "LeelawUI",
@@ -415,9 +416,17 @@ class _AddBookPageState extends State<AddBookPage>  {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("${convenience_fee}% of rental amount would be deducted as convenience fee.",
+                    child: Text("${rentprice}% of Quoted Deposit will be sent to owner as Rent for the book.",
                     style: TextStyle(
                         color: Colors.grey
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("${commission_fee}% of rental amount would be deducted as convenience fee.",
+                      style: TextStyle(
+                          color: Colors.grey
                       ),
                     ),
                   ),
@@ -722,7 +731,8 @@ class _AddBookPageState extends State<AddBookPage>  {
   void getQuotedParameters() {
     _firestore.collection("Admin").doc("Quoted_Parameters").get().then((value) {
       setState(() {
-        convenience_fee=value.get("Quoted_Rent_Percent");
+        rentprice=double.parse(value.get("Quoted_Rent_Percent").toString());
+        commission_fee=double.parse(value.get("SellerShare_Cut_Percent").toString());
       });
     });
   }

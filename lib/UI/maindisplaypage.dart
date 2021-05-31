@@ -54,12 +54,10 @@ class _maindisplaypageState extends State<maindisplaypage> {
           )
         ]
     );
-
-    FirebaseMessaging.onMessage.listen(_firebaseonforegrounfHandler);
+    Notifications.init();
+    // FirebaseMessaging.onMessage.listen(_firebaseonforegrounfHandler);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-
-    Notifications.init();
 
     setState(() {
       home_cat_get();
@@ -618,11 +616,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 }
 
-Future<void> _firebaseonforegrounfHandler(RemoteMessage message) async{
-  print('Got a message whilst in the foreground!');
-  print('Message data: ${message.data}');
-  if (message.notification != null) {
-    print('Message also contained a notification: ${message.notification}');
-  }
-
-}
+// Future<void> _firebaseonforegrounfHandler(RemoteMessage message) async{
+//   print('Got a message whilst in the foreground!');
+//   print('Message data: ${message.data}');
+//   if (message.notification != null) {
+//     print('Message also contained a notification: ${message.notification}');
+//   }
+//
+// }
