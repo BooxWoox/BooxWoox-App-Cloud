@@ -15,7 +15,7 @@ import 'Transactions/Transactions_Buyer.dart';
 import 'package:bookollab/UI/LoginPage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
+import 'package:bookollab/UI/Profile/Mybooks.dart';
 final FirebaseAuth _auth=FirebaseAuth.instance;
 final _firestore=FirebaseFirestore.instance;
 class ProfilePage extends StatefulWidget {
@@ -99,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               GestureDetector(
                 onTap: (){
-                  print("My Books");
+                  Navigator.pushNamed(context, Mybooks.id);
                 },
                 child: Row(
                   children: [
