@@ -3,6 +3,7 @@ import 'package:bookollab/UI/ProfilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'LoginPage.dart';
 import 'dart:io';
 import 'package:images_picker/images_picker.dart';
@@ -16,6 +17,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:bookollab/UI/Homepage.dart';
+import 'package:random_string/random_string.dart';
 
 final _firestore=FirebaseFirestore.instance;
 FirebaseStorage _firebaseStorage=FirebaseStorage.instance;
@@ -28,6 +30,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   int leaseduration=-1;
   String _scanBarcode = '';
   TextEditingController _controller;
+  String cityName="Select Your City";
   File _ImageFile;
   String barcoderesult = "";
   GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
@@ -49,6 +52,7 @@ class _AddBookPageState extends State<AddBookPage>  {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        title: Text("Add Books"),
         backgroundColor: Color(0xFFFFCC00),
         shadowColor: Color(0xFFF7C100),
       ),
@@ -77,7 +81,7 @@ class _AddBookPageState extends State<AddBookPage>  {
           ),
           color: Color(0xFFFFCC00),
           onPressed: () async{
-            if(check(BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone,Seller_fullname)){
+            if(check(cityName,BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone,Seller_fullname)){
               //checks passed
               //TEMPORARY SEARCHING ALGORITHM(SPLITIING STRING METHOD)
               List<String> splitList=BookName.split(' ');
@@ -89,7 +93,9 @@ class _AddBookPageState extends State<AddBookPage>  {
               }
               //backend starts
               String useruid=FirebaseAuth.instance.currentUser.uid;
-              String uploadname=useruid+DateTime.now().toString()+BookName;
+              final DateFormat formatter = DateFormat('yyyy-MM-dd');
+              final String formattedDate = formatter.format(DateTime.now());
+              String uploadname=useruid+formattedDate.replaceAll(' ', '')+randomAlphaNumeric(10)+BookName.trim().replaceAll(' ', '');
               var reference=_firebaseStorage.ref()
                   .child('BookFrontCovers')
                   .child('/${uploadname}.jpg');
@@ -470,6 +476,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                           fontWeight: FontWeight.bold
                       ),),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
@@ -492,7 +499,38 @@ class _AddBookPageState extends State<AddBookPage>  {
                       ),
                     ),
                   ),
-
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButton<String>(
+                      focusColor:Colors.white,
+                      value: cityName,
+                      //elevation: 5,
+                      style: TextStyle(color: Colors.white),
+                      iconEnabledColor:Colors.black,
+                      items: <String>[
+                        'Select Your City',
+                        'Ahmedabad',
+                        'Others',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,style:TextStyle(color:Colors.black),),
+                        );
+                      }).toList(),
+                      hint:Text(
+                        "Please select your city",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      onChanged: (String value) {
+                        setState(() {
+                          cityName = value;
+                        });
+                      },
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text("UPI ID",
@@ -657,8 +695,13 @@ class _AddBookPageState extends State<AddBookPage>  {
   }
 
 
-  bool check(String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address, String seller_upi,String sellercontact, String seller_fullname) {
-    if(bookName.trim()==""||bookName.trim().isEmpty||bookName.trim().length==0){
+  bool check(String city, String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address, String seller_upi,String sellercontact, String seller_fullname) {
+
+   if(city.isEmpty||city==null||city!="Ahmedabad"){
+     _onBasicWaitingAlertPressed(context,"Sorry we are currently operating in Ahmedabad only\nStay tuned :)");
+     return false;
+   }
+   if(bookName.trim()==""||bookName.trim().isEmpty||bookName.trim().length==0){
       _onBasicWaitingAlertPressed(context,"BookName can't be Empty");
       return false;
     }

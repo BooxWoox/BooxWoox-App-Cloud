@@ -29,6 +29,7 @@ class Book_info extends StatefulWidget {
 }
 
 class _Book_infoState extends State<Book_info> {
+  String cityName="Select Your City";
   String Book_name = "";
   String Buyer_address = "";
   String Buyer_Fullname = "";
@@ -351,201 +352,247 @@ class _Book_infoState extends State<Book_info> {
                               topRight: Radius.circular(30.0)),
                         ),
                         builder: (BuildContext context) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CircleAvatar(
-                                  radius: 35,
-                                  backgroundColor: Colors.black12,
-                                  backgroundImage:
-                                      AssetImage("UIAssets/BookInfo/map.png"),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 18,
-                                  ),
-                                  Icon(Icons.location_city_rounded),
-                                  Text(
-                                    "Full Name",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18.0, vertical: 8),
-                                child: Container(
-                                  height: 55,
-                                  child: TextField(
-                                    onChanged: (value) {
-                                      Buyer_Fullname = value;
-                                    },
-                                    autocorrect: false,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.grey[290],
-                                      hintText: "Type your full name..",
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey),
+
+                          return StatefulBuilder(
+                              builder: (BuildContext context, StateSetter setState /*You can rename this!*/) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CircleAvatar(
+                                        radius: 35,
+                                        backgroundColor: Colors.black12,
+                                        backgroundImage:
+                                        AssetImage("UIAssets/BookInfo/map.png"),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 18,
-                                  ),
-                                  Icon(Icons.location_city_rounded),
-                                  Text(
-                                    "Delivery Address",
-                                    style: TextStyle(
-                                      fontSize: 16,
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 18,
+                                        ),
+                                        Icon(Icons.location_city_rounded),
+                                        Text(
+                                          "Full Name",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18.0, vertical: 8),
-                                child: Container(
-                                  height: 55,
-                                  child: TextField(
-                                    onChanged: (value) {
-                                      Buyer_address = value;
-                                    },
-                                    autocorrect: false,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.grey[290],
-                                      hintText: "Type your delivery address..",
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 18,
-                                  ),
-                                  Icon(Icons.phone_android),
-                                  Text(
-                                    "Phone Number",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18.0, vertical: 8),
-                                child: Container(
-                                  height: 55,
-                                  child: TextField(
-                                    keyboardType: TextInputType.phone,
-                                    onChanged: (value) {
-                                      Buyer_phnumber = value;
-                                    },
-                                    autocorrect: false,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.grey[290],
-                                      hintText: "Contact Number",
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        borderSide:
-                                            BorderSide(color: Colors.grey),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: RaisedButton(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12.0, horizontal: 12),
-                                    child: Container(
-                                      width: 110,
-                                      height: 25,
-                                      child: Center(
-                                        child: FittedBox(
-                                          child: Text(
-                                            'Continue',
-                                            style: TextStyle(
-                                                fontFamily: 'LeelawUI',
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0, vertical: 8),
+                                      child: Container(
+                                        height: 55,
+                                        child: TextField(
+                                          onChanged: (value) {
+                                            Buyer_Fullname = value;
+                                          },
+                                          autocorrect: false,
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.grey[290],
+                                            hintText: "Type your full name..",
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide:
+                                              BorderSide(color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide:
+                                              BorderSide(color: Colors.grey),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  color: Color(0xFFFFCC00),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(21),
-                                  ),
-                                  onPressed: () async {
-                                    if (Buyer_address == null ||
-                                        Buyer_address.trim().length == 0 ||
-                                        Buyer_address == "" ||
-                                        Buyer_phnumber == null ||
-                                        Buyer_phnumber == "" ||
-                                        Buyer_Fullname == null ||
-                                        Buyer_Fullname.trim().length == 0) {
-                                      _onBasicWaitingAlertPressed(
-                                          context, "All fields are mandatory");
-                                    } else {
-                                      finalrent = double.parse(
-                                          (totalrent).toStringAsFixed(2));
-                                      getOrderID(finalrent * 100, Buyer_address,
-                                          Buyer_phnumber);
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 18,
+                                        ),
+                                        Icon(Icons.location_city_rounded),
+                                        Text(
+                                          "Delivery Address",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0, vertical: 8),
+                                      child: Container(
+                                        height: 55,
+                                        child: TextField(
+                                          onChanged: (value) {
+                                            Buyer_address = value;
+                                          },
+                                          autocorrect: false,
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.grey[290],
+                                            hintText: "Type your delivery address..",
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide:
+                                              BorderSide(color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide:
+                                              BorderSide(color: Colors.grey),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 18,
+                                        ),
+                                        Icon(Icons.phone_android),
+                                        Text(
+                                          "Phone Number",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0, vertical: 8),
+                                      child: Container(
+                                        height: 55,
+                                        child: TextField(
+                                          keyboardType: TextInputType.phone,
+                                          onChanged: (value) {
+                                            Buyer_phnumber = value;
+                                          },
+                                          autocorrect: false,
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.grey[290],
+                                            hintText: "Contact Number",
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide:
+                                              BorderSide(color: Colors.grey),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0)),
+                                              borderSide:
+                                              BorderSide(color: Colors.grey),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DropdownButton<String>(
+                                        focusColor:Colors.white,
+                                        value: cityName,
+                                        //elevation: 5,
+                                        style: TextStyle(color: Colors.white),
+                                        iconEnabledColor:Colors.black,
+                                        items: <String>[
+                                          'Select Your City',
+                                          'Ahmedabad',
+                                          'Others',
+                                        ].map<DropdownMenuItem<String>>((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value,style:TextStyle(color:Colors.black),),
+                                          );
+                                        }).toList(),
+                                        hint:Text(
+                                          "Please select your city",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        onChanged: (String value) {
+                                          setState(() {
+                                            cityName = value;
+                                          });
+                                          setState(() {
+
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: RaisedButton(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12.0, horizontal: 12),
+                                          child: Container(
+                                            width: 110,
+                                            height: 25,
+                                            child: Center(
+                                              child: FittedBox(
+                                                child: Text(
+                                                  'Continue',
+                                                  style: TextStyle(
+                                                      fontFamily: 'LeelawUI',
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        color: Color(0xFFFFCC00),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(21),
+                                        ),
+                                        onPressed: () async {
+                                          if(cityName!="Ahmedabad"||cityName==null||cityName==""){
+                                            _onBasicWaitingAlertPressed(
+                                                context, "Sorry we are currently operating in Ahmedabad only\nStay tuned :)");
+                                          }else{
+                                            if (Buyer_address == null ||
+                                                Buyer_address.trim().length == 0 ||
+                                                Buyer_address == "" ||
+                                                Buyer_phnumber == null ||
+                                                Buyer_phnumber == "" ||
+                                                Buyer_Fullname == null ||
+                                                Buyer_Fullname.trim().length == 0) {
+                                              _onBasicWaitingAlertPressed(
+                                                  context, "All fields are mandatory");
+                                            } else {
+                                              finalrent = double.parse(
+                                                  (totalrent).toStringAsFixed(2));
+                                              getOrderID(finalrent * 100, Buyer_address,
+                                                  Buyer_phnumber);
+                                            }
+                                          }
+
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
                           );
                         });
                     //getOrderID(totalrent*100);

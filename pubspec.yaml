@@ -57,7 +57,8 @@ dependencies:
   awesome_notifications: ^0.0.6+7
   firebase_messaging: ^9.1.2
   flutter_local_notifications: ^6.0.0
-
+  sweetsheet: ^0.2.0
+  random_string: ^2.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
