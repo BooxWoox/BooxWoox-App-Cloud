@@ -86,11 +86,17 @@ class _MybooksState extends State<Mybooks> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(snapshot.data.docs[index].get("BookName"),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500
-                                  ),),
+                                  Flexible(
+                                    child: RichText(
+                                      overflow: TextOverflow.ellipsis,
+                                      strutStyle: StrutStyle(fontSize: 18.0),
+                                      text:TextSpan(
+                                        text: snapshot.data.docs[index].get("BookName"),
+                                        style: TextStyle(color: Colors.black87,
+                                        fontWeight: FontWeight.w500),
+                                      ) ,
+                                    ),
+                                  ),
                                   Text(snapshot.data.docs[index].get("Author")),
                                   SizedBox(
                                     height: 4,

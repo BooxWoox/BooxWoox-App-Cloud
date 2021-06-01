@@ -59,6 +59,7 @@ dependencies:
   flutter_local_notifications: ^6.0.0
   sweetsheet: ^0.2.0
   random_string: ^2.1.0
+  sn_progress_dialog: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

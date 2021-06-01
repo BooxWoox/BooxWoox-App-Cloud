@@ -16,10 +16,12 @@ import 'package:dio/dio.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:sweetsheet/sweetsheet.dart';
 
 
 final _firestore=FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
+
 class Ongoing_transaction_Buyer extends StatefulWidget {
   static String id='Ongoing_transaction_Screen';
   @override
@@ -27,6 +29,7 @@ class Ongoing_transaction_Buyer extends StatefulWidget {
 }
 
 class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
+  final SweetSheet _sweetSheet = SweetSheet();
   String Buyer_fullname="";
   String Seller_fullname="";
   String Bkname="";
@@ -135,12 +138,36 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                               String sellerphn=snapshot.data.docs[index].get("Seller_PhoneNumber");
                                               String orderid=snapshot.data.docs[index].id;
                                               double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
-                                              if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
-                                                _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
-                                              }else{
-                                                ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt,
-                                                    snapshot.data.docs[index].get("Book_Name"));
-                                              }
+                                              //Confirmation from user
+                                              _sweetSheet.show(
+                                                context: context,
+                                                title: Text("Warning"),
+                                                description: Text(
+                                                    'This action is irreversible\nAre you sure?'),
+                                                color: SweetSheetColor.WARNING,
+                                                icon: Icons.warning,
+                                                positive: SweetSheetAction(
+                                                  onPressed: () {
+                                                    if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
+                                                      _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
+                                                    }else{
+                                                      ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt,
+                                                          snapshot.data.docs[index].get("Book_Name"));
+                                                    }
+                                                    Navigator.pop(context);
+
+                                                  },
+                                                  title: 'CONTINUE',
+                                                  color: Colors.white,
+                                                  icon: Icons.open_in_new,
+                                                ),
+                                                negative: SweetSheetAction(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  title: 'CANCEL',
+                                                ),
+                                              );
                                         }),
                                         Text("Return"),
                                       ],
@@ -166,7 +193,31 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                             FlatButton(
                                               color:Colors.greenAccent,
                                                 onPressed: (){
-                                                _confirming_received_from_seller(snapshot.data.docs[index].id);
+                                                //confirmation warning
+                                                  _sweetSheet.show(
+                                                    context: context,
+                                                    title: Text("Warning"),
+                                                    description: Text(
+                                                        'This action is irreversible\nAre you sure?'),
+                                                    color: SweetSheetColor.WARNING,
+                                                    icon: Icons.warning,
+                                                    positive: SweetSheetAction(
+                                                      onPressed: () {
+                                                        _confirming_received_from_seller(snapshot.data.docs[index].id);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      title: 'CONTINUE',
+                                                      color: Colors.white,
+                                                      icon: Icons.open_in_new,
+                                                    ),
+                                                    negative: SweetSheetAction(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      title: 'CANCEL',
+                                                    ),
+                                                  );
+
                                                 }, child: Text("Yes, Received")),
                                             FlatButton(
                                                 color:Colors.red,
@@ -179,7 +230,34 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                                   String sellerphn=snapshot.data.docs[index].get("Seller_PhoneNumber");
                                                   String orderid=snapshot.data.docs[index].id;
                                                   double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
-                                                  cancelorderrequest(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt);
+
+                                                  //confirmation warning
+                                                  _sweetSheet.show(
+                                                    context: context,
+                                                    title: Text("Warning"),
+                                                    description: Text(
+                                                        'This action is irreversible\nAre you sure?'),
+                                                    color: SweetSheetColor.WARNING,
+                                                    icon: Icons.warning,
+                                                    positive: SweetSheetAction(
+                                                      onPressed: () {
+                                                        cancelorderrequest(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      title: 'CONTINUE',
+                                                      color: Colors.white,
+                                                      icon: Icons.open_in_new,
+                                                    ),
+                                                    negative: SweetSheetAction(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      title: 'CANCEL',
+                                                    ),
+                                                  );
+
+
+
                                                 }, child: Text("Cancel Order")),
                                           ],
                                         )

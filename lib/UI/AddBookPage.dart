@@ -8,7 +8,7 @@ import 'LoginPage.dart';
 import 'dart:io';
 import 'package:images_picker/images_picker.dart';
 import 'maindisplaypage.dart';
-
+import 'package:getwidget/getwidget.dart';
 import 'dart:async';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 // import 'package:image_picker/image_picker.dart';
@@ -18,6 +18,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:bookollab/UI/Homepage.dart';
 import 'package:random_string/random_string.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
+import 'package:sweetsheet/sweetsheet.dart';
 
 final _firestore=FirebaseFirestore.instance;
 FirebaseStorage _firebaseStorage=FirebaseStorage.instance;
@@ -27,6 +29,7 @@ class AddBookPage extends StatefulWidget {
   _AddBookPageState createState() => _AddBookPageState();
 }
 class _AddBookPageState extends State<AddBookPage>  {
+  final SweetSheet _sweetSheet = SweetSheet();
   int leaseduration=-1;
   String _scanBarcode = '';
   TextEditingController _controller;
@@ -39,6 +42,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   double quotedprice=0;
   double rentprice=0;
   double commission_fee=10; //By default
+
 @override
   void initState() {
     // TODO: implement initState
@@ -48,6 +52,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   }
   @override
   Widget build(BuildContext context) {
+    ProgressDialog pd = ProgressDialog(context: context);
     double width=MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
@@ -83,60 +88,81 @@ class _AddBookPageState extends State<AddBookPage>  {
           onPressed: () async{
             if(check(cityName,BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone,Seller_fullname)){
               //checks passed
+              pd.show(max: 100, msg: 'Uploading...');
+
               //TEMPORARY SEARCHING ALGORITHM(SPLITIING STRING METHOD)
               List<String> splitList=BookName.split(' ');
               List<String> indexList=[];
-              for(int i=0;i<splitList.length;i++){
-                for(int j=0;j<splitList[i].length + i;j++){
-                  indexList.add(splitList[i].substring(0,j).toLowerCase());
-                }
-              }
+
               //backend starts
               String useruid=FirebaseAuth.instance.currentUser.uid;
               final DateFormat formatter = DateFormat('yyyy-MM-dd');
               final String formattedDate = formatter.format(DateTime.now());
-              String uploadname=useruid+formattedDate.replaceAll(' ', '')+randomAlphaNumeric(10)+BookName.trim().replaceAll(' ', '');
-              var reference=_firebaseStorage.ref()
-                  .child('BookFrontCovers')
-                  .child('/${uploadname}.jpg');
-              reference.putFile(_ImageFile).then((val){
-                String docid=(DateTime.now().toString())+useruid;
-                val.ref.getDownloadURL().then((value) {
-                  _firestore.collection("Book_Collection").doc(docid).set({
-                    "Book_Collection_ID":docid,
-                    "Author":Author,
-                    "adminapproval":0,//by default false
-                    "tags":[""],
-                    "Availability":true,
-                    "BookName":BookName,
-                    "Condition":"Used",
-                    "Condition Description":condition,
-                    "Dislikes":0,
-                    "Homepage_category":"",
-                    "ISBN":_scanBarcode.toString(),
-                    "ImageUrl":value.toString(),
-                    "Likes":0,
-                    "Long Description":bkdesc,
-                    "MRP":MRP,
-                    "OwnerRatings":"5",
-                    "OwnerUID":useruid,
-                    "LeaseDuration":leaseduration,
-                    "Quantity":1,
-                    "QuotedDeposit":quotedprice,
-                    'SellerFullName':Seller_fullname.trim(),
-                    "seller_address":pickup_address,
-                    'seller_UPI':seller_UPI,
-                    "seller_phoneNumber":seller_phone,
-                    "SearchingIndex":indexList,
-                    "category":"Unknown",
-                  }).then((value) {
+              String uploadname=useruid+formattedDate+randomAlphaNumeric(10)+BookName.trim().replaceAll(' ', '');
 
+              try{
+                var reference=_firebaseStorage.ref()
+                    .child('BookFrontCovers')
+                    .child('/${uploadname}.jpg');
+                reference.putFile(_ImageFile).then((val){
+                  pd.update(value: 50);
+                  String docid=(DateTime.now().toString())+useruid;
+                  val.ref.getDownloadURL().then((value) {
+                    _firestore.collection("Book_Collection").doc(docid).set({
+                      "Book_Collection_ID":docid,
+                      "Author":Author,
+                      "adminapproval":0,//by default false
+                      "tags":[""],
+                      "Availability":true,
+                      "BookName":BookName,
+                      "Condition":"Used",
+                      "Condition Description":condition,
+                      "Dislikes":0,
+                      "Homepage_category":"",
+                      "ISBN":_scanBarcode.toString(),
+                      "ImageUrl":value.toString(),
+                      "Likes":0,
+                      "Long Description":bkdesc,
+                      "MRP":MRP,
+                      "OwnerRatings":"5",
+                      "OwnerUID":useruid,
+                      "LeaseDuration":leaseduration,
+                      "Quantity":1,
+                      "QuotedDeposit":quotedprice,
+                      'SellerFullName':Seller_fullname.trim(),
+                      "seller_address":pickup_address,
+                      'seller_UPI':seller_UPI,
+                      "seller_phoneNumber":seller_phone,
+                      "SearchingIndex":indexList,
+                      "category":"Unknown",
+                    }).then((value) {
+                      pd.update(value: 99);
+                    });
                   });
+                }).then((value) {
+                  pd.close();
+                  Navigator.pushNamed(context,Homepage.id);
+                  _onBasicSuccessAlert(context, "Book has been successfully added for admin approval");
                 });
-              }).then((value) {
-                Navigator.pushNamed(context,Homepage.id);
-                _onBasicSuccessAlert(context, "Book has been successfully added for admin approval");
-              });
+              }catch(e){
+                pd.close();
+                _sweetSheet.show(
+                  context: context,
+                  title: Text("Warning"),
+                  description: Text(
+                      'Unexpected Error :(\n${e.message} '),
+                  color: SweetSheetColor.WARNING,
+                  icon: Icons.delete_forever,
+                  positive: SweetSheetAction(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    title: 'OK',
+                    color: Colors.white,
+                  ),
+                );
+              }
+
             }
           },
         ),
@@ -159,7 +185,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField( 
+                    child: TextField(
                       onChanged: (value){
                         BookName =value;
                       },
@@ -298,8 +324,9 @@ class _AddBookPageState extends State<AddBookPage>  {
                           //_scanQR();
                           scanBarcodeNormal();
                           setState(() {
-                            
+
                           });
+
                         })
                       ],
                     ),
@@ -635,6 +662,8 @@ class _AddBookPageState extends State<AddBookPage>  {
                     onPressed: () async{
                       print("camera");
                       List<Media> res = await ImagesPicker.openCamera(
+                        maxSize: 640,
+                        quality: 0.1,
                         cropOpt: CropOption(
                           aspectRatio: CropAspectRatio.custom,
                           cropType: CropType.rect,

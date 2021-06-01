@@ -6,6 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
+import 'package:sweetsheet/sweetsheet.dart';
+
 final _firestore=FirebaseFirestore.instance;
 class LoginPage extends StatefulWidget {
   static String id='Login_Screen';
@@ -14,6 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final SweetSheet _sweetSheet = SweetSheet();
   String email_typed="";
   String pass_typed="";
   final _auth = FirebaseAuth.instance;
@@ -27,9 +31,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
+    ProgressDialog pd = ProgressDialog(context: context);
     return Scaffold(
-
       appBar: AppBar(
         backgroundColor: Color(0xFFFFCC00),
         shadowColor: Color(0xFFF7C100),
@@ -91,7 +94,6 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal:48.0),
                   child: TextField(
-
                     onChanged: (value){
                       pass_typed=value;
                     },
@@ -148,18 +150,40 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     onPressed: () async{
 
-                      //login server starts calling API
-                      try{
-                        var user=await _auth.signInWithEmailAndPassword(email: email_typed.trim().toLowerCase(), password: pass_typed).then((value){
+                      if(check(email_typed, pass_typed)){
+                        //login server starts calling API
+                        pd.show(max: 100, msg: 'Signing In...');
+                        try{
+                          var user=await _auth.signInWithEmailAndPassword(email: email_typed.trim().toLowerCase(), password: pass_typed).then((value){
+                            print("Successfully Logged in as ${value.user.uid}");
+                            pd.close();
+                            Navigator.pushReplacementNamed(context, Homepage.id);
+                          });
+                          ;
 
-                          print("Successfully Logged in as ${value.user.uid}");
-                          Navigator.pushReplacementNamed(context, Homepage.id);
-                        });
-                        ;
-
-                      }catch(e){
+                        }catch(e){
+                          pd.close();
+                          _sweetSheet.show(
+                            context: context,
+                            title: Text("Unable to Sign In"),
+                            description: Text(
+                                '${e.message}'),
+                            color: SweetSheetColor.WARNING,
+                            icon: Icons.error,
+                            positive: SweetSheetAction(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              title: 'OK',
+                              color: Colors.white,
+                            ),
+                          );
                           print("Error in log in"+e.toString());
+                        }
+                      }else{
+                        pd.close();
                       }
+
                     },
 
                   ),
@@ -171,5 +195,28 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+
+  }
+  bool check(String useremail,String userpass){
+    if(useremail==null||userpass==null||useremail.isEmpty||userpass.isEmpty||useremail.trim().length==0||userpass.trim().length==0||userpass==""||useremail==""){
+
+      _sweetSheet.show(
+        context: context,
+        title: Text("Unable to Sign In"),
+        description: Text(
+            'All fields are mandatory'),
+        color: SweetSheetColor.WARNING,
+        icon: Icons.error,
+        positive: SweetSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          title: 'OK',
+          color: Colors.white,
+        ),
+      );
+      return false;
+    }
+    return true;
   }
 }

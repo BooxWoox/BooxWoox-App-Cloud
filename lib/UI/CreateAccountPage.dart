@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sweetsheet/sweetsheet.dart';
 
 final _firestore=FirebaseFirestore.instance;
 class CreateAccountPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class CreateAccountPage extends StatefulWidget {
 }
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
+  final SweetSheet _sweetSheet = SweetSheet();
   bool checkValueBox=false;
   String _verificationCode;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -74,6 +76,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       key: scaffoldKey,
       appBar: AppBar(
 
+        title: Text("Create Account"),
         backgroundColor: Color(0xFFFFCC00),
         shadowColor: Color(0xFFF7C100),
       ),
@@ -476,32 +479,33 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   }
   bool check_parameters(String username,String Phone,String email,String pass,String comf_pass, String fullname_typed,bool termsCheckBox){
     if(!email.trim().contains('@')){
-      _onBasicErrorPressed(context, "Invalid Email Address");
+      _sweetheartDialog("Invalid Email Format");
       return false;
     }
     if(fullname_typed.trim().isEmpty||fullname_typed.trim().length==0){
-      _onBasicErrorPressed(context, "Fullname field is not valid or empty");
+
+      _sweetheartDialog("Fullname field is not valid or empty");
       return false;
     }
     if(username.trim().isEmpty||username.trim().length==0){
-      _onBasicErrorPressed(context, "Username is not valid or empty");
+      _sweetheartDialog("Username is not valid or empty");
       return false;
     }
     if(Phone.isEmpty||Phone.trim().length==0){
-      _onBasicErrorPressed(context, "Check Phone Number");
       return false;
     }
     if(pass!=comf_pass){
-      _onBasicErrorPressed(context, "Passwords do not match");
+      _sweetheartDialog("Passwords do not match");
       return false;
     }
     if(pass.length<6){
-      _onBasicErrorPressed(context, "Minimum length of Password is 6 characters");
+      _sweetheartDialog("Minimum length of Password is 6 characters");
       return false;
     }
 
     if(termsCheckBox==false||termsCheckBox==null){
-      _onBasicWaitingAlertPressed(context, "Please accept the terms and conditions");
+      _sweetheartDialog("Please accept the terms and conditions");
+      return false;
     }
     return true;
   }
@@ -526,5 +530,23 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
     // Code will continue after alert is closed.
     debugPrint("Alert closed now.");
+  }
+
+  _sweetheartDialog(String content){
+    _sweetSheet.show(
+      context: context,
+      title: Text("Error"),
+      description: Text(
+          content),
+      color: SweetSheetColor.WARNING,
+      icon: Icons.error,
+      positive: SweetSheetAction(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        title: 'OK',
+        color: Colors.white,
+      ),
+    );
   }
 }
