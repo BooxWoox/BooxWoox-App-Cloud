@@ -449,6 +449,14 @@ class _AddBookPageState extends State<AddBookPage>  {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
+                    child: Text("*Quoted Deposit is the security deposit which can be within 30-60 percent of MRP value.",
+                      style: TextStyle(
+                          color: Colors.grey
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Text("${rentprice}% of Quoted Deposit will be sent to owner as Rent for the book.",
                     style: TextStyle(
                         color: Colors.grey

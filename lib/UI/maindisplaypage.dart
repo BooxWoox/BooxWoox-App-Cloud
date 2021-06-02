@@ -272,31 +272,27 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                         SizedBox(
                                           width: 100,
                                           child: Center(
-                                            child: Flexible(
-                                              child: RichText(
-                                                overflow: TextOverflow.ellipsis,
-                                                strutStyle: StrutStyle(fontSize: 16.0),
-                                                text:TextSpan(
-                                                  text: featured[itemIndex].BookName,
-                                                  style: TextStyle(color: Colors.black87,),
-                                                ) ,
-                                              ),
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              strutStyle: StrutStyle(fontSize: 16.0),
+                                              text:TextSpan(
+                                                text: featured[itemIndex].BookName,
+                                                style: TextStyle(color: Colors.black87,),
+                                              ) ,
                                             ),
                                           ),
                                         ),
                                         SizedBox(
                                           width: 100,
                                           child: Center(
-                                            child: Flexible(
-                                              child: RichText(
-                                                overflow: TextOverflow.ellipsis,
-                                                strutStyle: StrutStyle(fontSize: 14.0),
-                                                text:TextSpan(
-                                                  text: featured[itemIndex].Author,
-                                                  style: TextStyle(color: Colors.grey,
-                                                      fontFamily: "LeelawUI"),
-                                                ) ,
-                                              ),
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              strutStyle: StrutStyle(fontSize: 14.0),
+                                              text:TextSpan(
+                                                text: featured[itemIndex].Author,
+                                                style: TextStyle(color: Colors.grey,
+                                                    fontFamily: "LeelawUI"),
+                                              ) ,
                                             ),
                                           ),
                                         ),
@@ -374,31 +370,27 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                         SizedBox(
                                           width: 100,
                                           child: Center(
-                                            child: Flexible(
-                                              child: RichText(
-                                                overflow: TextOverflow.ellipsis,
-                                                strutStyle: StrutStyle(fontSize: 16.0),
-                                                text:TextSpan(
-                                                  text: latestbooks[itemIndex].BookName,
-                                                  style: TextStyle(color: Colors.black87,),
-                                                ) ,
-                                              ),
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              strutStyle: StrutStyle(fontSize: 16.0),
+                                              text:TextSpan(
+                                                text: latestbooks[itemIndex].BookName,
+                                                style: TextStyle(color: Colors.black87,),
+                                              ) ,
                                             ),
                                           ),
                                         ),
                                         SizedBox(
                                           width: 100,
                                           child: Center(
-                                            child: Flexible(
-                                              child: RichText(
-                                                overflow: TextOverflow.ellipsis,
-                                                strutStyle: StrutStyle(fontSize: 14.0),
-                                                text:TextSpan(
-                                                  text: latestbooks[itemIndex].Author,
-                                                  style: TextStyle(color: Colors.grey,
-                                                      fontFamily: "LeelawUI"),
-                                                ) ,
-                                              ),
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              strutStyle: StrutStyle(fontSize: 14.0),
+                                              text:TextSpan(
+                                                text: latestbooks[itemIndex].Author,
+                                                style: TextStyle(color: Colors.grey,
+                                                    fontFamily: "LeelawUI"),
+                                              ) ,
                                             ),
                                           ),
                                         ),
@@ -476,31 +468,27 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                         SizedBox(
                                           width: 100,
                                           child: Center(
-                                            child: Flexible(
-                                              child: RichText(
-                                                overflow: TextOverflow.ellipsis,
-                                                strutStyle: StrutStyle(fontSize: 16.0),
-                                                text:TextSpan(
-                                                  text: BestRated[itemIndex].BookName,
-                                                  style: TextStyle(color: Colors.black87,),
-                                                ) ,
-                                              ),
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              strutStyle: StrutStyle(fontSize: 16.0),
+                                              text:TextSpan(
+                                                text: BestRated[itemIndex].BookName,
+                                                style: TextStyle(color: Colors.black87,),
+                                              ) ,
                                             ),
                                           ),
                                         ),
                                         SizedBox(
                                           width: 100,
                                           child: Center(
-                                            child: Flexible(
-                                              child: RichText(
-                                                overflow: TextOverflow.ellipsis,
-                                                strutStyle: StrutStyle(fontSize: 14.0),
-                                                text:TextSpan(
-                                                  text: BestRated[itemIndex].Author,
-                                                  style: TextStyle(color: Colors.grey,
-                                                      fontFamily: "LeelawUI"),
-                                                ) ,
-                                              ),
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              strutStyle: StrutStyle(fontSize: 14.0),
+                                              text:TextSpan(
+                                                text: BestRated[itemIndex].Author,
+                                                style: TextStyle(color: Colors.grey,
+                                                    fontFamily: "LeelawUI"),
+                                              ) ,
                                             ),
                                           ),
                                         ),

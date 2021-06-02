@@ -115,11 +115,15 @@ class _AllBooksPageState extends State<AllBooksPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                allBooks[index].item.BookName,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: "LeelawUI",
+                              Container(
+                                width:MediaQuery.of(context).size.width/1.8,
+                                child: Text(
+                                  allBooks[index].item.BookName,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: "LeelawUI",
+                                  ),
                                 ),
                               ),
                               Text(
