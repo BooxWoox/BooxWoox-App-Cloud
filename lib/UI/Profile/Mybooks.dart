@@ -82,31 +82,35 @@ class _MybooksState extends State<Mybooks> {
                                 ),
                               ),
 
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                    child: RichText(
-                                      overflow: TextOverflow.ellipsis,
-                                      strutStyle: StrutStyle(fontSize: 18.0),
-                                      text:TextSpan(
-                                        text: snapshot.data.docs[index].get("BookName"),
-                                        style: TextStyle(color: Colors.black87,
-                                        fontWeight: FontWeight.w500),
-                                      ) ,
+                              Container(
+                                width: MediaQuery.of(context).size.width/2,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Flexible(
+                                      child: RichText(
+                                        overflow: TextOverflow.ellipsis,
+                                        strutStyle: StrutStyle(fontSize: 18.0),
+                                        text:TextSpan(
+                                          text: snapshot.data.docs[index].get("BookName"),
+                                          style: TextStyle(color: Colors.black87,
+                                          fontWeight: FontWeight.w500),
+                                        ) ,
+                                      ),
                                     ),
-                                  ),
-                                  Text(snapshot.data.docs[index].get("Author")),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Text("MRP : \u{20B9}${snapshot.data.docs[index].get("MRP")}"),
-                                  Text("Quoted Deposit : \u{20B9}${snapshot.data.docs[index].get("QuotedDeposit")}"),
-                                  Text("Max Borrow Duration : ${snapshot.data.docs[index].get("LeaseDuration")} months"),
-                                  Text("Phn No : ${snapshot.data.docs[index].get("seller_phoneNumber")}"),
-                                  Text("UPI : ${snapshot.data.docs[index].get("seller_UPI")}")
-                                ],
+                                    Text(snapshot.data.docs[index].get("Author"),
+                                      overflow: TextOverflow.ellipsis,),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text("MRP : \u{20B9}${snapshot.data.docs[index].get("MRP")}"),
+                                    Text("Quoted Deposit : \u{20B9}${snapshot.data.docs[index].get("QuotedDeposit")}"),
+                                    Text("Max Borrow Duration : ${snapshot.data.docs[index].get("LeaseDuration")} months"),
+                                    Text("Phn No : ${snapshot.data.docs[index].get("seller_phoneNumber")}"),
+                                    Text("UPI : ${snapshot.data.docs[index].get("seller_UPI")}")
+                                  ],
+                                ),
                               ),
                               snapshot.data.docs[index].get("adminapproval")==1?
                               Column(

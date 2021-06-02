@@ -41,7 +41,7 @@ class _notificationState extends State<notification> {
                     itemBuilder: (BuildContext context, int index){
                       return Card(
                         child: Container(
-                          height: 100,
+                          height: 110,
                           child: Row(
                             children: [
                               Padding(
@@ -52,7 +52,7 @@ class _notificationState extends State<notification> {
                                 width: 5,
                               ),
                               Container(
-                                width: 300,
+                                width: MediaQuery.of(context).size.width/1.4,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -67,7 +67,7 @@ class _notificationState extends State<notification> {
                                     SizedBox(height: 10,),
                                     Text("${snapshot.data.docs[index].get("Message")}",
                                     overflow: TextOverflow.ellipsis,
-                                      maxLines: 3,
+                                      maxLines: 4,
                                     style: TextStyle(
                                       fontSize: 14
                                     ),),

@@ -77,10 +77,19 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(snapshot.data.docs[index].get("Book_Name"),style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600
-                                        ),),
+                                        Flexible(
+                                          child: RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            strutStyle: StrutStyle(fontSize: 17.0),
+                                            text:TextSpan(
+                                              text: snapshot.data.docs[index].get("Book_Name"),
+                                              style:TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w600
+                                              ),
+                                            ) ,
+                                          ),
+                                        ),
                                         SizedBox(height: 12,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
@@ -350,6 +359,9 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
           "Order_ID":orderID,
           "Total_Amt":totalamt,
           "Status":"Delivering",
+          "Refund_Status":false,
+          "Refund_Type":"Cancelled",
+          "Refund_Timestamp":"",
           "BuyerUID":BuyerUID,
           "SellerUID":SellerUID,
           "BuyerShare_Amt":Buyershareamt,

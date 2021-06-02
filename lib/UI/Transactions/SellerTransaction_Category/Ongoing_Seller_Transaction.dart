@@ -135,7 +135,21 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                                           color:Colors.greenAccent,
                                           onPressed: (){
                                             String BookCollectionID=snapshot.data.docs[index].get("BookCollection_ID");
-                                            _confirming_received_from_buyer(snapshot.data.docs[index].id,BookCollectionID);
+                                            _confirming_received_from_buyer(snapshot.data.docs[index].id,BookCollectionID,
+                                                snapshot.data.docs[index].get("Order_ID"),
+                                                double.parse(snapshot.data.docs[index].get("Total_Amt").toString()),
+                                                snapshot.data.docs[index].get("BuyerUID"),
+                                                snapshot.data.docs[index].get("SellerUID"),
+                                                double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString()),
+                                                double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString()),
+                                                snapshot.data.docs[index].get("BuyerFullName"),
+                                                snapshot.data.docs[index].get("SellerFullName"),
+                                                snapshot.data.docs[index].get("Buyer_PhoneNumber"),
+                                              snapshot.data.docs[index].get("Seller_PhoneNumber"),
+                                              snapshot.data.docs[index].get("Buyer_Address"),
+                                              snapshot.data.docs[index].get("Seller_Address"),
+
+                                            );
                                           }, child: Text("Yes")),
                                     ],
                                   )
@@ -169,8 +183,9 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
 
     );
   }
-  void _confirming_received_from_buyer(String DocID,String BookCollection_ID){
-
+  void _confirming_received_from_buyer(String DocID,String BookCollection_ID,String OrderID,double totalAmt,String buyerUID,
+      String SellerUID,double BuyerShareAmt,double SellerShareAmt,String Buyerfullname,String Sellerfullname,
+      String BuyerPhoneNumber,String SellerPhoneNumber,String BuyerAdderss,String Seller_address){
     _firestore.collection("Transactions").doc(DocID).update({
       "Book_Taken_from_Buyer":true,
       "Book_Taken_from_Buyer_Timestamp":DateTime.now(),
@@ -178,6 +193,27 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
     }).then((value) {
       _firestore.collection("Book_Collection").doc(BookCollection_ID).update({
         'Availability':true,
+      }).then((value) {
+        //Transaction Completed so refund amt to respective users
+        _firestore.collection("Admin_Refund_Transactions").doc().set({
+          "Order_ID":OrderID,
+          "Total_Amt":totalAmt,
+          "Status":"Delivered",
+          "Refund_Status":false,
+          "Refund_Type":"Completed",
+          "Refund_Timestamp":"",
+          "BuyerUID":buyerUID,
+          "SellerUID":SellerUID,
+          "BuyerShare_Amt":BuyerShareAmt,
+          "SellerShare_Amt":SellerShareAmt,
+          "BuyerFullName":Buyerfullname,
+          "SellerFullName":Sellerfullname,
+          "Buyer_PhoneNumber":BuyerPhoneNumber,
+          "Seller_PhoneNumber":SellerPhoneNumber,
+          "Buyer_Address":BuyerAdderss,
+          "order_creation_date":DateTime.now(),
+          "Seller_Address":Seller_address,
+        });
       });
     });
   }
