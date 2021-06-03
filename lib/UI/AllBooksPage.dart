@@ -96,6 +96,7 @@ class _AllBooksPageState extends State<AllBooksPage> {
                                 allBooks[index].item.ImageURl,
                                 fit: BoxFit.cover,
                                 width: 100,
+                                filterQuality: FilterQuality.low,
                               ),
                             ),
                             ClipRRect(
@@ -126,12 +127,17 @@ class _AllBooksPageState extends State<AllBooksPage> {
                                   ),
                                 ),
                               ),
-                              Text(
-                                allBooks[index].item.Author,
-                                style: TextStyle(
+                              Container(
+                                width:MediaQuery.of(context).size.width/1.8,
+                                child: Text(
+                                  allBooks[index].item.Author,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
                                     fontSize: 16,
+                                    color: Colors.grey,
                                     fontFamily: "LeelawUI",
-                                    color: Colors.grey),
+                                  ),
+                                ),
                               ),
                               if ((allBooks[index].item.Likes +
                                       allBooks[index].item.Dislikes) !=

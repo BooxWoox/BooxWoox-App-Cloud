@@ -35,7 +35,7 @@ dependencies:
   pin_code_fields: ^7.0.0
   cloud_firestore: ^1.0.0
   barcode_scan: "^1.0.0"
-  images_picker: ^1.0.0
+  images_picker: ^1.2.4
   rflutter_alert:
     git: git://github.com/RatelHub/rflutter_alert.git
   flutter_barcode_scanner: ^1.0.2
@@ -60,6 +60,12 @@ dependencies:
   sweetsheet: ^0.2.0
   random_string: ^2.1.0
   sn_progress_dialog: ^1.0.1
+  auto_size_text: ^2.1.0
+  transparent_image: ^2.0.0
+  flutter_image_compress: ^1.0.0
+  path_provider: ^2.0.2
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

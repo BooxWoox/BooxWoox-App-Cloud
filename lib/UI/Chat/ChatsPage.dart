@@ -139,18 +139,20 @@ class _ChatsPageState extends State<ChatsPage> {
                                                     width: MediaQuery.of(context)
                                                             .size
                                                             .width *
-                                                        0.6,
-                                                    child: Text(
-                                                      itemsnapshot.data.docs.first
-                                                          .get("text"),
-                                                      style: TextStyle(
-                                                        color: Colors.blueGrey,
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                        0.59,
+                                                    child: RichText(
+                                                      overflow: TextOverflow.ellipsis,
+                                                      strutStyle: StrutStyle(fontSize: 18.0),
+                                                      text:TextSpan(
+                                                        text: itemsnapshot.data.docs.first
+                                                            .get("text"),
+                                                        style: TextStyle(
+                                                          color: Colors.blueGrey,
+                                                          fontSize: 15.0,
+                                                          fontWeight:
+                                                          FontWeight.w600,
+                                                        ),
+                                                      ) ,
                                                     ),
                                                   ),
                                                 ),

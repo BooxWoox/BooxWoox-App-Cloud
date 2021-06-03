@@ -10,6 +10,7 @@ import 'package:images_picker/images_picker.dart';
 import 'maindisplaypage.dart';
 import 'package:getwidget/getwidget.dart';
 import 'dart:async';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,9 @@ import 'package:bookollab/UI/Homepage.dart';
 import 'package:random_string/random_string.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:sweetsheet/sweetsheet.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+
 
 final _firestore=FirebaseFirestore.instance;
 FirebaseStorage _firebaseStorage=FirebaseStorage.instance;
@@ -340,15 +344,20 @@ class _AddBookPageState extends State<AddBookPage>  {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("MRP",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontFamily: "LeelawUI",
-                                    fontWeight: FontWeight.bold
-                                ),),
+                              child: Flexible(
+                                child: RichText(
+                                  overflow: TextOverflow.ellipsis,
+                                  strutStyle: StrutStyle(fontSize: 18.0),
+                                  text:TextSpan(
+                                    text: "MRP",
+                                    style: TextStyle(color: Colors.black87,
+                                        fontWeight: FontWeight.w500),
+                                  ) ,
+                                ),
+                              ),
                             ),
                             Container(
-                              width: width/4,
+                              width: width/4.3,
                               child: TextField(
                                 keyboardType: TextInputType.number,
                                 onChanged: (value){
@@ -358,7 +367,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.grey[290],
-                                  hintText: "Enter MRP",
+                                  hintText: "MRP",
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                                     borderSide: BorderSide(color: Colors.grey),
@@ -379,12 +388,20 @@ class _AddBookPageState extends State<AddBookPage>  {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text("Quoted Deposit",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontFamily: "LeelawUI",
-                                    fontWeight: FontWeight.bold
-                                ),),
+                              child: Container(
+                                width: width/3.4,
+                                child: Flexible(
+                                  child: RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    strutStyle: StrutStyle(fontSize: 18.0),
+                                    text:TextSpan(
+                                      text: "Quoted Deposit",
+                                      style: TextStyle(color: Colors.black87,
+                                          fontWeight: FontWeight.w500),
+                                    ) ,
+                                  ),
+                                ),
+                              ),
                             ),
                             Container(
                               width: width/3.3,
@@ -422,20 +439,30 @@ class _AddBookPageState extends State<AddBookPage>  {
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical:8.0),
-                              child: Text("Lease Period",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontFamily: "LeelawUI",
-                                    fontWeight: FontWeight.bold
-                                ),),
+                              child: Container(
+                                width: width/4.5,
+                                child: AutoSizeText(
+                                  'Rent Duration\n(months)',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: "LeelawUI",
+                                      fontWeight: FontWeight.bold),
+                                  maxLines: 2,
+                                  minFontSize: 10,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical:5.0),
                               child: Container(
-                                width: width/4,
+                                width:60,
                                 child: DropDown(
                                   items: [1, 2, 3, 4],
-                                  hint: Text("Max Time"),
+                                  hint: Text("Max.",
+                                  style: TextStyle(
+                                    fontSize: 14
+                                  ),),
                                   onChanged: (value){
                                     print(value);
                                     leaseduration=value;
@@ -670,8 +697,8 @@ class _AddBookPageState extends State<AddBookPage>  {
                     onPressed: () async{
                       print("camera");
                       List<Media> res = await ImagesPicker.openCamera(
-                        maxSize: 640,
-                        quality: 0.1,
+                       maxSize: 1,
+                        quality: 0.0001,
                         cropOpt: CropOption(
                           aspectRatio: CropAspectRatio.custom,
                           cropType: CropType.rect,
@@ -679,7 +706,11 @@ class _AddBookPageState extends State<AddBookPage>  {
                         pickType: PickType.image,
                       );
                       if(res!=null){
-                        _ImageFile=File(res[0].path);
+                        final dir = await path_provider.getTemporaryDirectory();
+                        final targetPath = dir.absolute.path + "/temp.jpg";
+                        testCompressAndGetFile(File(res[0].path),targetPath).then((value) {
+                          _ImageFile=value;
+                        });
                       }else{
                         print("not wrking or null return");
                       }
@@ -816,7 +847,17 @@ class _AddBookPageState extends State<AddBookPage>  {
       });
     });
   }
+  Future<File> testCompressAndGetFile(File file, String targetPath) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path, targetPath,
+      quality: 10,
+    );
 
+    print(file.lengthSync());
+    print(result.lengthSync());
+
+    return result;
+  }
 
 }
 
