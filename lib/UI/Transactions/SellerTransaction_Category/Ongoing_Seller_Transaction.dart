@@ -148,8 +148,7 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                                               snapshot.data.docs[index].get("Seller_PhoneNumber"),
                                               snapshot.data.docs[index].get("Buyer_Address"),
                                               snapshot.data.docs[index].get("Seller_Address"),
-
-                                            );
+                                              snapshot.data.docs[index].get("Seller_UPI"));
                                           }, child: Text("Yes")),
                                     ],
                                   )
@@ -185,7 +184,7 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
   }
   void _confirming_received_from_buyer(String DocID,String BookCollection_ID,String OrderID,double totalAmt,String buyerUID,
       String SellerUID,double BuyerShareAmt,double SellerShareAmt,String Buyerfullname,String Sellerfullname,
-      String BuyerPhoneNumber,String SellerPhoneNumber,String BuyerAdderss,String Seller_address){
+      String BuyerPhoneNumber,String SellerPhoneNumber,String BuyerAdderss,String Seller_address,String sellerUPI){
     _firestore.collection("Transactions").doc(DocID).update({
       "Book_Taken_from_Buyer":true,
       "Book_Taken_from_Buyer_Timestamp":DateTime.now(),
@@ -198,8 +197,9 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
         _firestore.collection("Admin_Refund_Transactions").doc().set({
           "Order_ID":OrderID,
           "Total_Amt":totalAmt,
+          "Seller_UPI":sellerUPI,
           "Status":"Delivered",
-          "Refund_Status":false,
+          "Refund_Status":0,
           "Refund_Type":"Completed",
           "Refund_Timestamp":"",
           "BuyerUID":buyerUID,

@@ -44,7 +44,8 @@ class _AllBooksPageState extends State<AllBooksPage> {
               i.get("seller_address"),
               i.get("seller_phoneNumber"),
               i.get("Availability"),
-              i.get("SellerFullName"))));
+              i.get("SellerFullName"),
+              i.get("seller_UPI"))));
         }
         setState(() {
         });

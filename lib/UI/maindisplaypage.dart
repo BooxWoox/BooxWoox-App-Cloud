@@ -163,6 +163,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                     bool availability = i.get("Availability");
                     String sellerFullname = i.get("SellerFullName");
                     List homepage_tag_cat = i.get("tags");
+                    String sellerUPI=i.get("seller_UPI");
                     Navigator.pushNamed(context, Book_info.id,
                         arguments: maindisp_book_info_model(
                             homepage_items_featured(
@@ -179,7 +180,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                 selleraddress,
                                 sellerphn,
                                 availability,
-                                sellerFullname)));
+                                sellerFullname,
+                                sellerUPI)));
                   });
                 },
               ),
@@ -531,6 +533,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
           String sellerphn = i.get("seller_phoneNumber");
           bool availability = i.get("Availability");
           String sellerFullname = i.get("SellerFullName");
+          String sellerUPI=i.get("seller_UPI");
           List homepage_tag_cat = i.get("tags");
           TotalBookName.add(bkname);
           TotalBookCollID.add(i.id);
@@ -549,7 +552,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                 selleraddress,
                 sellerphn,
                 availability,
-                sellerFullname));
+                sellerFullname,
+                sellerUPI));
           }
           if (homepage_tag_cat.contains("latest books")) {
             latestbooks.add(homepage_items_featured(
@@ -566,7 +570,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                 selleraddress,
                 sellerphn,
                 availability,
-                sellerFullname));
+                sellerFullname,
+                sellerUPI));
           }
           if (homepage_tag_cat.contains("best rated")) {
             BestRated.add(homepage_items_featured(
@@ -583,7 +588,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                 selleraddress,
                 sellerphn,
                 availability,
-                sellerFullname));
+                sellerFullname,
+                sellerUPI));
           }
         }
         setState(() {});

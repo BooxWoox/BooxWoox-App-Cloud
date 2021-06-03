@@ -94,6 +94,7 @@ class _Book_infoState extends State<Book_info> {
       'SellerFullName': itemmodeltemp.item.Seller_FullName,
       'Seller_Address': itemmodeltemp.item.Seller_address,
       'Seller_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
+      'Seller_UPI':itemmodeltemp.item.Seller_UPI,
       'Book_Taken_from_Seller': false,
       'Book_Taken_from_Buyer': false,
       'Buyer_Return_Initiation': false,
@@ -167,6 +168,7 @@ class _Book_infoState extends State<Book_info> {
                 'BuyerUID': useruid,
                 'BuyerShare_Amt': Book_item_model.quotedDeposit,
                 'SellerShare_Amt': Sellers_Return_Share,
+                'Seller_UPI':itemmodeltemp.item.Seller_UPI,
                 'Total_Amt': finalrent,
               });
             }).then((value) {
@@ -176,7 +178,7 @@ class _Book_infoState extends State<Book_info> {
                 'userUID':itemmodeltemp.item.OwnerUID.trim(),
                 'isSeen':false,
                 'Timestamp':DateTime.now(),
-                'Message': "Your book ${itemmodeltemp.item.BookName} has been borrowed \n Please see in seller transaction about the details."
+                'Message': "Your book ${itemmodeltemp.item.BookName} has been borrowed \nPlease see in seller transaction about the details."
               }).then((value) {
                 Navigator.pop(context);
                 _onBasicSuccessAlert(context, "Payment Successfully Completed");

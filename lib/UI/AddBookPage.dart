@@ -344,16 +344,14 @@ class _AddBookPageState extends State<AddBookPage>  {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Flexible(
-                                child: RichText(
-                                  overflow: TextOverflow.ellipsis,
-                                  strutStyle: StrutStyle(fontSize: 18.0),
-                                  text:TextSpan(
-                                    text: "MRP",
-                                    style: TextStyle(color: Colors.black87,
-                                        fontWeight: FontWeight.w500),
-                                  ) ,
-                                ),
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                strutStyle: StrutStyle(fontSize: 18.0),
+                                text:TextSpan(
+                                  text: "MRP",
+                                  style: TextStyle(color: Colors.black87,
+                                      fontWeight: FontWeight.w500),
+                                ) ,
                               ),
                             ),
                             Container(
@@ -390,16 +388,14 @@ class _AddBookPageState extends State<AddBookPage>  {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 width: width/3.4,
-                                child: Flexible(
-                                  child: RichText(
-                                    overflow: TextOverflow.ellipsis,
-                                    strutStyle: StrutStyle(fontSize: 18.0),
-                                    text:TextSpan(
-                                      text: "Quoted Deposit",
-                                      style: TextStyle(color: Colors.black87,
-                                          fontWeight: FontWeight.w500),
-                                    ) ,
-                                  ),
+                                child: RichText(
+                                  overflow: TextOverflow.ellipsis,
+                                  strutStyle: StrutStyle(fontSize: 18.0),
+                                  text:TextSpan(
+                                    text: "Quoted Deposit",
+                                    style: TextStyle(color: Colors.black87,
+                                        fontWeight: FontWeight.w500),
+                                  ) ,
                                 ),
                               ),
                             ),

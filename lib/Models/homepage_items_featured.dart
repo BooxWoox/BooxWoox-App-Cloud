@@ -13,15 +13,16 @@ class homepage_items_featured{
   String _OwnerUID;
   String _Seller_address;
   String _Seller_phnNumber;
-
+  bool _availability;
+  String _Seller_FullName;
+  String _Seller_UPI;
   String get Author => _Author;
 
   set Author(String value) {
     _Author = value;
   }
 
-  bool _availability;
-  String _Seller_FullName;
+
 
   homepage_items_featured(
       this._Author,
@@ -37,7 +38,8 @@ class homepage_items_featured{
       this._Seller_address,
       this._Seller_phnNumber,
       this._availability,
-      this._Seller_FullName);
+      this._Seller_FullName,
+      this._Seller_UPI);
 
   String get BookName => _BookName;
 
@@ -100,4 +102,10 @@ class homepage_items_featured{
   int get Dislikes => _Dislikes;
 
   double get Mrp => _Mrp;
+
+  String get Seller_UPI=>_Seller_UPI;
+
+  set Seller_UPI(String value){
+    _Seller_UPI=value;
+  }
 }

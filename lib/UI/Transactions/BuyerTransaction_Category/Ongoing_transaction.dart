@@ -33,6 +33,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
   String Buyer_fullname="";
   String Seller_fullname="";
   String Bkname="";
+  String SellerUPI="";
   @override
   Widget build(BuildContext context) {
     String UserUID=_auth.currentUser.uid.toString();
@@ -77,18 +78,14 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Flexible(
-                                          child: RichText(
+                                        Container(
+                                          width:MediaQuery.of(context).size.width/2,
+                                          child: Text(snapshot.data.docs[index].get("Book_Name"),
                                             overflow: TextOverflow.ellipsis,
-                                            strutStyle: StrutStyle(fontSize: 17.0),
-                                            text:TextSpan(
-                                              text: snapshot.data.docs[index].get("Book_Name"),
-                                              style:TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.w600
-                                              ),
-                                            ) ,
-                                          ),
+                                            style:TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w600
+                                            ),),
                                         ),
                                         SizedBox(height: 12,),
                                         Row(
@@ -299,6 +296,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
         setState(() {
           Buyer_fullname=value.get("BuyerFullName");
           Seller_fullname=value.get("SellerFullName");
+          SellerUPI=value.get("Seller_UPI");
         });
       }).then((value) {
         countDocuments("Delivery_System").then((value) {
@@ -312,6 +310,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
             "SellerUID":SellerUID,
             "BuyerShare_Amt":Buyershareamt,
             "SellerShare_Amt":Sellershareamt,
+            "Seller_UPI":SellerUPI,
             "from_Name":Buyer_fullname,
             "to_Name":Seller_fullname,
             "from_PhoneNumber":buyerphn,
@@ -359,7 +358,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
           "Order_ID":orderID,
           "Total_Amt":totalamt,
           "Status":"Delivering",
-          "Refund_Status":false,
+          "Refund_Status":0,
           "Refund_Type":"Cancelled",
           "Refund_Timestamp":"",
           "BuyerUID":BuyerUID,
@@ -370,6 +369,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
           "SellerFullName":Seller_fullname,
           "Buyer_PhoneNumber":buyerphn,
           "Seller_PhoneNumber":sellerphn,
+          "Seller_UPI":SellerUPI,
           "Buyer_Address":from_address,
           "order_creation_date":DateTime.now(),
           "Seller_Address":to_address,
