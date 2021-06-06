@@ -52,8 +52,10 @@ class _Completed_transaction_BuyerState extends State<Completed_transaction_Buye
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  SizedBox(width: 20,),
                                   Container(
                                     height: 120,
                                     width: 90,
@@ -63,10 +65,15 @@ class _Completed_transaction_BuyerState extends State<Completed_transaction_Buye
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(snapshot.data.docs[index].get("Book_Name"),style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600
-                                      ),),
+                                      Container(
+                                        width:MediaQuery.of(context).size.width/2,
+                                        child: Text(snapshot.data.docs[index].get("Book_Name"),
+                                          overflow: TextOverflow.ellipsis,
+                                          style:TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w600
+                                          ),),
+                                      ),
                                       SizedBox(height: 12,),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
@@ -92,6 +99,13 @@ class _Completed_transaction_BuyerState extends State<Completed_transaction_Buye
                                         children: [
                                           Text("Order ID: "),
                                           Text(snapshot.data.docs[index].get("Order_ID")),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Text("Payment ID: "),
+                                          Text(snapshot.data.docs[index].get("Payment_ID")),
                                         ],
                                       ),
                                       SizedBox(height: 8,),

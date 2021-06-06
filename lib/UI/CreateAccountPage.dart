@@ -10,6 +10,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sweetsheet/sweetsheet.dart';
+import 'LoginPage.dart';
+import 'package:webviewx/webviewx.dart';
 
 final _firestore=FirebaseFirestore.instance;
 class CreateAccountPage extends StatefulWidget {
@@ -39,6 +41,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   bool _initialized = false;
   bool _error = false;
+
+  WebViewXController webviewController;
 
   _showSnackBar(@required String message, @required Color colors) {
     if (scaffoldKey != null) {
@@ -277,7 +281,43 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       Text("I accept all "),
                       GestureDetector(
                         onTap: (){
-                          launch('https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
+
+                          showDialog(
+                            context: context,
+                            builder: (context){
+                              return Dialog(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                                elevation: 16,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(30.0),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: WebViewX(
+                                          initialContent: 'https://booxwoox.netlify.app/tnc.html',
+                                          initialSourceType: SourceType.URL,
+                                          onWebViewCreated: (controller) => webviewController = controller,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5,),
+                                      InkWell(
+                                        onTap: (){
+                                          Navigator.pop(context);
+                                        },
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.red,
+                                          radius: 20,
+                                          child: Icon(Icons.close_sharp,color: Colors.white,),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          );
+
+                         // launch('https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
                         },
                           child: Text("Terms & conditions",
                           style: TextStyle(
@@ -442,7 +482,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           });
         },
         verificationFailed: (FirebaseAuthException e) {
-          _onBasicErrorPressed(context, "Verification Failed");
+          _sweetheartDialog("Verification Failed+${e.message}");
           print(e.message);
         },
         codeSent: (String verficationID, int resendToken) {
@@ -456,7 +496,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             _verificationCode = verificationID;
           });
         },
-        timeout: Duration(seconds: 120));
+        timeout: Duration(seconds: 12));
   }
   setvaluesofuser_database(String uid,String username,String Phone,String email, String fullname_typed) async{
     try{
@@ -469,7 +509,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         'FullName':fullname_typed.trim(),
         'Add2':"2",
       }).then((value) {
+        Navigator.pushReplacementNamed(context, LoginPage.id);
         _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
+
       });
     }
     catch(e){

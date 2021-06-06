@@ -846,7 +846,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path, targetPath,
-      quality: 10,
+      quality: 45,
     );
 
     print(file.lengthSync());

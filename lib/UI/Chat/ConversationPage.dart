@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bookollab/UI/Chat/ChatsPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +17,8 @@ class ConversationsPage extends StatefulWidget {
 }
 
 class _ConversationsPageState extends State<ConversationsPage> {
+  ScrollController _controller = ScrollController();
+
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String UserUID = _auth.currentUser.uid.toString();
 
@@ -69,7 +73,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                 .collection("Chat")
                 .doc(second_user.id)
                 .collection("Messages")
-                .orderBy("timestamp", descending: false)
+                .orderBy("timestamp", descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -81,6 +85,8 @@ class _ConversationsPageState extends State<ConversationsPage> {
                 children: [
                   Expanded(
                     child: ListView.builder(
+                      reverse: true,
+                      controller: _controller,
                       itemCount: snapshot.data.docs.length,
                       itemBuilder: (BuildContext context, int index) {
                         var doc = snapshot.data.docs[index];
@@ -170,6 +176,12 @@ class _ConversationsPageState extends State<ConversationsPage> {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 8,horizontal: 4),
                     child: TextField(
+                      onTap: (){
+                        Timer(
+                            Duration(milliseconds: 300),
+                                () => _controller
+                                .jumpTo(_controller.position.minScrollExtent));
+                      },
                       controller: messageController,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
@@ -230,6 +242,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
       });
     }
     messageController.clear();
+
   }
 }
 

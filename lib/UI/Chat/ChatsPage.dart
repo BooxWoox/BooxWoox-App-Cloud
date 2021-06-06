@@ -20,6 +20,7 @@ class ChatsPage extends StatefulWidget {
 }
 
 class _ChatsPageState extends State<ChatsPage> {
+  ScrollController _scrollController = new ScrollController();
   String UserUID = _auth.currentUser.uid.toString();
   List<String> chats = [];
 

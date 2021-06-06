@@ -16,6 +16,8 @@ import 'package:dio/dio.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:sweetsheet/sweetsheet.dart';
+
 
 final _firestore=FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
@@ -26,6 +28,8 @@ class Ongoing_Seller_Transaction extends StatefulWidget {
 
 class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction> {
   String UserUID=_auth.currentUser.uid.toString();
+  final SweetSheet _sweetSheet = SweetSheet();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,8 +56,10 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  SizedBox(width:10,),
                                   Container(
                                     height: 120,
                                     width: 90,
@@ -63,10 +69,15 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(snapshot.data.docs[index].get("Book_Name"),style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600
-                                      ),),
+                                      Container(
+                                        width:MediaQuery.of(context).size.width/2,
+                                        child: Text(snapshot.data.docs[index].get("Book_Name"),
+                                          overflow: TextOverflow.ellipsis,
+                                          style:TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w600
+                                          ),),
+                                      ),
                                       SizedBox(height: 12,),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
@@ -134,21 +145,50 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                                       FlatButton(
                                           color:Colors.greenAccent,
                                           onPressed: (){
-                                            String BookCollectionID=snapshot.data.docs[index].get("BookCollection_ID");
-                                            _confirming_received_from_buyer(snapshot.data.docs[index].id,BookCollectionID,
-                                                snapshot.data.docs[index].get("Order_ID"),
-                                                double.parse(snapshot.data.docs[index].get("Total_Amt").toString()),
-                                                snapshot.data.docs[index].get("BuyerUID"),
-                                                snapshot.data.docs[index].get("SellerUID"),
-                                                double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString()),
-                                                double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString()),
-                                                snapshot.data.docs[index].get("BuyerFullName"),
-                                                snapshot.data.docs[index].get("SellerFullName"),
-                                                snapshot.data.docs[index].get("Buyer_PhoneNumber"),
-                                              snapshot.data.docs[index].get("Seller_PhoneNumber"),
-                                              snapshot.data.docs[index].get("Buyer_Address"),
-                                              snapshot.data.docs[index].get("Seller_Address"),
-                                              snapshot.data.docs[index].get("Seller_UPI"));
+                                            //Confirmation Dialog box
+                                            _sweetSheet.show(
+                                              context: context,
+                                              title: Text("Warning"),
+                                              description: Text(
+                                                  'This action is irreversible\nAre you sure?'),
+                                              color: SweetSheetColor.WARNING,
+                                              icon: Icons.warning,
+                                              positive: SweetSheetAction(
+                                                onPressed: () {
+                                                  String BookCollectionID=snapshot.data.docs[index].get("BookCollection_ID");
+                                                  _confirming_received_from_buyer(snapshot.data.docs[index].id,BookCollectionID,
+                                                      snapshot.data.docs[index].get("Order_ID"),
+                                                      double.parse(snapshot.data.docs[index].get("Total_Amt").toString()),
+                                                      snapshot.data.docs[index].get("BuyerUID"),
+                                                      snapshot.data.docs[index].get("SellerUID"),
+                                                      double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString()),
+                                                      double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString()),
+                                                      snapshot.data.docs[index].get("BuyerFullName"),
+                                                      snapshot.data.docs[index].get("SellerFullName"),
+                                                      snapshot.data.docs[index].get("Buyer_PhoneNumber"),
+                                                      snapshot.data.docs[index].get("Seller_PhoneNumber"),
+                                                      snapshot.data.docs[index].get("Buyer_Address"),
+                                                      snapshot.data.docs[index].get("Seller_Address"),
+                                                      snapshot.data.docs[index].get("Seller_UPI"));
+                                                  Navigator.pop(context);
+                                                },
+                                                title: 'YES',
+                                                color: Colors.white,
+                                                icon: Icons.open_in_new,
+                                              ),
+                                              negative: SweetSheetAction(
+                                                onPressed: () {
+
+                                                  Navigator.of(context).pop();
+                                                },
+                                                title: 'CANCEL',
+                                              ),
+                                            );
+
+
+
+
+
                                           }, child: Text("Yes")),
                                     ],
                                   )

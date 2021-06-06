@@ -29,6 +29,7 @@ class Book_info extends StatefulWidget {
 }
 
 class _Book_infoState extends State<Book_info> {
+
   String cityName="Select Your City";
   String Book_name = "";
   String Buyer_address = "";
@@ -42,6 +43,10 @@ class _Book_infoState extends State<Book_info> {
   double Sellers_Return_Share = 0;
   double _bankcharges = 0;
   double finalrent = 0;
+
+  String Razorpay_username="";
+  String Razorpay_pass="";
+
   List<int> _LeasePeriod = [];
   var result = null;
   int leaseduration = 0;
@@ -104,7 +109,7 @@ class _Book_infoState extends State<Book_info> {
       'Lease_Duration': _selectedLeaseperiod,
       'Lease_Start_Date': Leasestartdate,
       'Lease_End_Date':
-          Leasestartdate.add(Duration(days: _selectedLeaseperiod * 34)),
+          Leasestartdate.add(Duration(days: _selectedLeaseperiod * 34)),//added 4 more days delivery time accomodation
     }).then((value) {
       print(itemmodeltemp.item.BookCollectionidentity);
       _firestore
@@ -147,6 +152,7 @@ class _Book_infoState extends State<Book_info> {
             "SellerUID": itemmodeltemp.item.OwnerUID.trim(),
             "BuyerUID": useruid
           }).then((value) {
+            //included sequence generator for numbering delivering targets CAN BE CHANGED LATER
             countDocuments("Delivery_System").then((value) {
               _firestore
                   .collection("Delivery_System")
@@ -163,6 +169,7 @@ class _Book_infoState extends State<Book_info> {
                 'to_PhoneNumber': Buyer_phnumber,
                 'from_PhoneNumber': itemmodeltemp.item.Seller_phnNumber,
                 'Order_ID': response.orderId,
+                'Payment_ID': response.paymentId,
                 "Status": "Delivering",
                 "SellerUID": itemmodeltemp.item.OwnerUID.trim(),
                 'BuyerUID': useruid,
@@ -173,7 +180,6 @@ class _Book_infoState extends State<Book_info> {
               });
             }).then((value) {
               //Notification setup to inform seller that somebody has purchased a book
-              
               _firestore.collection("Notification_Messages").doc().set({
                 'userUID':itemmodeltemp.item.OwnerUID.trim(),
                 'isSeen':false,
@@ -250,7 +256,7 @@ class _Book_infoState extends State<Book_info> {
   void openCheckout(String id, double amt, String buyer_address,
       String buyer_phnumber) async {
     var options = {
-      'key': 'rzp_test_qlUviOkjQzWXfJ',
+      'key': Razorpay_username,
       'amount': amt,
       'order_id': id,
       'name': 'BooxWooX',
@@ -298,32 +304,34 @@ class _Book_infoState extends State<Book_info> {
       return Scaffold(
         bottomSheet: Row(
           children: [
+
+            //TODO:FOR ADD TO FAV FUNCTION(WILL BE IMPLEMENTED IN NEXT PATCH)
+            // Container(
+            //   height: 60,
+            //   width: width / 2,
+            //   child: ElevatedButton(
+            //     onPressed: () {},
+            //     child: Text(
+            //       "ADD TO FAV",
+            //       style: TextStyle(color: Colors.black, fontSize: 16),
+            //     ),
+            //     style: ButtonStyle(
+            //         padding: MaterialStateProperty.all<EdgeInsets>(
+            //             EdgeInsets.all(15)),
+            //         foregroundColor:
+            //             MaterialStateProperty.all<Color>(Colors.white),
+            //         backgroundColor:
+            //             MaterialStateProperty.all<Color>(Colors.white),
+            //         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            //             RoundedRectangleBorder(
+            //                 borderRadius: BorderRadius.circular(16.0),
+            //                 side:
+            //                     BorderSide(color: Colors.black, width: 2.0)))),
+            //   ),
+            // ),
             Container(
               height: 60,
-              width: width / 2,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  "ADD TO FAV",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
-                ),
-                style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                        EdgeInsets.all(15)),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            side:
-                                BorderSide(color: Colors.black, width: 2.0)))),
-              ),
-            ),
-            Container(
-              height: 60,
-              width: width / 2,
+              width: width,
               child: ElevatedButton(
                 onPressed: () {
                   if (checkparameters(_selectedLeaseperiod) &&
@@ -616,7 +624,7 @@ class _Book_infoState extends State<Book_info> {
                         MaterialStateProperty.all<Color>(Colors.white),
                     backgroundColor: MaterialStateProperty.all<Color>(
                         itemmodeltemp.item.availability
-                            ? Colors.black
+                            ? Color(0xFFFFCC00)
                             : Colors.red),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -1002,7 +1010,6 @@ class _Book_infoState extends State<Book_info> {
             conditiondesc,
             isbn,
             leaseduration);
-        print(Bookname + "OOOOOOOOOOOOOOOOPPPPPPPPP");
         return true;
       });
     } catch (e) {
@@ -1013,8 +1020,9 @@ class _Book_infoState extends State<Book_info> {
 
   void getOrderID(
       double amt, String buyer_address, String buyer_phnumber) async {
-    String username = "rzp_test_qlUviOkjQzWXfJ";
-    String password = "KaQ60n8ZkWPdCN2AeImDoPhr";
+
+    String username = Razorpay_username;
+    String password = Razorpay_pass;
     final url = "https://api.razorpay.com/v1/orders";
     var auth = 'Basic ' + base64Encode(utf8.encode('$username:$password'));
     var dio = Dio();
@@ -1023,7 +1031,6 @@ class _Book_infoState extends State<Book_info> {
             data: {"amount": amt, "currency": "INR", "receipt": "Undefined"},
             options: Options(headers: <String, String>{'authorization': auth}))
         .then((value) {
-      print(value.data['id']);
       OrderID = value.data['id'];
       openCheckout(value.data['id'], amt, buyer_address, buyer_phnumber);
     });
@@ -1036,6 +1043,8 @@ class _Book_infoState extends State<Book_info> {
           .doc("Quoted_Parameters")
           .get()
           .then((value) {
+        Razorpay_username=value.get("Razorpay_secretusername");
+        Razorpay_pass=value.get("Razorpay_secretpass");
         _quotedrentpercent =
             double.parse(value["Quoted_Rent_Percent"].toString());
         _deliverycharges = double.parse(value["Delivery_Charges"].toString());
@@ -1048,7 +1057,7 @@ class _Book_infoState extends State<Book_info> {
         return true;
       });
     } catch (e) {
-      print("yohooooooooooooooooo2" + e);
+      print("Error:+$e");
     }
     return false;
   }
@@ -1094,11 +1103,9 @@ class _Book_infoState extends State<Book_info> {
 
 - The borrower and lender are requested to follow all Covid Guidelines when making the transfer to the delivery personal for your and your family's safety and good health. Our delivery personal will carry a zip bag in which the book will be placed after a minor check and hence, will be transferred in that. The delivery personal will be following all Covid Protocols and incase of failure from the delivery personal's end, or incase of any misconduct, either party can report the case to us in the app and then the issue will be investigated and resolved further.
 
-- Towards the end of the borrowing period, another extra 1 week duration will be provided to both parties and the borrower must send the book return request before this duration ends. The lender must make sure to receive the book back and complete the transaction in the app as well. In case of any delay from the borrower's end, a penalty will be applicable on the borrower.
+- Towards the end of the borrowing period, another extra 4-5 days duration will be provided to both parties and the borrower must send the book return request before this duration ends. The lender must make sure to receive the book back and complete the transaction in the app as well. In case of any delay from the borrower's end, a penalty will be applicable on the borrower.
 
-- If the borrower wishes to extend the borrowing period, he/she will have to initiate a request from 'My Borrowed Books' section regarding the same. Once the lender approves the request, the borrower will have to make a payment for borrowing the book for the next period. Please note that, the period won't be extended unless the payment has been made before the borrowing period ends. In any such case, the extension request will be rejected automatically.
-
-- If upon returning the book, there is any issue regarding condition of book or if any damage is done to the book, the lender can raise an issue through the app and the matter will be looked into by our team and resolved accordingly. If any penalties are induced then an amount will be deducted from the security deposited which will be decided by our team.
+- If upon returning the book, there is any issue regarding condition of book or if any damage is done to the book, the lender can raise an issue by calling to the support of app and the matter will be looked into by our team and resolved accordingly. If any penalties are induced then an amount will be deducted from the security deposited which will be decided by our team.
 
 - If there is no issue and the book has been safely returned, the lender will have to confirm the receiving of the book in the app and thereafter the deposit will be returned to the borrower. It is suggested that the book verification and receiving be done in front of the lender to avoid any issues later. Once, the receiving is confirmed, the transfer will be considered closed and complete and no further issues for that transaction will be entertained.
 
@@ -1122,11 +1129,9 @@ Instructions
 
 - The borrower and lender are requested to follow all Covid Guidelines when making the transfer to the delivery personal for your and your family's safety and good health. Our delivery personal will carry a zip bag in which the book will be placed after a minor check and hence, will be transferred in that. The delivery personal will be following all Covid Protocols and incase of failure from the delivery personal's end, or incase of any misconduct, either party can report the case to us in the app and then the issue will be investigated and resolved further.
 
-- Towards the end of the borrowing period, another extra 1 week duration will be provided to both parties and the borrower must send the book return request before this duration ends. The lender must make sure to receive the book back and complete the transaction in the app as well. In case of any delay from the borrower's end, a penalty will be applicable on the borrower.
+- Towards the end of the borrowing period, another extra 4-5 days duration will be provided to both parties and the borrower must send the book return request before this duration ends. The lender must make sure to receive the book back and complete the transaction in the app as well. In case of any delay from the borrower's end, a penalty will be applicable on the borrower.
 
-- If the borrower wishes to extend the borrowing period, he/she will have to initiate a request from 'My Borrowed Books' section regarding the same. Once the lender approves the request, the borrower will have to make a payment for borrowing the book for the next period. Please note that, the period won't be extended unless the payment has been made before the borrowing period ends. In any such case, the extension request will be rejected automatically.
-
-- If upon returning the book, there is any issue regarding condition of book or if any damage is done to the book, the lender can raise an issue through the app and the matter will be looked into by our team and resolved accordingly. If any penalties are induced then an amount will be deducted from the security deposited which will be decided by our team.
+- If upon returning the book, there is any issue regarding condition of book or if any damage is done to the book, the lender can raise an issue by calling to the support of app and the matter will be looked into by our team and resolved accordingly. If any penalties are induced then an amount will be deducted from the security deposited which will be decided by our team.
 
 - If there is no issue and the book has been safely returned, the lender will have to confirm the receiving of the book in the app and thereafter the deposit will be returned to the borrower. It is suggested that the book verification and receiving be done in front of the lender to avoid any issues later. Once, the receiving is confirmed, the transfer will be considered closed and complete and no further issues for that transaction will be entertained.
 

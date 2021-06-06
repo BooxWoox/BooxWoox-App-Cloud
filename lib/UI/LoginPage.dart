@@ -1,3 +1,4 @@
+import 'package:bookollab/UI/CreateAccountPage.dart';
 import 'package:bookollab/UI/Homepage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -119,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Forgot Password?"
                       ),
-                    )
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -127,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Center(
                   child: RaisedButton(
+                    elevation: 6,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical:13.0,horizontal: 13),
                       child: Container(
@@ -134,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 25,
                         child: Center(
                           child: FittedBox(
-                            child: Text('Done',style: TextStyle(
+                            child: Text('Login',style: TextStyle(
                                 fontFamily: 'LeelawUI',
                                 fontSize: 16,
                                 color: Colors.white,
@@ -188,6 +190,41 @@ class _LoginPageState extends State<LoginPage> {
 
                   ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: RaisedButton(
+                    elevation: 6,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical:13.0,horizontal: 13),
+                      child: Container(
+                        width: 110,
+                        height: 25,
+                        child: Center(
+                          child: FittedBox(
+                            child: Text('Create Account',style: TextStyle(
+                                fontFamily: 'LeelawUI',
+                                fontSize: 16,
+                                color: Color(0xFFFFCC00),
+                                fontWeight: FontWeight.bold
+                            ),),
+                          ),
+                        ),
+                      ),
+                    ),
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(21),
+                    ),
+                    onPressed: () async{
+                          //Goto create account page
+                      Navigator.pushNamed(context, CreateAccountPage.id);
+                    },
+
+                  ),
+                ),
+
               ],
             )
           ],

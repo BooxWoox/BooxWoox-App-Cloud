@@ -66,9 +66,10 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    SizedBox(width: 10,),
                                     Container(
                                       height: 120,
                                       width: 90,
@@ -114,6 +115,13 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                             Text(snapshot.data.docs[index].get("Order_ID")),
                                           ],
                                         ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text("Payment ID: "),
+                                            Text(snapshot.data.docs[index].get("Payment_ID")),
+                                          ],
+                                        ),
                                         SizedBox(height: 8,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
@@ -145,35 +153,42 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                               String orderid=snapshot.data.docs[index].id;
                                               double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
                                               //Confirmation from user
-                                              _sweetSheet.show(
-                                                context: context,
-                                                title: Text("Warning"),
-                                                description: Text(
-                                                    'This action is irreversible\nAre you sure?'),
-                                                color: SweetSheetColor.WARNING,
-                                                icon: Icons.warning,
-                                                positive: SweetSheetAction(
-                                                  onPressed: () {
-                                                    if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
-                                                      _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
-                                                    }else{
-                                                      ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt,
-                                                          snapshot.data.docs[index].get("Book_Name"));
-                                                    }
-                                                    Navigator.pop(context);
+                                              if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
+                                                _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
+                                              }else{
+                                                _sweetSheet.show(
+                                                  context: context,
+                                                  title: Text("Warning"),
+                                                  description: Text(
+                                                      'This action is irreversible\nAre you sure?'),
+                                                  color: SweetSheetColor.WARNING,
+                                                  icon: Icons.warning,
+                                                  positive: SweetSheetAction(
+                                                    onPressed: () {
+                                                      if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
+                                                        _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
+                                                        Navigator.pop(context);
 
-                                                  },
-                                                  title: 'CONTINUE',
-                                                  color: Colors.white,
-                                                  icon: Icons.open_in_new,
-                                                ),
-                                                negative: SweetSheetAction(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  title: 'CANCEL',
-                                                ),
-                                              );
+                                                      }else{
+                                                        ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt,
+                                                            snapshot.data.docs[index].get("Book_Name"),snapshot.data.docs[index].get("Payment_ID"));
+                                                      }
+                                                      Navigator.pop(context);
+
+                                                    },
+                                                    title: 'CONTINUE',
+                                                    color: Colors.white,
+                                                    icon: Icons.open_in_new,
+                                                  ),
+                                                  negative: SweetSheetAction(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    title: 'CANCEL',
+                                                  ),
+                                                );
+                                              }
+
                                         }),
                                         Text("Return"),
                                       ],
@@ -288,7 +303,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
 
     );
   }
-  void ReturnInitaiation(String docID,String to_address,String from_address,String BuyerUID,String SellerUID,double Buyershareamt,double Sellershareamt,String buyerphn,String sellerphn,String orderID,double totalamt,String bookname){
+  void ReturnInitaiation(String docID,String to_address,String from_address,String BuyerUID,String SellerUID,double Buyershareamt,double Sellershareamt,String buyerphn,String sellerphn,String orderID,double totalamt,String bookname,String PaymentID){
     _firestore.collection("Transactions").doc(docID).update({
       "Buyer_Return_Initiation":true,
     }).then((value) {
@@ -304,6 +319,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
             "Seq_No":value.toInt()+1,
             "BookName":bookname,
             "Order_ID":orderID,
+            "Payment_ID":PaymentID,
             "Total_Amt":totalamt,
             "Status":"Delivering",
             "BuyerUID":BuyerUID,

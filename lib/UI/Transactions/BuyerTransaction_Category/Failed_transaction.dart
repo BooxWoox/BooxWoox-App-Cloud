@@ -51,8 +51,10 @@ class _Failed_transaction_BuyerState extends State<Failed_transaction_Buyer> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  SizedBox(width: 10,),
                                   Container(
                                     height: 120,
                                     width: 90,
@@ -62,10 +64,15 @@ class _Failed_transaction_BuyerState extends State<Failed_transaction_Buyer> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(snapshot.data.docs[index].get("Book_Name"),style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600
-                                      ),),
+                                      Container(
+                                        width:MediaQuery.of(context).size.width/2,
+                                        child: Text(snapshot.data.docs[index].get("Book_Name"),
+                                          overflow: TextOverflow.ellipsis,
+                                          style:TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w600
+                                          ),),
+                                      ),
                                       SizedBox(height: 12,),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
