@@ -8,6 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:bookollab/UI/LoginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
+final _firestore=FirebaseFirestore.instance;
 
 class Onboarding extends StatefulWidget {
   static String id='Onboarding_Screen';
@@ -35,8 +39,12 @@ class _OnboardingState extends State<Onboarding> {
         print('User is currently signed out!');
       } else {
         print('User is signed in!');
-        setState(() {
-          Navigator.pushReplacementNamed(context, Homepage.id);
+        _firestore.collection("Users").doc(user.uid).get().then((value){
+          if(value.get("Username").toString().isNotEmpty){
+            setState(() {
+              Navigator.pushReplacementNamed(context, Homepage.id);
+            });
+          }
         });
       }
     });

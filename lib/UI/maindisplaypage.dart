@@ -514,6 +514,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
     try {
       await _firestore
           .collection("Book_Collection")
+          .where("OwnerUID",isNotEqualTo: FirebaseAuth.instance.currentUser.uid)
           .where("adminapproval", isEqualTo: 1)
           .get()
           .then((value) {

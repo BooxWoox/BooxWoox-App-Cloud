@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pagination/pagination.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 final _firestore = FirebaseFirestore.instance;
@@ -221,8 +222,9 @@ class _AllBooksPageState extends State<AllBooksPage> {
                 // orderBy is compulsary to enable pagination
                 query: _firestore
                     .collection("Book_Collection")
+                    .where("OwnerUID",isNotEqualTo: FirebaseAuth.instance.currentUser.uid)
                     .where("adminapproval", isEqualTo: 1)
-                    .orderBy('Availability',descending: true),
+                    .orderBy('OwnerUID',descending: true),
                 isLive: true // to fetch real-time data
             ),
           ),
