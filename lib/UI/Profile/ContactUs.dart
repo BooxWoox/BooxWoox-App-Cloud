@@ -36,7 +36,7 @@ class _ContactUsState extends State<ContactUs> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: CustomCard("Maurya Bhat", "+91 8849229046", "Founder", "Overall", "bhattmaurya@gmail.com", "https://firebasestorage.googleapis.com/v0/b/bookollab-3c360.appspot.com/o/ProfileImages%2FMaurya.jpg?alt=media&token=7df1dc68-a0f2-4b85-b7b0-38a70bfa99f1"),
+                child: CustomCard("Maurya Bhatt", "+91 8849229046", "Founder", "Overall", "bhattmaurya@gmail.com", "https://firebasestorage.googleapis.com/v0/b/bookollab-3c360.appspot.com/o/ProfileImages%2FMaurya.jpg?alt=media&token=7df1dc68-a0f2-4b85-b7b0-38a70bfa99f1"),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
