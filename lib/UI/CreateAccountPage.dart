@@ -24,7 +24,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   final SweetSheet _sweetSheet = SweetSheet();
   bool checkValueBox=false;
   bool checkValuePrivacy=false;
-  String _verificationCode;
+  String _verificationCode="";
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String phoneNumber = ""; //enter your 10 digit number
   int minNumber = 1000;
@@ -483,8 +483,6 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                                     borderRadius: BorderRadius.circular(21),
                                                   ),
                                                   onPressed: () async{
-                                                    //check parameters are valid or not
-                                                    //bool check_parmaeters();
                                                     //send api call to verify otp
                                                     print("otp verify button");
                                                     print(otp_typed);
@@ -577,12 +575,12 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         'Add2':"2",
       }).then((value) {
         userValue.user.linkWithCredential(credential).then((user) {
-        }).then((value) {
-          print("Registration Successful");
-          FirebaseAuth.instance.signOut();
-          Navigator.pushReplacementNamed(context, LoginPage.id);
-          _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
         });
+      }).then((value) {
+        print("Registration Successful");
+        FirebaseAuth.instance.signOut();
+        Navigator.pushReplacementNamed(context, LoginPage.id);
+        _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
       });
     }
     catch(e){
