@@ -497,13 +497,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                                         if (value.user != null) {
                                                           print("Hola");
                                                           print(value.user.uid);
-                                                          setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed, fullname_typed);
-                                                          value.user.linkWithCredential(credential).then((user) {
-                                                            print("$user Successfully merged");
-                                                            print("Registration Successful");
-                                                          }).catchError((error) {
-                                                            _sweetheartDialog(error.toString());
-                                                          });
+                                                          setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed, fullname_typed,credential,value);
                                                         }
                                                       });
                                                     } catch (e) {
@@ -568,9 +562,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             _verificationCode = verificationID;
           });
         },
-        timeout: Duration(seconds: 12));
+        timeout: Duration(seconds: 60));
   }
-  setvaluesofuser_database(String uid,String username,String Phone,String email, String fullname_typed) async{
+  setvaluesofuser_database(String uid,String username,String Phone,String email, String fullname_typed,
+      AuthCredential credential, UserCredential userValue) async{
     try{
       await _firestore.collection('Users').doc(uid).set({
         'Username': username.trim(),
@@ -581,9 +576,13 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         'FullName':fullname_typed.trim(),
         'Add2':"2",
       }).then((value) {
-        Navigator.pushReplacementNamed(context, LoginPage.id);
-        _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
-
+        userValue.user.linkWithCredential(credential).then((user) {
+        }).then((value) {
+          print("Registration Successful");
+          FirebaseAuth.instance.signOut();
+          Navigator.pushReplacementNamed(context, LoginPage.id);
+          _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
+        });
       });
     }
     catch(e){

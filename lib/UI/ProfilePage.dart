@@ -47,7 +47,10 @@ class _ProfilePageState extends State<ProfilePage> {
     }
     catch(e){
       print(e.message);
-      Navigator.pop(context);
+      _auth.signOut().then((value) {
+        Navigator.pushReplacementNamed(context, LoginPage.id);
+      });
+
     }
 
 
