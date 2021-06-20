@@ -124,7 +124,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal:48.0,vertical: 10),
-                    child: Text('Phone Number',
+                    child: Text('Phone Number (+91)',
                       style: TextStyle(
                           fontSize: 16
                       ),),
@@ -518,7 +518,6 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                             }else{
                               _sweetheartDialog("Phone Number already Exists");
                             }
-
                           });
 
                         }
@@ -537,13 +536,20 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: '+91${phoneNumber.trim()}',
         verificationCompleted: (PhoneAuthCredential credential) async {
-          await FirebaseAuth.instance
-              .signInWithCredential(credential)
-              .then((value) async {
-            if (value.user != null) {
-              print("success");
-            }
-          });
+          try{
+            await FirebaseAuth.instance
+                .signInWithCredential(credential)
+                .then((value) async {
+              if (value.user != null) {
+                AuthCredential credential = EmailAuthProvider.credential(email: email_typed, password: password_typed);
+                setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed, fullname_typed,credential,value);
+                print("success");
+              }
+            });
+          }catch(e){
+            _sweetheartDialog(e.toString());
+          }
+
         },
         verificationFailed: (FirebaseAuthException e) {
           _sweetheartDialog("Verification Failed+${e.message}");
@@ -575,6 +581,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         'Add2':"2",
       }).then((value) {
         userValue.user.linkWithCredential(credential).then((user) {
+          print("Registration Successful");
+          FirebaseAuth.instance.signOut();
+          Navigator.pushReplacementNamed(context, LoginPage.id);
+          _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
         });
       }).then((value) {
         print("Registration Successful");
