@@ -23,6 +23,7 @@ import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:sweetsheet/sweetsheet.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:chips_choice/chips_choice.dart';
 
 
 final _firestore=FirebaseFirestore.instance;
@@ -46,7 +47,9 @@ class _AddBookPageState extends State<AddBookPage>  {
   double quotedprice=0;
   double rentprice=0;
   double commission_fee=10; //By default
-
+  // list of string options
+  List<String> options = [];
+  List<String> tags = [];
 @override
   void initState() {
     // TODO: implement initState
@@ -90,7 +93,7 @@ class _AddBookPageState extends State<AddBookPage>  {
           ),
           color: Color(0xFFFFCC00),
           onPressed: () async{
-            if(check(cityName,BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone,Seller_fullname)){
+            if(check(cityName,BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone,Seller_fullname,tags)){
               //checks passed
               pd.show(max: 100, msg: 'Uploading...');
 
@@ -116,7 +119,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                       "Book_Collection_ID":docid,
                       "Author":Author,
                       "adminapproval":0,//by default false
-                      "tags":[""],
+                      "tags":tags,
                       "Availability":true,
                       "BookName":BookName,
                       "Condition":"Used",
@@ -288,6 +291,27 @@ class _AddBookPageState extends State<AddBookPage>  {
                         ),
                       )
                     ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Genre tags",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: "LeelawUI",
+                          fontWeight: FontWeight.bold
+                      ),),
+                  ),
+                  ChipsChoice<String>.multiple(
+                    value: tags,
+                    onChanged: (val) => setState(() => tags = val),
+                    choiceItems: C2Choice.listFrom<String, String>(
+                      source: options,
+                      value: (i, v) => v,
+                      label: (i, v) => v,
+                      tooltip: (i, v) => v,
+                    ),
+                    wrapped: true,
+
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -494,6 +518,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                       ),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text("Book Description (Optional)",
@@ -759,8 +784,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   }
 
 
-  bool check(String city, String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address, String seller_upi,String sellercontact, String seller_fullname) {
-
+  bool check(String city, String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address, String seller_upi,String sellercontact, String seller_fullname, List<String> tags) {
    if(city.isEmpty||city==null||city!="Ahmedabad"){
      _onBasicWaitingAlertPressed(context,"Sorry we are currently operating in Ahmedabad only\nStay tuned :)");
      return false;
@@ -771,6 +795,10 @@ class _AddBookPageState extends State<AddBookPage>  {
     }
     if(condition.trim()==""||condition.trim().isEmpty||condition.trim().length==0){
       _onBasicWaitingAlertPressed(context,"Condition field can't be Empty");
+      return false;
+    }
+    if(tags.isEmpty||tags.length==0){
+      _onBasicWaitingAlertPressed(context,"Please select atleast one Genre tag for the book");
       return false;
     }
     if(mrp==0||mrp.isNaN){
@@ -840,6 +868,9 @@ class _AddBookPageState extends State<AddBookPage>  {
       setState(() {
         rentprice=double.parse(value.get("Quoted_Rent_Percent").toString());
         commission_fee=double.parse(value.get("SellerShare_Cut_Percent").toString());
+        for(var i in value.get("Genretags")){
+          options.add(i.toString());
+        }
       });
     });
   }
