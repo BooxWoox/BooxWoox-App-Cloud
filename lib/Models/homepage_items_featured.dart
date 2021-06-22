@@ -16,6 +16,11 @@ class homepage_items_featured{
   bool _availability;
   String _Seller_FullName;
   String _Seller_UPI;
+  List _Genretags;
+
+
+
+
   String get Author => _Author;
 
   set Author(String value) {
@@ -39,7 +44,8 @@ class homepage_items_featured{
       this._Seller_phnNumber,
       this._availability,
       this._Seller_FullName,
-      this._Seller_UPI);
+      this._Seller_UPI,
+      this._Genretags);
 
   String get BookName => _BookName;
 
@@ -108,4 +114,11 @@ class homepage_items_featured{
   set Seller_UPI(String value){
     _Seller_UPI=value;
   }
+
+  List get Genretags => _Genretags;
+
+  set Genretags(List value) {
+    _Genretags = value;
+  }
+
 }

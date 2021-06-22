@@ -80,7 +80,8 @@ class _AllBooksPageState extends State<AllBooksPage> {
                               snapshot.get("seller_phoneNumber"),
                               snapshot.get("Availability"),
                               snapshot.get("SellerFullName"),
-                              snapshot.get("seller_UPI"))));
+                              snapshot.get("seller_UPI"),
+                              snapshot.get("Genretags"))));
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(

@@ -146,7 +146,6 @@ class _maindisplaypageState extends State<maindisplaypage> {
                   );
                 },
                 onItemSelected: (item) {
-
                   int index=TotalBookName.indexOf(item);
                   _firestore.collection("Book_Collection").doc(TotalBookCollID[index]).get().then((i) {
                     String bkname = i.get("BookName");
@@ -165,6 +164,13 @@ class _maindisplaypageState extends State<maindisplaypage> {
                     String sellerFullname = i.get("SellerFullName");
                     List homepage_tag_cat = i.get("tags");
                     String sellerUPI=i.get("seller_UPI");
+                    List genretags=[""];
+
+                    try{
+                      genretags=i.get("Genretags");
+                    }catch(e){
+                      print(e);
+                    }
                     Navigator.pushNamed(context, Book_info.id,
                         arguments: maindisp_book_info_model(
                             homepage_items_featured(
@@ -182,7 +188,9 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                 sellerphn,
                                 availability,
                                 sellerFullname,
-                                sellerUPI)));
+                                sellerUPI,
+                                genretags
+                            )));
                   });
                 },
               ),
@@ -619,7 +627,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
           .get()
           .then((value) {
         for (var i in value.docs) {
-          print(i.get("BookName"));
+
           String bkname = i.get("BookName");
           String author = i.get("Author");
           String ImageUrl = i.get("ImageUrl");
@@ -636,6 +644,12 @@ class _maindisplaypageState extends State<maindisplaypage> {
           String sellerFullname = i.get("SellerFullName");
           String sellerUPI=i.get("seller_UPI");
           List homepage_tag_cat = i.get("tags");
+          List GenreTags=[""];
+          try{
+            GenreTags=i.get("Genretags");
+          }catch(e){
+            print(e);
+          }
           TotalBookName.add(bkname);
           TotalBookCollID.add(i.id);
           if (homepage_tag_cat.contains("booksforyou")) {
@@ -654,7 +668,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                 sellerphn,
                 availability,
                 sellerFullname,
-                sellerUPI));
+                sellerUPI,
+                GenreTags));
           }
           if (homepage_tag_cat.contains("featured")) {
             featured.add(homepage_items_featured(
@@ -672,7 +687,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                 sellerphn,
                 availability,
                 sellerFullname,
-                sellerUPI));
+                sellerUPI,
+                GenreTags));
           }
           if (homepage_tag_cat.contains("latest books")) {
             latestbooks.add(homepage_items_featured(
@@ -690,7 +706,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                 sellerphn,
                 availability,
                 sellerFullname,
-                sellerUPI));
+                sellerUPI,
+                GenreTags));
           }
           if (homepage_tag_cat.contains("best rated")) {
             BestRated.add(homepage_items_featured(
@@ -708,7 +725,8 @@ class _maindisplaypageState extends State<maindisplaypage> {
                 sellerphn,
                 availability,
                 sellerFullname,
-                sellerUPI));
+                sellerUPI,
+                GenreTags));
           }
         }
         setState(() {});
@@ -726,7 +744,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
         setState(() {});
       });
     } catch (e) {
-      print("yohooooooooooooooooo" + e.message);
+      print("Error" + e.message);
     }
 
     print(Homepage_Cat);
@@ -746,12 +764,3 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   AwesomeNotifications().createNotificationFromJsonData(message.data);
 
 }
-
-// Future<void> _firebaseonforegrounfHandler(RemoteMessage message) async{
-//   print('Got a message whilst in the foreground!');
-//   print('Message data: ${message.data}');
-//   if (message.notification != null) {
-//     print('Message also contained a notification: ${message.notification}');
-//   }
-//
-// }

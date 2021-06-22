@@ -18,6 +18,7 @@ import 'package:dio/dio.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:badge_flutter/badges.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -58,7 +59,7 @@ class _Book_infoState extends State<Book_info> {
   double totalrent = 0;
   Razorpay _razorpay;
   maindisp_book_info_model itemmodeltemp;
-
+  List<Widget> Genrechips=[];
   @override
   void initState() {
     // TODO: implement initState
@@ -71,7 +72,11 @@ class _Book_infoState extends State<Book_info> {
       Book_name = itemmodeltemp.item.BookName;
       doc_address = itemmodeltemp.item.BookCollectionidentity;
       print(Book_name);
-      setState(() {});
+      setState(() {
+        for(var i in itemmodeltemp.item.Genretags){
+          Genrechips.add(chipitem(i));
+        }
+      });
     });
     super.initState();
   }
@@ -362,9 +367,8 @@ class _Book_infoState extends State<Book_info> {
                               topRight: Radius.circular(30.0)),
                         ),
                         builder: (BuildContext context) {
-
                           return StatefulBuilder(
-                              builder: (BuildContext context, StateSetter setState /*You can rename this!*/) {
+                              builder: (BuildContext context, StateSetter setState ) {
                                 return Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -858,6 +862,40 @@ class _Book_infoState extends State<Book_info> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
+                        "Tags",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w800),
+                      ),
+                      Container(
+                        height: 50,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: itemmodeltemp.item.Genretags.length,
+                            itemBuilder: (context, itemIndex) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Chip(
+                                  padding: EdgeInsets.all(0),
+                                  backgroundColor: Colors.deepPurple,
+                                  label: Text(itemmodeltemp.item.Genretags[itemIndex], style: TextStyle(color: Colors.white)),
+                                ),
+                              );
+                            }),
+                      ),
+
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                         "Highlights",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w800),
@@ -1145,4 +1183,16 @@ Instructions
     List<DocumentSnapshot> _myDocCount = _myDoc.docs;
     return (_myDocCount.length); // Count of Documents in Collection
   }
+
+  Widget chipitem(String chiptext){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Chip(
+        padding: EdgeInsets.all(0),
+        backgroundColor: Colors.deepPurple,
+        label: Text(chiptext, style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+
 }
