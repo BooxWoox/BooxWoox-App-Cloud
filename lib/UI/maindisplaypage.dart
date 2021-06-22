@@ -31,6 +31,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
   List<homepage_items_featured> featured = [];
   List<homepage_items_featured> latestbooks = [];
   List<homepage_items_featured> BestRated = [];
+  List<homepage_items_featured> booksForYou = [];
   List TotalBookName = [];
   List TotalBookCollID=[];
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -207,7 +208,106 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Homepage_Cat[index]=="Featured"?Container(
+                        Homepage_Cat[index]=="Books For You"?
+                        Container(
+                          height: 210,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: booksForYou.length+1,
+                              itemBuilder: (context, itemIndex) {
+                                return itemIndex>booksForYou.length-1?Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap:(){
+                                          //GOTO VIEW ALL PAGE
+                                          Navigator.pushNamed(context, AllBooksPage.id);
+                                        },
+                                        child: Column(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.amberAccent,
+                                              child: Icon(Icons.remove_red_eye_rounded,color: Colors.white,),
+                                              radius: 35,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("See all"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10,)
+                                  ],
+                                ):InkWell(
+                                  onTap: () {
+                                    //goto book info page
+                                    Navigator.pushNamed(context, Book_info.id,
+                                        arguments: maindisp_book_info_model(
+                                            booksForYou[itemIndex]));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Card(
+                                          elevation: 3,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(16),
+                                          ),
+                                          child: Container(
+                                            height: 140,
+                                            width: 100,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(16),
+                                              child: Image.network(
+                                                booksForYou[itemIndex].ImageURl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              strutStyle: StrutStyle(fontSize: 16.0),
+                                              text:TextSpan(
+                                                text: booksForYou[itemIndex].BookName,
+                                                style: TextStyle(color: Colors.black87,),
+                                              ) ,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              strutStyle: StrutStyle(fontSize: 14.0),
+                                              text:TextSpan(
+                                                text: booksForYou[itemIndex].Author,
+                                                style: TextStyle(color: Colors.grey,
+                                                    fontFamily: "LeelawUI"),
+                                              ) ,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ):
+                      Homepage_Cat[index]=="Featured"?
+                        Container(
                           height: 210,
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
@@ -538,6 +638,24 @@ class _maindisplaypageState extends State<maindisplaypage> {
           List homepage_tag_cat = i.get("tags");
           TotalBookName.add(bkname);
           TotalBookCollID.add(i.id);
+          if (homepage_tag_cat.contains("booksforyou")) {
+            booksForYou.add(homepage_items_featured(
+                author,
+                bkname,
+                coll_type,
+                ImageUrl,
+                likes,
+                dislikes,
+                mrp,
+                quotedPrice,
+                original_loc,
+                owneruid,
+                selleraddress,
+                sellerphn,
+                availability,
+                sellerFullname,
+                sellerUPI));
+          }
           if (homepage_tag_cat.contains("featured")) {
             featured.add(homepage_items_featured(
                 author,

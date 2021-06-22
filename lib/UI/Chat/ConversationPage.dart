@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
 
 final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
@@ -65,7 +66,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
           backgroundColor: Color(0xFFFFCC00),
           shadowColor: Colors.transparent,
         ),
-        backgroundColor: Color(0xFFFFCC00),
+        backgroundColor: Color(0xfff5f5f5),
         body: StreamBuilder<QuerySnapshot>(
             stream: _firestore
                 .collection("Users")
@@ -107,24 +108,33 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
+                                        // Container(
+                                        //   constraints: BoxConstraints(
+                                        //       maxWidth: width / 2),
+                                        //   child: Card(
+                                        //     shape: RoundedRectangleBorder(
+                                        //       side: BorderSide(
+                                        //           color: Colors.white70,
+                                        //           width: 1),
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(10),
+                                        //     ),
+                                        //     child: Padding(
+                                        //       padding:
+                                        //           const EdgeInsets.all(6.0),
+                                        //       child: Text(
+                                        //         chat['text'],
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         Container(
-                                          constraints: BoxConstraints(
-                                              maxWidth: width / 2),
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                  color: Colors.white70,
-                                                  width: 1),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(6.0),
-                                              child: Text(
-                                                chat['text'],
-                                              ),
-                                            ),
+                                          constraints:BoxConstraints(maxWidth: width/1.2),
+                                          child: BubbleSpecialOne(
+                                            text: chat['text'],
+                                            isSender: false,
+                                            color: Color(0xFFE8E8EE),
+                                            sent: true,
                                           ),
                                         ),
                                         Text(DateFormat.yMMMd()
@@ -142,22 +152,32 @@ class _ConversationsPageState extends State<ConversationsPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
+                                        // Container(
+                                        //   constraints: BoxConstraints(
+                                        //       maxWidth: width / 2),
+                                        //   child: Card(
+                                        //     child: Padding(
+                                        //       padding:
+                                        //           const EdgeInsets.all(4.0),
+                                        //       child: Text(
+                                        //         chat['text'],
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         Container(
-                                          constraints: BoxConstraints(
-                                              maxWidth: width / 2),
-                                          child: Card(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: Text(
-                                                chat['text'],
-                                              ),
-                                            ),
+                                          constraints:BoxConstraints(maxWidth: width/1.2),
+                                          child: BubbleSpecialOne(
+                                            text: chat['text'],
+                                            isSender: true,
+                                            color: Color(0xfffff192),
+                                            sent: true,
                                           ),
                                         ),
                                         Text(DateFormat.yMMMd()
                                             .add_jm()
                                             .format(chat['timestamp'].toDate()))
+
                                       ],
                                     ),
                                     CircleAvatar(
@@ -243,6 +263,13 @@ class _ConversationsPageState extends State<ConversationsPage> {
     }
     messageController.clear();
 
+  }
+
+
+  DateTime timeformat(Timestamp timestamp){
+    Timestamp now = timestamp;
+    DateTime dateNow = now.toDate();
+    return dateNow;
   }
 }
 

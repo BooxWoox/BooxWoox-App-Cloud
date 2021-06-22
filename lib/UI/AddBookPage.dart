@@ -119,7 +119,8 @@ class _AddBookPageState extends State<AddBookPage>  {
                       "Book_Collection_ID":docid,
                       "Author":Author,
                       "adminapproval":0,//by default false
-                      "tags":tags,
+                      "tags":[""],
+                      "Genretags":tags,
                       "Availability":true,
                       "BookName":BookName,
                       "Condition":"Used",
@@ -304,7 +305,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                   ChipsChoice<String>.multiple(
                     value: tags,
                     onChanged: (val) => setState(() => tags = val),
-                    choiceItems: C2Choice.listFrom<String, String>(
+                    choiceItems:C2Choice.listFrom<String, String>(
                       source: options,
                       value: (i, v) => v,
                       label: (i, v) => v,

@@ -224,7 +224,8 @@ class _AllBooksPageState extends State<AllBooksPage> {
                     .collection("Book_Collection")
                     .where("OwnerUID",isNotEqualTo: FirebaseAuth.instance.currentUser.uid)
                     .where("adminapproval", isEqualTo: 1)
-                    .orderBy('OwnerUID',descending: true),
+                    .orderBy('OwnerUID',descending: false)
+                    .orderBy("MRP",descending: false),
                 isLive: true // to fetch real-time data
             ),
           ),

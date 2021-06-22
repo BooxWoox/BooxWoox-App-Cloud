@@ -67,7 +67,7 @@ dependencies:
   pagination: ^0.1.0
   paginate_firestore: ^0.3.1
   chips_choice: ^2.0.1
-
+  chat_bubbles: ^1.0.0+3
 
 
 
