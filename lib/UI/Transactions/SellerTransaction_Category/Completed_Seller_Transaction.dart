@@ -39,7 +39,8 @@ class _Completed_Seller_TransactionState extends State<Completed_Seller_Transact
               child: Text('Loading!'),
             );
           }
-          return Column(
+          return snapshot.data.docs.length!=0?
+          Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
@@ -151,7 +152,12 @@ class _Completed_Seller_TransactionState extends State<Completed_Seller_Transact
                     }),
               )
             ],
-          );
+          ):
+          Center(child: Text("No Completed Transactions",
+          style: TextStyle(
+          fontSize: 18,
+          color: Colors.black26
+          ),),);
         },
       ),
 

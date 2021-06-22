@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -77,6 +78,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   }
   @override
   Widget build(BuildContext context) {
+    ProgressDialog pd = ProgressDialog(context: context);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -418,7 +420,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                             if(value.docs.isEmpty){
                               _firestore.collection("Users").where("Email_Id",isEqualTo: email_typed).get().then((value) {
                                 if(value.docs.isEmpty){
-                                  _verifyPhone();
+                                  _verifyPhone(pd);
                                   //show bottomsheet with otp verification
                                   showModalBottomSheet(context: context,
                                       isScrollControlled: true,
@@ -486,6 +488,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                                     //send api call to verify otp
                                                     print("otp verify button");
                                                     print(otp_typed);
+                                                    pd.show(max: 100, msg: 'Please Wait...');
                                                     AuthCredential credential = EmailAuthProvider.credential(email: email_typed, password: password_typed);
                                                     try {
                                                       await FirebaseAuth.instance
@@ -495,7 +498,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                                         if (value.user != null) {
                                                           print("Hola");
                                                           print(value.user.uid);
-                                                          setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed, fullname_typed,credential,value);
+                                                          setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed, fullname_typed,credential,value,pd);
                                                         }
                                                       });
                                                     } catch (e) {
@@ -532,21 +535,23 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       ),
     );
   }
-  _verifyPhone() async {
+  _verifyPhone(ProgressDialog pd) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: '+91${phoneNumber.trim()}',
         verificationCompleted: (PhoneAuthCredential credential) async {
+          pd.show(max: 100, msg: 'Please Wait...');
           try{
             await FirebaseAuth.instance
                 .signInWithCredential(credential)
                 .then((value) async {
               if (value.user != null) {
                 AuthCredential credential = EmailAuthProvider.credential(email: email_typed, password: password_typed);
-                setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed, fullname_typed,credential,value);
+                setvaluesofuser_database(value.user.uid, username_typed, phoneNumber, email_typed, fullname_typed,credential,value,pd);
                 print("success");
               }
             });
           }catch(e){
+            pd.close();
             _sweetheartDialog(e.toString());
           }
 
@@ -569,31 +574,47 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         timeout: Duration(seconds: 60));
   }
   setvaluesofuser_database(String uid,String username,String Phone,String email, String fullname_typed,
-      AuthCredential credential, UserCredential userValue) async{
+      AuthCredential credential, UserCredential userValue, ProgressDialog pd) async{
     try{
-      await _firestore.collection('Users').doc(uid).set({
-        'Username': username.trim(),
-        'Phone_Number':Phone.trim(),
-        'Email_Id':email.trim(),
-        'Profile_ImageURL':"",
-        'Ratings':'5',
-        'FullName':fullname_typed.trim(),
-        'Add2':"2",
-      }).then((value) {
-        userValue.user.linkWithCredential(credential).then((user) {
+      userValue.user.linkWithCredential(credential).then((user) {
+        _firestore.collection('Users').doc(uid).set({
+          'Username': username.trim(),
+          'Phone_Number':Phone.trim(),
+          'Email_Id':email.trim(),
+          'Profile_ImageURL':"",
+          'Ratings':'5',
+          'FullName':fullname_typed.trim(),
+          'Add2':"2",
+        }).then((value) {
+          pd.close();
           print("Registration Successful");
-          FirebaseAuth.instance.signOut();
-          Navigator.pushReplacementNamed(context, LoginPage.id);
-          _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
+          FirebaseAuth.instance.signOut().then((value){
+            Navigator.pushReplacementNamed(context, LoginPage.id);
+            _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
+          });
+
         });
       }).then((value) {
-        print("Registration Successful");
-        FirebaseAuth.instance.signOut();
-        Navigator.pushReplacementNamed(context, LoginPage.id);
-        _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
+        _firestore.collection('Users').doc(uid).set({
+          'Username': username.trim(),
+          'Phone_Number':Phone.trim(),
+          'Email_Id':email.trim(),
+          'Profile_ImageURL':"",
+          'Ratings':'5',
+          'FullName':fullname_typed.trim(),
+          'Add2':"2",
+        }).then((value) {
+          pd.close();
+          print("Registration Successful");
+          FirebaseAuth.instance.signOut().then((value){
+            Navigator.pushReplacementNamed(context, LoginPage.id);
+            _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
+          });
+        });
       });
     }
     catch(e){
+      pd.close();
       _showSnackBar(e.message,Colors.red[600]);
     }
 

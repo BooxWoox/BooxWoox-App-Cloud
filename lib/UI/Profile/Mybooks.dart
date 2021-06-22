@@ -49,7 +49,8 @@ class _MybooksState extends State<Mybooks> {
               child: Text('Loading!'),
             );
           }
-          return Column(
+          return snapshot.data.docs.length!=0?
+          Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
@@ -209,7 +210,12 @@ class _MybooksState extends State<Mybooks> {
                     }),
               )
             ],
-          );
+          ):
+          Center(child: Text("No Books Rented",
+          style: TextStyle(
+          fontSize: 18,
+          color: Colors.black26
+          ),),);
         },
       ),
     );

@@ -100,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   thickness: 2,
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, Mybooks.id);
                 },
@@ -129,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              GestureDetector(
+              InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, AllTransactions.id);
                   print("All Transactions");
@@ -158,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   thickness: 2,
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, Aboutus.id);
                 },
@@ -186,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   thickness: 2,
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, ContactUs.id);
 
@@ -215,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   thickness: 2,
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 onTap: (){
                   print("Logout");
                   String useruid=_auth.currentUser.uid;

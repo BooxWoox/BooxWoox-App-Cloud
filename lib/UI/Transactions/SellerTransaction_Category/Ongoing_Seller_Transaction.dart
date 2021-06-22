@@ -42,7 +42,8 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
               child: Text('Loading!'),
             );
           }
-          return Column(
+          return snapshot.data.docs.length!=0?
+          Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
@@ -216,7 +217,12 @@ class _Ongoing_Seller_TransactionState extends State<Ongoing_Seller_Transaction>
                     }),
               )
             ],
-          );
+          ):
+          Center(child: Text("No Ongoing Transactions",
+          style: TextStyle(
+          fontSize: 18,
+          color: Colors.black26
+          ),),);
         },
       ),
 

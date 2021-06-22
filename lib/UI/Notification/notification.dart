@@ -32,7 +32,8 @@ class _notificationState extends State<notification> {
               child: Text('Loading!'),
             );
           }
-          return Column(
+          return snapshot.data.docs.length!=0?
+          Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
@@ -83,7 +84,12 @@ class _notificationState extends State<notification> {
                     }),
               )
             ],
-          );
+          ):
+          Center(child: Text("No Notifications",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black26
+            ),),);
         },
       ),
     );

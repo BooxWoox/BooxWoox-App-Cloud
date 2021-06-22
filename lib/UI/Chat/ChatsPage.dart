@@ -45,7 +45,7 @@ class _ChatsPageState extends State<ChatsPage> {
               child: Text('Loading!'),
             );
           }
-          return Column(
+          return snapshot.data.docs.length!=0?Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
@@ -177,7 +177,11 @@ class _ChatsPageState extends State<ChatsPage> {
                 ),
               )
             ],
-          );
+          ):Center(child: Text("No Chats",
+            style: TextStyle(
+                fontSize: 18,
+                color: Colors.black26
+            ),),);
         },
       ),
     );
