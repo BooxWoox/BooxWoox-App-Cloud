@@ -839,15 +839,25 @@ class _Book_infoState extends State<Book_info> {
                               fontWeight: FontWeight.w600,
                               color: Colors.grey)),
                       SizedBox(
-                        height: 3,
+                        height: 8,
                       ),
-                      DropDown(
-                        items: _LeasePeriod,
-                        hint: Text("Select Lent Duration"),
-                        onChanged: (value) {
-                          print(value);
-                          _selectedLeaseperiod = value;
-                        },
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Lent Duration (Months)",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w800),
+                          ),
+                          DropDown(
+                            items: _LeasePeriod,
+                            hint: Text("Select Lent Duration"),
+                            onChanged: (value) {
+                              print(value);
+                              _selectedLeaseperiod = value;
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),

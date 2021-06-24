@@ -56,7 +56,7 @@ class _Completed_transaction_BuyerState extends State<Completed_transaction_Buye
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(width: 20,),
+
                                   Container(
                                     height: 120,
                                     width: 90,
@@ -105,7 +105,7 @@ class _Completed_transaction_BuyerState extends State<Completed_transaction_Buye
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          Text("Payment ID: "),
+                                          Text("Pay ID: "),
                                           Text(snapshot.data.docs[index].get("Payment_ID")),
                                         ],
                                       ),

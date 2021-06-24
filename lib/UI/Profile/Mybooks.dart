@@ -127,29 +127,50 @@ class _MybooksState extends State<Mybooks> {
                                     children: [
                                       InkWell(
                                       onTap: (){
-                                        _sweetSheet.show(
-                                          context: context,
-                                          title: Text("Warning"),
-                                          description: Text(
-                                              'Your book item will be deleted from the store.'),
-                                          color: SweetSheetColor.WARNING,
-                                          icon: Icons.delete_forever,
-                                          positive: SweetSheetAction(
-                                            onPressed: () {
-                                              _deleteitemfromdatabase(snapshot.data.docs[index].get("ImageUrl"), snapshot.data.docs[index].get("Book_Collection_ID"));
-                                              Navigator.pop(context);
+                                        //Check whether it is already in use or not in some kind of transaction
+                                        if(snapshot.data.docs[index].get("Availability")){
+                                          _sweetSheet.show(
+                                            context: context,
+                                            title: Text("Warning"),
+                                            description: Text(
+                                                'Your book item will be deleted from the store.'),
+                                            color: SweetSheetColor.WARNING,
+                                            icon: Icons.delete_forever,
+                                            positive: SweetSheetAction(
+                                              onPressed: () {
+                                                _deleteitemfromdatabase(snapshot.data.docs[index].get("ImageUrl"), snapshot.data.docs[index].get("Book_Collection_ID"));
+                                                Navigator.pop(context);
                                               },
-                                            title: 'CONTINUE',
-                                            color: Colors.white,
-                                            icon: Icons.open_in_new,
-                                          ),
-                                          negative: SweetSheetAction(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            title: 'CANCEL',
-                                          ),
-                                        );
+                                              title: 'CONTINUE',
+                                              color: Colors.white,
+                                              icon: Icons.open_in_new,
+                                            ),
+                                            negative: SweetSheetAction(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              title: 'CANCEL',
+                                            ),
+                                          );
+                                        }else{
+                                          _sweetSheet.show(
+                                            context: context,
+                                            title: Text("Warning"),
+                                            description: Text(
+                                                'Your book is already in some kind of transaction\nPlease clarify with the support team.'),
+                                            color: SweetSheetColor.WARNING,
+                                            icon: Icons.delete_forever,
+                                            positive: SweetSheetAction(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              title: 'OK',
+                                              color: Colors.white,
+                                              icon: Icons.open_in_new,
+                                            ),
+                                          );
+                                        }
+
                                       },
                                           child: Icon(Icons.delete_forever,color: Colors.red,size: 38,)),
                                       Text("Delete"),

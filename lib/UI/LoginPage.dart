@@ -244,6 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                           var user=await _auth.signInWithEmailAndPassword(email: email_typed.trim().toLowerCase(), password: pass_typed).then((value){
                             print("Successfully Logged in as ${value.user.uid}");
                             pd.close();
+                            Navigator.of(context).popUntil((route) => route.isFirst);
                             Navigator.pushReplacementNamed(context, Homepage.id);
                           });
                           ;

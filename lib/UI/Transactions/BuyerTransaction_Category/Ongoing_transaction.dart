@@ -62,14 +62,12 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
-
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(width: 10,),
                                     Container(
                                       height: 120,
                                       width: 90,
@@ -118,7 +116,7 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
-                                            Text("Payment ID: "),
+                                            Text("Pay ID: "),
                                             Text(snapshot.data.docs[index].get("Payment_ID")),
                                           ],
                                         ),
@@ -139,59 +137,61 @@ class _Ongoing_transaction_BuyerState extends State<Ongoing_transaction_Buyer> {
                                         ),
                                       ],
                                     ),
-                                    snapshot.data.docs[index].get("Book_Taken_from_Seller")?Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        IconButton(
-                                            icon: Icon(Icons.assignment_return,color: Colors.redAccent,size: 24,), onPressed: (){
-                                              String buyeruid=snapshot.data.docs[index].get("BuyerUID");
-                                              String selleruid=snapshot.data.docs[index].get("SellerUID");
-                                              double buyershare=double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString());
-                                              double sellershare=double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString());
-                                              String buyerphn=snapshot.data.docs[index].get("Buyer_PhoneNumber");
-                                              String sellerphn=snapshot.data.docs[index].get("Seller_PhoneNumber");
-                                              String orderid=snapshot.data.docs[index].id;
-                                              double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
-                                              //Confirmation from user
-                                              if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
-                                                _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
-                                              }else{
-                                                _sweetSheet.show(
-                                                  context: context,
-                                                  title: Text("Warning"),
-                                                  description: Text(
-                                                      'This action is irreversible\nAre you sure?'),
-                                                  color: SweetSheetColor.WARNING,
-                                                  icon: Icons.warning,
-                                                  positive: SweetSheetAction(
-                                                    onPressed: () {
-                                                      if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
-                                                        _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
+                                    snapshot.data.docs[index].get("Book_Taken_from_Seller")?Flexible(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          IconButton(
+                                              icon: Icon(Icons.assignment_return,color: Colors.redAccent,size: 24,), onPressed: (){
+                                                String buyeruid=snapshot.data.docs[index].get("BuyerUID");
+                                                String selleruid=snapshot.data.docs[index].get("SellerUID");
+                                                double buyershare=double.parse(snapshot.data.docs[index].get("BuyerShare_Amt").toString());
+                                                double sellershare=double.parse(snapshot.data.docs[index].get("SellerShare_Amt").toString());
+                                                String buyerphn=snapshot.data.docs[index].get("Buyer_PhoneNumber");
+                                                String sellerphn=snapshot.data.docs[index].get("Seller_PhoneNumber");
+                                                String orderid=snapshot.data.docs[index].id;
+                                                double totalamt=double.parse(snapshot.data.docs[index].get("Total_Amt").toString());
+                                                //Confirmation from user
+                                                if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
+                                                  _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
+                                                }else{
+                                                  _sweetSheet.show(
+                                                    context: context,
+                                                    title: Text("Warning"),
+                                                    description: Text(
+                                                        'This action is irreversible\nAre you sure?'),
+                                                    color: SweetSheetColor.WARNING,
+                                                    icon: Icons.warning,
+                                                    positive: SweetSheetAction(
+                                                      onPressed: () {
+                                                        if(snapshot.data.docs[index].get("Buyer_Return_Initiation")){
+                                                          _onBasicWaitingAlertPressed(context, "Return request has already been initiated");
+                                                          Navigator.pop(context);
+
+                                                        }else{
+                                                          ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt,
+                                                              snapshot.data.docs[index].get("Book_Name"),snapshot.data.docs[index].get("Payment_ID"));
+                                                        }
                                                         Navigator.pop(context);
 
-                                                      }else{
-                                                        ReturnInitaiation(snapshot.data.docs[index].id,snapshot.data.docs[index].get("Seller_Address"),snapshot.data.docs[index].get("Buyer_Address"),buyeruid,selleruid,buyershare,sellershare,buyerphn,sellerphn,orderid,totalamt,
-                                                            snapshot.data.docs[index].get("Book_Name"),snapshot.data.docs[index].get("Payment_ID"));
-                                                      }
-                                                      Navigator.pop(context);
+                                                      },
+                                                      title: 'CONTINUE',
+                                                      color: Colors.white,
+                                                      icon: Icons.open_in_new,
+                                                    ),
+                                                    negative: SweetSheetAction(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      title: 'CANCEL',
+                                                    ),
+                                                  );
+                                                }
 
-                                                    },
-                                                    title: 'CONTINUE',
-                                                    color: Colors.white,
-                                                    icon: Icons.open_in_new,
-                                                  ),
-                                                  negative: SweetSheetAction(
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    title: 'CANCEL',
-                                                  ),
-                                                );
-                                              }
-
-                                        }),
-                                        Text("Return"),
-                                      ],
+                                          }),
+                                          Text("Return"),
+                                        ],
+                                      ),
                                     ):SizedBox(),
 
                                   ],

@@ -221,6 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   String useruid=_auth.currentUser.uid;
                   notificationUserDeactive(useruid);
                   FirebaseAuth.instance.signOut();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.pushReplacementNamed(context, LoginPage.id);
                 },
                 child: Row(

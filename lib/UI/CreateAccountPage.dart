@@ -297,7 +297,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                     children: [
                                       Expanded(
                                         child: WebViewX(
-                                          initialContent: 'https://booxwoox.netlify.app/tnc.html',
+                                          initialContent: 'https://booxwoox.com/tnc.html',
                                           initialSourceType: SourceType.URL,
                                           onWebViewCreated: (controller) => webviewController = controller,
                                         ),
@@ -356,7 +356,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                         children: [
                                           Expanded(
                                             child: WebViewX(
-                                              initialContent: 'https://booxwoox.netlify.app/privacypolicy.html',
+                                              initialContent: 'https://booxwoox.com/privacypolicy.html',
                                               initialSourceType: SourceType.URL,
                                               onWebViewCreated: (controller) => webviewController = controller,
                                             ),
@@ -589,6 +589,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           pd.close();
           print("Registration Successful");
           FirebaseAuth.instance.signOut().then((value){
+            Navigator.of(context).popUntil((route) => route.isFirst);
             Navigator.pushReplacementNamed(context, LoginPage.id);
             _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
           });
@@ -607,6 +608,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           pd.close();
           print("Registration Successful");
           FirebaseAuth.instance.signOut().then((value){
+            Navigator.of(context).popUntil((route) => route.isFirst);
             Navigator.pushReplacementNamed(context, LoginPage.id);
             _onBasicWaitingAlertPressed(context,"Yo Hoo! Successfully Created");
           });

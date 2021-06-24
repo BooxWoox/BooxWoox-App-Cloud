@@ -43,7 +43,7 @@ class _AboutusState extends State<Aboutus> {
         shadowColor: Color(0xFFF7C100),
       ),
       body: WebViewX(
-          initialContent: 'https://prnvbajaj.github.io/BooxWoox---The-Global-Library/#AboutUs',
+          initialContent: 'https://www.booxwoox.com/',
           initialSourceType: SourceType.URL,
           onWebViewCreated: (controller) => webviewController = controller,
       ),

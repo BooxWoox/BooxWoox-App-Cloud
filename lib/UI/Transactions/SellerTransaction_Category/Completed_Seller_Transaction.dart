@@ -106,7 +106,7 @@ class _Completed_Seller_TransactionState extends State<Completed_Seller_Transact
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          Text("Payment ID: "),
+                                          Text("Pay ID: "),
                                           Text(snapshot.data.docs[index].get("Payment_ID")),
                                         ],
                                       ),
