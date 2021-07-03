@@ -34,11 +34,10 @@ dependencies:
   firebase_auth: ^1.0.0
   pin_code_fields: ^7.0.0
   cloud_firestore: ^1.0.0
-  barcode_scan: "^1.0.0"
   images_picker: ^1.0.0
   rflutter_alert:
     git: git://github.com/RatelHub/rflutter_alert.git
-  flutter_barcode_scanner: ^1.0.2
+  flutter_barcode_scanner: ^2.0.0
   firebase_storage: ^8.0.1
   razorpay_flutter: 1.1.1
   dio: ^4.0.0
@@ -69,7 +68,8 @@ dependencies:
   chips_choice: ^2.0.1
   chat_bubbles: ^1.0.0+3
   badge_flutter: ^1.1.4
-
+  multi_select_flutter: ^4.0.0
+  direct_select_flutter: ^1.1.1
 
 
 dev_dependencies:

@@ -28,6 +28,7 @@ import 'UI/Transactions/AllTransactions.dart';
 import 'UI/Profile/Aboutus.dart';
 import 'UI/Profile/ContactUs.dart';
 import 'UI/Profile/Mybooks.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -40,6 +41,13 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Color(0xFFFFBD06),
+        colorScheme: ColorScheme.light().copyWith(
+          primary: Color(0xFFFFBD06),
+        ),
+        fontFamily: 'LeelawUI',
+      ),
       initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
@@ -67,10 +75,9 @@ class bookollab extends StatelessWidget {
         Completed_Seller_Transaction.id: (context) =>
             Completed_Seller_Transaction(),
         AllTransactions.id: (context) => AllTransactions(),
-        Aboutus.id:(context) => Aboutus(),
-        ContactUs.id:(context) =>ContactUs(),
-        Mybooks.id:(context) => Mybooks(),
-
+        Aboutus.id: (context) => Aboutus(),
+        ContactUs.id: (context) => ContactUs(),
+        Mybooks.id: (context) => Mybooks(),
       },
     );
   }
