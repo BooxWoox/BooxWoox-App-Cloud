@@ -46,10 +46,11 @@ class _AddBookPageState extends State<AddBookPage>  {
   double MRP=0;
   double quotedprice=0;
   double rentprice=0;
-  double commission_fee=10; //By default
+  double commission_fee=10;//By default
   // list of string options
   List<String> options = [];
   List<String> tags = [];
+  int quality=100;
 @override
   void initState() {
     // TODO: implement initState
@@ -728,7 +729,7 @@ class _AddBookPageState extends State<AddBookPage>  {
                         pickType: PickType.image,
                       );
                       if(res!=null){
-                        final dir = await path_provider.getTemporaryDirectory();
+                          final dir = await path_provider.getTemporaryDirectory();
                         final targetPath = dir.absolute.path + "/temp.jpg";
                         testCompressAndGetFile(File(res[0].path),targetPath).then((value) {
                           _ImageFile=value;
@@ -869,6 +870,7 @@ class _AddBookPageState extends State<AddBookPage>  {
       setState(() {
         rentprice=double.parse(value.get("Quoted_Rent_Percent").toString());
         commission_fee=double.parse(value.get("SellerShare_Cut_Percent").toString());
+        quality=double.parse(value.get("Image_Quality").toString()).toInt();
         for(var i in value.get("Genretags")){
           options.add(i.toString());
         }
@@ -878,7 +880,7 @@ class _AddBookPageState extends State<AddBookPage>  {
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path, targetPath,
-      quality: 45,
+      quality: quality,
     );
 
     print(file.lengthSync());
