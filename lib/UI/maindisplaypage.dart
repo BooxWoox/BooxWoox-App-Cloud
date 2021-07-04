@@ -16,6 +16,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../Notifications.dart';
+import  'AddBookPageNew.dart';
 
 final _firestore = FirebaseFirestore.instance;
 class maindisplaypage extends StatefulWidget {
@@ -77,7 +78,9 @@ class _maindisplaypageState extends State<maindisplaypage> {
         currentButton: FloatingActionButton(
           onPressed: () {
             print('add books rent');
-            Navigator.pushNamed(context, AddBookPage.id);
+            //Navigator.pushNamed(context, AddBookPage.id);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddNewBook()));
           },
           heroTag: "addrentbooks",
           backgroundColor: Colors.deepOrange,
