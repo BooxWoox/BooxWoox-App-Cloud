@@ -55,7 +55,7 @@ class bookollab extends StatelessWidget {
         ChatsPage.id: (context) => ChatsPage(),
         ConversationsPage.id: (context) => ConversationsPage(),
         RequestsPage.id: (context) => RequestsPage(),
-        AddBookPage.id: (context) => AddBookPage(),
+        AddNewBook.id: (context) => AddNewBook(),
         AllBooksPage.id: (context) => AllBooksPage(),
         testpayment.id: (context) => testpayment(),
         Transactions_Buyer.id: (context) => Transactions_Buyer(),
