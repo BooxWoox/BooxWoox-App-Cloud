@@ -40,6 +40,13 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Color(0xFFFFBD06),
+        colorScheme: ColorScheme.light().copyWith(
+          primary: Color(0xFFFFBD06),
+        ),
+        fontFamily: 'LeelawUI',
+      ),
       initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
