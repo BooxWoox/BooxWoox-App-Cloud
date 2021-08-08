@@ -1,20 +1,19 @@
-import 'package:bookollab/UI/CreateAccountPage.dart';
+import 'package:bookollab/Models/user.dart';
+import 'package:bookollab/State/onboarding.dart';
 import 'package:bookollab/UI/Homepage.dart';
+import 'package:bookollab/UI/LoginPage.dart';
+import 'package:bookollab/UI/widgets/ThemeButton.dart';
+import 'package:bookollab/repositories/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flutter/services.dart';
-import 'package:introduction_screen/introduction_screen.dart';
-import 'package:bookollab/UI/LoginPage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-
-final _firestore=FirebaseFirestore.instance;
+final _firestore = FirebaseFirestore.instance;
 
 class Onboarding extends StatefulWidget {
-  static String id='Onboarding_Screen';
+  static String id = 'Onboarding_Screen';
 
   @override
   _OnboardingState createState() => _OnboardingState();
@@ -22,80 +21,69 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   PageController _pageController;
-  String userloggedin=null;
+  String userloggedin = null;
+
   int currentIndex = 0;
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getuserlogininfo();
     _pageController = PageController();
   }
 
-  bool getuserlogininfo(){
-    FirebaseAuth.instance
-        .authStateChanges()
-        .listen((User user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-        _firestore.collection("Users").doc(user.uid).get().then((value){
-          if(value.get("Username").toString().isNotEmpty){
-            setState(() {
-              Navigator.pushReplacementNamed(context, Homepage.id);
-            });
-          }
+  bool getuserlogininfo() {
+    // FirebaseAuth.instance.authStateChanges().listen((User user) {
+    //   if (user == null) {
+    //     print('User is currently signed out!');
+    //   } else {
+    //     print('User is signed in!');
+    //     _firestore.collection("Users").doc(user.uid).get().then((value) {
+    //       if (value.get("Username").toString().isNotEmpty) {
+    //         setState(() {
+    //           Navigator.pushReplacementNamed(context, Homepage.id);
+    //         });
+    //       }
+    //     });
+    //   }
+    // });
+    Hive.box<User>('users').listenable().addListener(() {
+      if (Hive.box<User>('users').get('user') != null) {
+        setState(() {
+          Navigator.pushReplacementNamed(context, Homepage.id);
         });
       }
     });
   }
+
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
+
   onChangedFunction(int index) {
     setState(() {
       currentIndex = index;
     });
   }
+
   nextFunction() {
     _pageController.nextPage(duration: _kDuration, curve: _kCurve);
   }
+
   previousFunction() {
     _pageController.previousPage(duration: _kDuration, curve: _kCurve);
   }
+
   static const _kDuration = const Duration(milliseconds: 300);
   static const _kCurve = Curves.ease;
 
   @override
   Widget build(BuildContext context) {
-    var size =MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: size.width*0.65,
-                height: size.height*0.30,
-                child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Image.asset('UIAssets/curve2.png')),
-              ),
-              SafeArea(
-                child: Container(
-                  width: size.width*0.34,
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                        child: Padding(
-                          padding: const EdgeInsets.all(38.0),
-                          child: Image.asset('UIAssets/horizontal_logo_booxwoox.png'),
-                        ))),
-              )
-            ],
-          ),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -109,95 +97,103 @@ class _OnboardingState extends State<Onboarding> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            child: Image.asset('UIAssets/Onboarding/UI1/UI1.png')),
-                        Text('Lend and take!',
-                        style:  TextStyle(
-                          fontFamily: 'Avenir95Black',
-                          fontSize: 22,
-
-                        ),),
+                            child:
+                                Image.asset('UIAssets/Onboarding/UI1/UI1.png')),
+                        Text(
+                          'Monetize your books securely!',
+                          style: TextStyle(
+                            fontFamily: 'Avenir95Black',
+                            fontSize: 22,
+                          ),
+                        ),
                         SizedBox(
                           height: 5,
                         ),
-                        Text('your favourite books and best',
-                          style:  TextStyle(
+                        SizedBox(
+                          width: 200,
+                          height: 100,
+                          child: Text(
+                            'We ensure the safekeeping of your books.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
                               fontFamily: 'LeelawUI',
                               fontSize: 16,
-                              fontWeight: FontWeight.bold
-                          ),),
-                        Text('content effortlessly',
-                          style:  TextStyle(
-                              fontFamily: 'LeelawUI',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold
-                          ),)
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        )
                       ],
                     ),
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                Image.asset('UIAssets/Onboarding/UI2/lab.png'),
-                Text('Mobile App!',
-                  style:  TextStyle(
-                      fontFamily: 'Avenir95Black',
-                      fontSize: 22,
-
-                  ),),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Enabling swift performance and',
-                  style:  TextStyle(
-                      fontFamily: 'LeelawUI',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                  ),),
-                Text('User friendly interface',
-                  style:  TextStyle(
-                      fontFamily: 'LeelawUI',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold
-                  ),)
-                ],
-        ),
+                      children: [
+                        Image.asset('UIAssets/Onboarding/UI2/lab.png'),
+                        Text(
+                          'Connect with bibliophiles!',
+                          style: TextStyle(
+                            fontFamily: 'Avenir95Black',
+                            fontSize: 22,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        SizedBox(
+                          width: 200,
+                          height: 150,
+                          child: Text(
+                            'The next gen platform for the community of book lovers.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'LeelawUI',
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        )
+                      ],
+                    ),
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-                Image.asset('UIAssets/Onboarding/UI3/UI3.png'),
-                Text('Collaborate!',
-                style:  TextStyle(
-                    fontFamily: 'Avenir95Black',
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold
-                ),),
-                SizedBox(
-                height: 5,
-                ),
-                Text('Collaborate at a single platform',
-                style:  TextStyle(
-                    fontFamily: 'LeelawUI',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                ),),
-                Text('making the process seamless.',
-                style:  TextStyle(
-                    fontFamily: 'LeelawUI',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                ),),
-
-        ],
-      ),
+                      children: [
+                        Image.asset('UIAssets/Onboarding/UI3/UI3.png'),
+                        Text(
+                          'Making Knowledge Affordable',
+                          style: TextStyle(
+                              fontFamily: 'Avenir95Black',
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        SizedBox(
+                          width: 200,
+                          height: 150,
+                          child: Text(
+                            'We offer books at a cost that fits your pocket.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'LeelawUI',
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ],
           ),
           Positioned(
-            bottom: size.height*.20,
-            left: size.width*.5-25,
+            bottom: size.height * .15,
+            left: size.width * .5 - 25,
             child: Align(
               alignment: Alignment.center,
               child: Row(
@@ -225,101 +221,80 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
           ),
-          currentIndex!=2?Positioned(
-            bottom: 10,
-            right: 10,
-            child: Center(
-              child: Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        radius: 27,
-                        backgroundColor: Color(0xFFFFD500),
-                        child: IconButton(
-
-                            icon:Icon(Icons.arrow_forward_ios,color: Colors.white,),
-                            onPressed:() => nextFunction()),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ):Positioned(
-            bottom: 15,
-            child: SizedBox(
-              width: size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  RaisedButton(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 13,horizontal: 13),
-                      child: Container(
-                        width: 100,
-                        height: 25,
-                        child: Center(
-                          child: Text('Sign In',style: TextStyle(
-                              fontFamily: 'LeelawUI',
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold
-                          ),),
-                        ),
+          currentIndex != 2
+              ? Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: Center(
+                    child: Container(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircleAvatar(
+                              radius: 27,
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () => nextFunction()),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                    color: Color(0xFFFFCC00),
-                    shape: RoundedRectangleBorder(
-
-                      borderRadius: BorderRadius.circular(21),
-                    ),
-                    onPressed: () {
-                      //goto login screen
-                      Navigator.pushReplacementNamed(context, LoginPage.id);
-                  },
-
                   ),
-                  RaisedButton(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical:13.0,horizontal: 13),
-                      child: Container(
-                        width: 110,
-                        height: 25,
-                        child: Center(
-                          child: FittedBox(
-                            child: Text('Create Account',style: TextStyle(
-                                fontFamily: 'LeelawUI',
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold
-                            ),),
+                )
+              : Positioned(
+                  bottom: 15,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ThemeButton(
+                              label: 'Signup',
+                              onPressed: () {
+                                context.read(isLogin).state = false;
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  LoginPage.id,
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ThemeButton(
+                              label: 'Login',
+                              onPressed: () {
+                                context.read(isLogin).state = false;
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  LoginPage.id,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    color: Color(0xFFFFCC00),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(21),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, CreateAccountPage.id);
-                    },
-
                   ),
-
-                ],
-              ),
-            ),
-          ),
+                ),
         ],
-      )
+      ),
     );
   }
 }
+
 class Indicator extends StatelessWidget {
   final int positionIndex, currentIndex;
   const Indicator({this.currentIndex, this.positionIndex});
@@ -330,7 +305,7 @@ class Indicator extends StatelessWidget {
       width: 10,
       decoration: BoxDecoration(
           color: positionIndex == currentIndex
-              ? Color(0xFFB67400)
+              ? Theme.of(context).primaryColor
               : Color(0xFFC2C2C2),
           borderRadius: BorderRadius.circular(100)),
     );

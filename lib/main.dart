@@ -2,10 +2,12 @@ import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'Models/user.dart';
 import 'UI/SplashScreen.dart';
 import 'UI/Onboarding.dart';
 import 'UI/LoginPage.dart';
-import 'UI/CreateAccountPage.dart';
 import 'UI/Homepage.dart';
 import 'UI/maindisplaypage.dart';
 import 'UI/OTPverify.dart';
@@ -16,7 +18,6 @@ import 'UI/Chat/chat_homepage.dart';
 import 'UI/Notification/notification.dart';
 import 'UI/Chat/ChatsPage.dart';
 import 'UI/Payment/testpayment.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'UI/AddBookPage.dart';
 import 'UI/Transactions/Transactions_Buyer.dart';
 import 'UI/Transactions/BuyerTransaction_Category/Ongoing_transaction.dart';
@@ -28,11 +29,17 @@ import 'UI/Transactions/AllTransactions.dart';
 import 'UI/Profile/Aboutus.dart';
 import 'UI/Profile/ContactUs.dart';
 import 'UI/Profile/Mybooks.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  runApp(bookollab());
+  await Hive.initFlutter();
+  await Hive.openBox<User>('users');
+  runApp(
+    ProviderScope(
+      child: bookollab(),
+    ),
+  );
 }
 
 class bookollab extends StatelessWidget {
@@ -42,9 +49,8 @@ class bookollab extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         primaryColor: Color(0xFFFFBD06),
-        colorScheme: ColorScheme.light().copyWith(
-          primary: Color(0xFFFFBD06),
-        ),
+        colorScheme: ColorScheme.light()
+            .copyWith(primary: Color(0xFFFFBD06), secondary: Color(0xFFFFBD06)),
         fontFamily: 'LeelawUI',
       ),
       initialRoute: SplashScreen.id,
@@ -52,7 +58,6 @@ class bookollab extends StatelessWidget {
         SplashScreen.id: (context) => SplashScreen(),
         Onboarding.id: (context) => Onboarding(),
         LoginPage.id: (context) => LoginPage(),
-        CreateAccountPage.id: (context) => CreateAccountPage(),
         Homepage.id: (context) => Homepage(),
         maindisplaypage.id: (context) => maindisplaypage(),
         ProfilePage.id: (context) => ProfilePage(),
@@ -74,10 +79,10 @@ class bookollab extends StatelessWidget {
         Completed_Seller_Transaction.id: (context) =>
             Completed_Seller_Transaction(),
         AllTransactions.id: (context) => AllTransactions(),
-        Aboutus.id:(context) => Aboutus(),
-        ContactUs.id:(context) =>ContactUs(),
-        Mybooks.id:(context) => Mybooks(),
-
+        Aboutus.id: (context) => Aboutus(),
+        ContactUs.id: (context) => ContactUs(),
+        Mybooks.id: (context) => Mybooks(),
+        OTPverify.id: (context) => OTPverify(),
       },
     );
   }
