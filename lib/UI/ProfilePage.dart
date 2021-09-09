@@ -12,7 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Transactions/Transactions_Seller.dart';
 import 'Transactions/Transactions_Buyer.dart';
-import 'package:bookollab/UI/LoginPage.dart';
+import 'package:bookollab/UI/Onboarding/LoginPage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:bookollab/UI/Profile/Mybooks.dart';

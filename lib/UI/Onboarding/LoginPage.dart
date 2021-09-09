@@ -1,5 +1,6 @@
-import 'package:bookollab/UI/OTPverify.dart';
+import 'package:bookollab/UI/Onboarding/OTPverify.dart';
 import 'package:bookollab/repositories/auth_repo.dart';
+import 'package:bookollab/utilities/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,18 +81,26 @@ class _LoginPageState extends State<LoginPage> {
                       EdgeInsets.symmetric(vertical: 15),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     try {
-                      context
-                          .read(authProvider)
-                          .state
-                          .sendOtpToPhone(phoneController.text);
-                      Navigator.pushReplacementNamed(context, OTPverify.id);
+                      // final provider = context.read(authProvider);
+                      // await provider.sendOtpToPhone(phoneController.text);
+                      Navigator.pushReplacementNamed(
+                        context,
+                        OTPverify.id,
+                        arguments: OtpScreenArguments(
+                          phoneController.text,
+                        ),
+                      );
                     } catch (e) {
-                      print(e);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      logger.e(e.toString());
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
                           content: Text(
-                              'An unexpected error occured. please try again')));
+                            'An unexpected error occured. please try again',
+                          ),
+                        ),
+                      );
                     }
                   },
                   child: Text(

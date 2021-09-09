@@ -1,16 +1,17 @@
 import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
+import 'package:bookollab/UI/Onboarding/GenreTags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'Models/user.dart';
-import 'UI/SplashScreen.dart';
-import 'UI/Onboarding.dart';
-import 'UI/LoginPage.dart';
+import 'UI/Onboarding/SplashScreen.dart';
+import 'UI/Onboarding/Onboarding.dart';
+import 'UI/Onboarding/LoginPage.dart';
 import 'UI/Homepage.dart';
 import 'UI/maindisplaypage.dart';
-import 'UI/OTPverify.dart';
+import 'UI/Onboarding/OTPverify.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'UI/ProfilePage.dart';
 import 'UI/Book_info.dart';
@@ -52,6 +53,7 @@ class bookollab extends StatelessWidget {
         colorScheme: ColorScheme.light()
             .copyWith(primary: Color(0xFFFFBD06), secondary: Color(0xFFFFBD06)),
         fontFamily: 'LeelawUI',
+        backgroundColor: Color(0xFFE9E9E9)
       ),
       initialRoute: SplashScreen.id,
       routes: {
@@ -83,6 +85,7 @@ class bookollab extends StatelessWidget {
         ContactUs.id: (context) => ContactUs(),
         Mybooks.id: (context) => Mybooks(),
         OTPverify.id: (context) => OTPverify(),
+        GenreTagsPage.id: (context) => GenreTagsPage(),
       },
     );
   }

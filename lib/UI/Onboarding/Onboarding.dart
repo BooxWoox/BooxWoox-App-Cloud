@@ -1,7 +1,7 @@
 import 'package:bookollab/Models/user.dart';
 import 'package:bookollab/State/onboarding.dart';
 import 'package:bookollab/UI/Homepage.dart';
-import 'package:bookollab/UI/LoginPage.dart';
+import 'package:bookollab/UI/Onboarding/LoginPage.dart';
 import 'package:bookollab/UI/widgets/ThemeButton.dart';
 import 'package:bookollab/repositories/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

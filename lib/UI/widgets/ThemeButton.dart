@@ -13,11 +13,14 @@ class ThemeButton extends StatelessWidget {
     return SizedBox(
       width: width,
       child: ElevatedButton(
-        child: Text(
-          label,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         onPressed: onPressed,

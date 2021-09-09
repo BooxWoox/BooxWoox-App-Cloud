@@ -2,7 +2,7 @@ import 'package:bookollab/UI/AddBookPage.dart';
 import 'package:bookollab/UI/ProfilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'LoginPage.dart';
+import 'Onboarding/LoginPage.dart';
 import 'maindisplaypage.dart';
 import 'dart:async';
 import 'package:bookollab/UI/Chat/chat_homepage.dart';
