@@ -10,23 +10,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
 import 'ChatsPage.dart';
 
-final _firestore=FirebaseFirestore.instance;
+//final _firestore=FirebaseFirestore.instance;
 
 class Chat_homepage extends StatefulWidget {
-  static String id='Chat_homepage_Screen';
+  static String id = 'Chat_homepage_Screen';
   @override
   _Chat_homepageState createState() => _Chat_homepageState();
 }
 
-class _Chat_homepageState extends State<Chat_homepage> with SingleTickerProviderStateMixin{
+class _Chat_homepageState extends State<Chat_homepage>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
-  GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
     // TODO: implement initState
     _tabController = TabController(length: 1, vsync: this);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,13 +44,17 @@ class _Chat_homepageState extends State<Chat_homepage> with SingleTickerProvider
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.chat_bubble_outlined,
-                      color: Colors.white,),
-                      SizedBox(width: 5,),
-                      Text("CHATS",
-                      style: TextStyle(
-                        color: Colors.white
-                      ),),
+                      Icon(
+                        Icons.chat_bubble_outlined,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "CHATS",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
@@ -71,4 +77,3 @@ class _Chat_homepageState extends State<Chat_homepage> with SingleTickerProvider
     );
   }
 }
-
