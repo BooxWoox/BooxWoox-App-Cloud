@@ -1,4 +1,5 @@
 import 'package:bookollab/UI/AllBooksPage.dart';
+import 'package:bookollab/UI/Book_individual_view.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
 import 'package:bookollab/UI/Onboarding/GenreTags.dart';
@@ -63,7 +64,7 @@ class bookollab extends StatelessWidget {
         Homepage.id: (context) => Homepage(),
         maindisplaypage.id: (context) => maindisplaypage(),
         ProfilePage.id: (context) => ProfilePage(),
-        Book_info.id: (context) => Book_info(),
+        Book_info.id: (context) => Bookindividualview(),
         Chat_homepage.id: (context) => Chat_homepage(),
         notification.id: (context) => notification(),
         ChatsPage.id: (context) => ChatsPage(),
