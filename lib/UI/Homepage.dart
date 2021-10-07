@@ -49,30 +49,6 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Image.asset(
-          'UIAssets/horizontal_logo_booxwoox.png',
-          width: MediaQuery.of(context).size.width * 0.3,
-          fit: BoxFit.fitWidth,
-          alignment: Alignment.centerLeft,
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              print("Notifications");
-              Navigator.pushNamed(context, notification.id);
-            },
-            child: Image.asset(
-              'UIAssets/Homepage/notification_icon.png',
-              color: Colors.black,
-              fit: BoxFit.scaleDown,
-            ),
-          ),
-        ],
-        backgroundColor: Colors.white,
-        shadowColor: Color(0xFFF7C100),
-      ),
       body: PageView(
         children: tabPages,
         onPageChanged: onPageChanged,
@@ -87,10 +63,6 @@ class _HomepageState extends State<Homepage> {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
           child: BottomNavigationBar(
             currentIndex: selectedIndex,
             showSelectedLabels: false,

@@ -18,6 +18,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../Notifications.dart';
 import 'AddBookPage.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:bookollab/UI/Notification/notification.dart';
 
 List book1 = ['abc', 'xyz'];
 final List<String> imageList = [
@@ -362,6 +363,30 @@ class _maindisplaypageState extends State<maindisplaypage> {
       );
     } else
       return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Image.asset(
+            'UIAssets/horizontal_logo_booxwoox.png',
+            width: MediaQuery.of(context).size.width * 0.3,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.centerLeft,
+          ),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                print("Notifications");
+                Navigator.pushNamed(context, notification.id);
+              },
+              child: Image.asset(
+                'UIAssets/Homepage/notification_icon.png',
+                color: Colors.black,
+                fit: BoxFit.scaleDown,
+              ),
+            ),
+          ],
+          backgroundColor: Colors.white,
+          shadowColor: Color(0xFFF7C100),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: UnicornDialer(
             backgroundColor: Colors.transparent,
