@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
 class Buyer extends StatefulWidget {
-
   @override
   _BuyerState createState() => _BuyerState();
 }
 
-class _BuyerState extends State<Buyer> with TickerProviderStateMixin{
-
+class _BuyerState extends State<Buyer> with TickerProviderStateMixin {
   TabController _tabController;
   @override
   void initState() {
@@ -22,55 +20,125 @@ class _BuyerState extends State<Buyer> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        bottom: TabBar(
-          labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          unselectedLabelStyle: TextStyle(fontSize: 16),
-          labelColor:Color(0xFFFFCC00),
-          tabs: [
-            Tab(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Icon(Icons.add_shopping_cart_sharp),
-                  Text("Ongoing"),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: TabBar(
+                labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                unselectedLabelStyle: TextStyle(fontSize: 16),
+                labelColor: Color(0xFFFFCC00),
+                unselectedLabelColor: Colors.black,
+                tabs: [
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.add_shopping_cart_sharp),
+                        Text("Ongoing"),
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.person_pin_rounded),
+                        Text("Completed"),
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.person_pin_rounded),
+                        Text("Failed"),
+                      ],
+                    ),
+                  ),
                 ],
+                controller: _tabController,
+                indicatorColor: Colors.transparent
+                // indicatorSize: TabBarIndicatorSize.tab,
               ),
-            ),
-            Tab(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          SliverFillRemaining(
+            child: TabBarView(
                 children: [
-                  // Icon(Icons.person_pin_rounded),
-                  Text("Completed"),
+                  BOngoing(),
+                  BCompleted(),
+                  BFailed(),
                 ],
+                controller: _tabController,
               ),
-            ),
-            Tab(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Icon(Icons.person_pin_rounded),
-                  Text("Failed"),
-                ],
-              ),
-            ),
-          ],
-          controller: _tabController,
-          indicatorColor: Colors.transparent
-          // indicatorSize: TabBarIndicatorSize.tab,
-        ),
-      ),
-      body: Expanded(
-        child: TabBarView(
-          children: [
-            BOngoing(),
-            BCompleted(),
-            BFailed(),
-          ],
-          controller: _tabController,
-        ),
+          ),
+        ],
       ),
     );
   }
 }
+
+
+
+
+
+
+
+// SizedBox(
+      //   height: 500,
+      //   child: Column(
+      //     children: [
+      //       Container(
+      //         child: TabBar(
+      //           labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      //           unselectedLabelStyle: TextStyle(fontSize: 16),
+      //           labelColor: Colors.black,
+      //           unselectedLabelColor: Colors.black,
+      //           tabs: [
+      //             Tab(
+      //               child: Row(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: [
+      //                   // Icon(Icons.add_shopping_cart_sharp),
+      //                   Text("Ongoing"),
+      //                 ],
+      //               ),
+      //             ),
+      //             Tab(
+      //               child: Row(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: [
+      //                   // Icon(Icons.person_pin_rounded),
+      //                   Text("Completed"),
+      //                 ],
+      //               ),
+      //             ),
+      //             Tab(
+      //               child: Row(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: [
+      //                   // Icon(Icons.person_pin_rounded),
+      //                   Text("Failed"),
+      //                 ],
+      //               ),
+      //             ),
+      //           ],
+      //           controller: _tabController,
+      //           indicatorColor: Colors.black
+      //           // indicatorSize: TabBarIndicatorSize.tab,
+      //         ),
+      //       ),
+      
+      //       Expanded(
+      //         child: TabBarView(
+      //           children: [
+      //             BOngoing(),
+      //             BCompleted(),
+      //             BFailed(),
+      //           ],
+      //           controller: _tabController,
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),

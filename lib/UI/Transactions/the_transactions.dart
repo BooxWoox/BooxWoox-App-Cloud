@@ -24,6 +24,7 @@ class _TheTransactionsState extends State<TheTransactions> with TickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        shadowColor: Colors.transparent,
         title: Text('The transactions', style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold),),
         backgroundColor: Color(0xFFFFCC00),
         bottom: TabBar(
@@ -58,14 +59,14 @@ class _TheTransactionsState extends State<TheTransactions> with TickerProviderSt
       body: Column(
         children: [
           Expanded(
-                child: TabBarView(
-                  children: [
-                    Buyer(),
-                    Seller(),
-                  ],
-                  controller: _tabController,
-                ),
-              ),
+            child: TabBarView(
+              children: [
+                Buyer(),
+                Seller(),
+              ],
+              controller: _tabController,
+            ),
+          ),
         ],
       ),
     );

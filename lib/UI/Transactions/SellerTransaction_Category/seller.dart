@@ -21,58 +21,57 @@ class _SellerState extends State<Seller> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          Container(
-            // color: Color(0xFFFFCC00),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
             child: TabBar(
-              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              unselectedLabelStyle: TextStyle(fontSize: 16),
-              labelColor:Color(0xFFFFCC00),
-              tabs: [
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Icon(Icons.add_shopping_cart_sharp),
-                      Text("Ongoing"),
-                    ],
+                labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                unselectedLabelStyle: TextStyle(fontSize: 16),
+                labelColor: Color(0xFFFFCC00),
+                unselectedLabelColor: Colors.black,
+                tabs: [
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.add_shopping_cart_sharp),
+                        Text("Ongoing"),
+                      ],
+                    ),
                   ),
-                ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Icon(Icons.person_pin_rounded),
-                      Text("Completed"),
-                    ],
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.person_pin_rounded),
+                        Text("Completed"),
+                      ],
+                    ),
                   ),
-                ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Icon(Icons.person_pin_rounded),
-                      Text("Failed"),
-                    ],
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.person_pin_rounded),
+                        Text("Failed"),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-              controller: _tabController,
-              indicatorColor: Colors.transparent
-              // indicatorSize: TabBarIndicatorSize.tab,
-            ),
+                ],
+                controller: _tabController,
+                indicatorColor: Colors.transparent
+                // indicatorSize: TabBarIndicatorSize.tab,
+              ),
           ),
-          Expanded(
+          SliverFillRemaining(
             child: TabBarView(
-              children: [
-                SOngoing(),
-                SCompleted(),
-                SFailed(),
-              ],
-              controller: _tabController,
-            ),
+                children: [
+                  SOngoing(),
+                  SCompleted(),
+                  SFailed(),
+                ],
+                controller: _tabController,
+              ),
           ),
         ],
       ),

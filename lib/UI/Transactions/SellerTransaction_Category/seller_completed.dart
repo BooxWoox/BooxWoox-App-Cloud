@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../transaction_cards.dart';
+
 class SCompleted extends StatefulWidget {
 
   @override
@@ -18,58 +20,57 @@ class _SCompletedState extends State<SCompleted> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          Container(
-            // color: Color(0xFFFFCC00),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
             child: TabBar(
-              labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black),
-              unselectedLabelStyle: TextStyle(fontSize: 12, color: Colors.grey),
-              // labelColor:Color(0xFFFFCC00),
-              tabs: [
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Icon(Icons.add_shopping_cart_sharp),
-                      Text("All transactions"),
-                    ],
+                labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                unselectedLabelStyle: TextStyle(fontSize: 12),
+                labelColor: Colors.black,
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.add_shopping_cart_sharp),
+                        Text("All transactions"),
+                      ],
+                    ),
                   ),
-                ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Icon(Icons.person_pin_rounded),
-                      Text("Self-Pick Up"),
-                    ],
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.person_pin_rounded),
+                        Text("Self-Pick Up"),
+                      ],
+                    ),
                   ),
-                ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Icon(Icons.person_pin_rounded),
-                      Text("Delivery"),
-                    ],
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Icon(Icons.person_pin_rounded),
+                        Text("Delivery"),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-              controller: _tabController,
-              indicatorColor: Colors.transparent
-              // indicatorSize: TabBarIndicatorSize.tab,
-            ),
+                ],
+                controller: _tabController,
+                indicatorColor: Colors.transparent,
+                // indicatorSize: TabBarIndicatorSize.tab,
+              ),
           ),
-          Expanded(
+          SliverFillRemaining(
             child: TabBarView(
-              children: [
-                SCalltransactions(),
-                SCselfpickup(),
-                SCdelivery(),
-              ],
-              controller: _tabController,
-            ),
+                children: [
+                  SCalltransactions(),
+                  SCselfpickup(),
+                  SCdelivery(),
+                ],
+                controller: _tabController,
+              ),
           ),
         ],
       ),
@@ -90,7 +91,13 @@ class _SCalltransactionsState extends State<SCalltransactions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
+      body: ListView(
+        children: [
+          ReceivedNotReturn(),
+          BookNotReceived(),
+          ReturnInitiated(),
+        ],
+      ),
     );
   }
 }
@@ -108,7 +115,13 @@ class _SCselfpickupState extends State<SCselfpickup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
+      body: ListView(
+        children: [
+          ReceivedNotReturn(),
+          BookNotReceived(),
+          ReturnInitiated(),
+        ],
+      ),
     );
   }
 }
@@ -126,7 +139,13 @@ class _SCdeliveryState extends State<SCdelivery> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
+      body: ListView(
+        children: [
+          ReceivedNotReturn(),
+          BookNotReceived(),
+          ReturnInitiated(),
+        ],
+      ),
     );
   }
 }
