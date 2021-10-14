@@ -1,7 +1,11 @@
 import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
+import 'package:bookollab/UI/Notification/NotificationSetting.dart';
 import 'package:bookollab/UI/Onboarding/GenreTags.dart';
+import 'package:bookollab/UI/Profile/EditBook.dart';
+import 'package:bookollab/UI/Profile/ReturnBooks.dart';
+import 'package:bookollab/UI/Profile/legals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -49,12 +53,11 @@ class bookollab extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: Color(0xFFFFBD06),
-        colorScheme: ColorScheme.light()
-            .copyWith(primary: Color(0xFFFFBD06), secondary: Color(0xFFFFBD06)),
-        fontFamily: 'LeelawUI',
-        backgroundColor: Color(0xFFE9E9E9)
-      ),
+          primaryColor: Color(0xFFFFBD06),
+          colorScheme: ColorScheme.light().copyWith(
+              primary: Color(0xFFFFBD06), secondary: Color(0xFFFFBD06)),
+          fontFamily: 'LeelawUI',
+          backgroundColor: Color(0xFFE9E9E9)),
       initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
@@ -86,6 +89,10 @@ class bookollab extends StatelessWidget {
         Mybooks.id: (context) => Mybooks(),
         OTPverify.id: (context) => OTPverify(),
         GenreTagsPage.id: (context) => GenreTagsPage(),
+        Legals.id: (context) => Legals(),
+        ReturnBooks.id: (context) => ReturnBooks(),
+        NotificationSetting.id: (context) => NotificationSetting(),
+        EditBook.id: (context) => EditBook(),
       },
     );
   }
