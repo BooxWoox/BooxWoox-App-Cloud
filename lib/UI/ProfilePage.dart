@@ -607,7 +607,7 @@ class _AppDrawerState extends State<AppDrawer> {
             leading: Icon(Icons.live_help_outlined),
             title: Text('FAQ'),
             onTap: () {
-              Navigator.pushNamed(context, EditBook.id);
+              
             },
           ),
         ],
