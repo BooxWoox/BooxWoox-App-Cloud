@@ -1,6 +1,9 @@
 import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
+import 'package:bookollab/UI/Payment/checkout.dart';
+import 'package:bookollab/UI/Transactions/the_transactions.dart';
+import 'package:bookollab/UI/filters.dart';
 import 'package:flutter/material.dart';
 import 'UI/SplashScreen.dart';
 import 'UI/Onboarding.dart';
@@ -40,7 +43,7 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: SplashScreen.id,
+      initialRoute: TheTransactions.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
         Onboarding.id: (context) => Onboarding(),
@@ -70,6 +73,9 @@ class bookollab extends StatelessWidget {
         Aboutus.id:(context) => Aboutus(),
         ContactUs.id:(context) =>ContactUs(),
         Mybooks.id:(context) => Mybooks(),
+        TheTransactions.id: (context) => TheTransactions(),
+        Checkout.id: (context) => Checkout(),
+        Filters.id: (context) => Filters(),
 
       },
     );

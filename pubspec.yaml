@@ -71,6 +71,7 @@ dependencies:
   badge_flutter: ^1.1.4
   multi_select_flutter: ^4.0.0
   direct_select_flutter: ^1.1.1
+  smart_select: ^4.3.2
 
 
 dev_dependencies:
