@@ -3,6 +3,7 @@ import 'package:bookollab/UI/Book_individual_view.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
 import 'package:bookollab/UI/Onboarding/GenreTags.dart';
+import 'package:bookollab/UI/Order_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -31,6 +32,9 @@ import 'UI/Transactions/AllTransactions.dart';
 import 'UI/Profile/Aboutus.dart';
 import 'UI/Profile/ContactUs.dart';
 import 'UI/Profile/Mybooks.dart';
+import 'UI/Profile/ReturnBooks.dart';
+import 'UI/See_all.dart';
+import 'UI/Profile/My_Books.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +60,7 @@ class bookollab extends StatelessWidget {
         fontFamily: 'LeelawUI',
         backgroundColor: Color(0xFFE9E9E9)
       ),
-      initialRoute: SplashScreen.id,
+      initialRoute: Mybooks.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
         Onboarding.id: (context) => Onboarding(),
@@ -64,7 +68,7 @@ class bookollab extends StatelessWidget {
         Homepage.id: (context) => Homepage(),
         maindisplaypage.id: (context) => maindisplaypage(),
         ProfilePage.id: (context) => ProfilePage(),
-        Book_info.id: (context) => Bookindividualview(),
+        Book_info.id: (context) => Book_individual_view(),
         Chat_homepage.id: (context) => Chat_homepage(),
         notification.id: (context) => notification(),
         ChatsPage.id: (context) => ChatsPage(),
@@ -84,9 +88,12 @@ class bookollab extends StatelessWidget {
         AllTransactions.id: (context) => AllTransactions(),
         Aboutus.id: (context) => Aboutus(),
         ContactUs.id: (context) => ContactUs(),
-        Mybooks.id: (context) => Mybooks(),
+        Mybooks.id: (context) => Mybookspage(),
         OTPverify.id: (context) => OTPverify(),
         GenreTagsPage.id: (context) => GenreTagsPage(),
+        ReturnBooks.id: (context) => ReturnBooks(),
+        SeeAllBooks.id: (context) => SeeAllBooks(),
+        OrderInfo.id: (context) => OrderInfo(),
       },
     );
   }

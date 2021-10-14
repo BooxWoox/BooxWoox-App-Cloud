@@ -1,14 +1,11 @@
-
 import 'package:flutter/material.dart';
-// void main() {
-//   runApp(Book_individual_view());
-// }
 
-class Book_individual_view extends StatefulWidget {
+class OrderInfo extends StatefulWidget {
 
+  static String id = 'OrderInfo';
 
   @override
-  _Book_individual_viewState createState() => _Book_individual_viewState();
+  _OrderInfoState createState() => _OrderInfoState();
 }
 
 TextStyle textstyleinactive = TextStyle(
@@ -43,7 +40,9 @@ TextStyle t2 = textstyleinactive ;
 BoxDecoration b1 = boxdinactive ;
 BoxDecoration b2 = boxdinactive ;
 
-class _Book_individual_viewState extends State<Book_individual_view> {
+
+
+class _OrderInfoState extends State<OrderInfo> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,195 +52,161 @@ class _Book_individual_viewState extends State<Book_individual_view> {
           elevation: 0,
         ),
         body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Stackssss(),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      boxxxx(
-                        height: 115,
-                        childc: Container(
-                          margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
-                          padding: EdgeInsets.only(left: 30.0),
-                          alignment: Alignment.topLeft,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Tags',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+          child: Column(
+            children: [
+              Stackssss(),
+              SizedBox(
+                height: 10.0,
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    boxxxx(
+                      height: 131.0,
+                      childc: Container(
+                        margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
+                        padding: EdgeInsets.only(left: 30.0),
+                        // alignment: Alignment.topLeft,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Timeline',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
                               ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Container(
-                                child: Row(
-                                  children: [
-                                    Tagg(name: 'Politics'),
-                                    Tagg(name: 'Politics'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      boxxxx(
-                        height: 131,
-                        childc: Container(
-                          margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
-                          padding: EdgeInsets.only(left: 30.0),
-                          // alignment: Alignment.topLeft,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Highlights',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Container(
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Container(
 
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      boxxxx(
-                        height: 131.0,
-                        childc: Container(
-                          margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
-                          padding: EdgeInsets.only(left: 30.0),
-                          // alignment: Alignment.topLeft,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Description',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Container(
-
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      boxxxx(
-                        height: 348.0,
-                        childc: Container(
-                          margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
-                          padding: EdgeInsets.only(left: 30.0),
-                          // alignment: Alignment.topLeft,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Reviews',
-                                style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 25.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Container(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: Colors.white,
-          child: Container(
-            height: 83.0,
-            // width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(7.0),
-              color: Color(0xffffffff),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xffE5E5E5),
-                  offset: Offset(0, 5), //(x,y)
-                  blurRadius: 15.0,
-                  spreadRadius: 10,
-                )
-              ],
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        t1 = textstyleactive ;
-                        b1 = boxdactive ;
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(30.0, 15.0, 15.0, 15.0),
-                      decoration: b1,
-                      child: Center(
-                        child: Text(
-                          'Add to wishlist',
-                          style: t1 ,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        t2 = textstyleactive ;
-                        b2 = boxdactive ;
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(15.0, 15.0, 30.0, 15.0),
-                      decoration: b2,
-                      child: Center(
-                        child: Text(
-                          'Borrow now',
-                          style: t2,
+                    boxxxx(
+                      height: 131.0,
+                      childc: Container(
+                        margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
+                        padding: EdgeInsets.only(left: 30.0),
+                        // alignment: Alignment.topLeft,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Order Details',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Container(
+
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
+                    boxxxx(
+                      height: 131.0,
+                      childc: Container(
+                        margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
+                        padding: EdgeInsets.only(left: 30.0),
+                        // alignment: Alignment.topLeft,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Description',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Container(
+
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    boxxxx(
+                      height: 115,
+                      childc: Container(
+                        margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
+                        padding: EdgeInsets.only(left: 30.0),
+                        alignment: Alignment.topLeft,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Tags',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Container(
+                              child: Row(
+                                children: [
+                                  Tagg(name: 'Politics'),
+                                  Tagg(name: 'Politics'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    boxxxx(
+                      height: 348.0,
+                      childc: Container(
+                        margin: EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
+                        padding: EdgeInsets.only(left: 30.0),
+                        // alignment: Alignment.topLeft,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Reviews',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Container(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),
     );
   }
 }
+
+
+
 
 class Stackssss extends StatelessWidget {
 
@@ -365,14 +330,13 @@ class Stackssss extends StatelessWidget {
                   )
                 ]
             ),
-            child: Image.asset('https://edit.org/images/cat/book-covers-big-2019101610.jpg',),
+            child: Image.asset('images/prescient.jpg'),
           ),
         ),
       ],
     );
   }
 }
-
 
 
 class boxxxx extends StatelessWidget {
