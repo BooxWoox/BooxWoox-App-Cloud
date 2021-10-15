@@ -61,7 +61,7 @@ class bookollab extends StatelessWidget {
         fontFamily: 'LeelawUI',
         backgroundColor: Color(0xFFE9E9E9),
       ),
-      initialRoute: GenreSelectionpage.id,
+      initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
         Onboarding.id: (context) => Onboarding(),
