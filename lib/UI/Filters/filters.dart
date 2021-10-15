@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smart_select/smart_select.dart';
 import 'choices.dart' as choices;
+import 'genreAPI.dart';
+import 'genreList.dart';
 
 class Filters extends StatefulWidget {
 
@@ -14,8 +18,6 @@ class Filters extends StatefulWidget {
 class _FiltersState extends State<Filters> {
 
   List<String> _car = [];
-  List<String> _smartphone = [];
-  List<String> _days = [];
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,11 @@ class _FiltersState extends State<Filters> {
       body: ListView(
         children: [
           Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SmartSelect.multiple(
+              Container(
+                child: Column(children: [
+                  SmartSelect.multiple(
                 title: 'Price',
                 value: _car,
                 onChange: (selected) => setState(() => _car = selected.value),
@@ -156,6 +161,45 @@ class _FiltersState extends State<Filters> {
               ),
 
               Divider(indent: 20),
+                ],),
+              ),
+
+              SizedBox(
+                height: 136,
+              ),
+
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: (){},
+                      child: Text('Reset', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(horizontal: 42, vertical: 10),
+                        primary: Colors.grey[300],
+                      ),
+                    ),
+
+                    SizedBox(
+                      width: 42,
+                    ),
+
+                    ElevatedButton(
+                      onPressed: (){},
+                      child: Text('Apply', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(horizontal: 42, vertical: 10),
+                        primary: Color(0xFFFFCC00),
+                      ),
+                    ),
+                  ]
+                ),
+              ),
             ],
           ),
         ],

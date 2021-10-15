@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'genreList.dart';
 
 class GenreAPI{
-  static Future<GenreList> genrelistapi() async{
+  static Future<GenreList> genrelistapi(String authToken) async{
     var url = 'https://hu7cb5n3g3.execute-api.ap-south-1.amazonaws.com/Prod/FilterByGenre';
 
-    var response = await http.get(Uri.parse(url));
+    var response = await http.post(Uri.parse(url), headers: {'authToken': authToken});
 
-    var returnList = GenreList.fromJson(json.decode(response.body));
+    var gList = GenreList.fromJson(json.decode(response.body));
 
-    return returnList;
+    return gList;
   }
 }
