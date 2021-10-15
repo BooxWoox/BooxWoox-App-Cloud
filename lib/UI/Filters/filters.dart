@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:bookollab/Models/Api/GenreDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:smart_select/smart_select.dart';
 import 'choices.dart' as choices;
 import 'genreAPI.dart';
 import 'genreList.dart';
+import 'package:bookollab/Models/Api/GenreDetails.dart';
 
 class Filters extends StatefulWidget {
 
@@ -94,42 +96,55 @@ class _FiltersState extends State<Filters> {
                 ),
               ),
       
-              Divider(indent: 20),
-      
-              SmartSelect.multiple(
-                title: 'Genre',
-                value: _car,
-                onChange: (selected) => setState(() => _car = selected.value),
-                // choiceItems: S2Choice.listFrom<String, Map>(
-                //   source: choices.genre,
-                //   value: (index, item) => item['value'],
-                //   title: (index, item) => item['title'],
-                //   // group: (index, item) => item['brand'],
-                // ),
+                Divider(indent: 20),
 
-                choiceItems: choices.gesfsfnre,
+                FutureBuilder<List<String>>(
+                future: GenreDetails.AllGenrename('b0f3778c-d2f8-4978-8c3a-4458d8702af9'),
+                builder: (context, snapshot) {
 
-                tileBuilder: (context, state) {
-                  return S2Tile.fromState(
-                    state,
-                    isTwoLine: true,
-                    leading: const CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://assets.ltkcontent.com/images/31018/book-genres_0066f46bde.jpg',
+                  if(snapshot.hasData){
+                    return LinearProgressIndicator();
+                  }
+                  else if(snapshot.hasError){
+                    return Text(snapshot.error);
+                  }
+
+                  return SmartSelect.multiple(
+                    title: 'Genre',
+                    value: _car,
+                    onChange: (selected) => setState(() => _car = selected.value),
+                    // choiceItems: S2Choice.listFrom<String, Map>(
+                    //   source: choices.genre,
+                    //   value: (index, item) => item['value'],
+                    //   title: (index, item) => item['title'],
+                    //   // group: (index, item) => item['brand'],
+                    // ),
+              
+                    choiceItems: snapshot.data.map((e) => S2Choice(value: e, title: e)).toList(),
+              
+                    tileBuilder: (context, state) {
+                      return S2Tile.fromState(
+                        state,
+                        isTwoLine: true,
+                        leading: const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            'https://assets.ltkcontent.com/images/31018/book-genres_0066f46bde.jpg',
+                          ),
+                        ),
+                      );
+                    },
+              
+                    choiceType: S2ChoiceType.checkboxes,
+                    modalType: S2ModalType.fullPage,
+                    modalHeaderStyle: S2ModalHeaderStyle(
+                      backgroundColor: Color(0xFFFFCC00),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                    modalFilter: true,
                   );
-                },
-
-                choiceType: S2ChoiceType.checkboxes,
-                modalType: S2ModalType.fullPage,
-                modalHeaderStyle: S2ModalHeaderStyle(
-                  backgroundColor: Color(0xFFFFCC00),
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                modalFilter: true,
+                }
               ),
       
               Divider(indent: 20),
