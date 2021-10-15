@@ -2,6 +2,7 @@ import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Book_individual_view.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
+import 'package:bookollab/UI/Genreselection.dart';
 import 'package:bookollab/UI/Onboarding/GenreTags.dart';
 import 'package:bookollab/UI/Order_info.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +59,9 @@ class bookollab extends StatelessWidget {
         colorScheme: ColorScheme.light()
             .copyWith(primary: Color(0xFFFFBD06), secondary: Color(0xFFFFBD06)),
         fontFamily: 'LeelawUI',
-        backgroundColor: Color(0xFFE9E9E9)
+        backgroundColor: Color(0xFFE9E9E9),
       ),
-      initialRoute: Mybooks.id,
+      initialRoute: GenreSelectionpage.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
         Onboarding.id: (context) => Onboarding(),
@@ -68,7 +69,7 @@ class bookollab extends StatelessWidget {
         Homepage.id: (context) => Homepage(),
         maindisplaypage.id: (context) => maindisplaypage(),
         ProfilePage.id: (context) => ProfilePage(),
-        Book_info.id: (context) => Book_individual_view(),
+        // Book_info.id: (context) => Book_individual_view(),
         Chat_homepage.id: (context) => Chat_homepage(),
         notification.id: (context) => notification(),
         ChatsPage.id: (context) => ChatsPage(),
@@ -94,6 +95,7 @@ class bookollab extends StatelessWidget {
         ReturnBooks.id: (context) => ReturnBooks(),
         SeeAllBooks.id: (context) => SeeAllBooks(),
         OrderInfo.id: (context) => OrderInfo(),
+        GenreSelectionpage.id: (context) => GenreSelectionpage(),
       },
     );
   }

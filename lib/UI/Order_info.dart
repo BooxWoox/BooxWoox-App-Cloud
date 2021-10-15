@@ -45,8 +45,7 @@ BoxDecoration b2 = boxdinactive ;
 class _OrderInfoState extends State<OrderInfo> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xffFFBD06),
           elevation: 0,
@@ -200,8 +199,7 @@ class _OrderInfoState extends State<OrderInfo> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 

@@ -46,8 +46,7 @@ BoxDecoration b2 = boxdinactive ;
 class _Book_individual_viewState extends State<Book_individual_view> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xffFFBD06),
           elevation: 0,
@@ -238,8 +237,7 @@ class _Book_individual_viewState extends State<Book_individual_view> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
