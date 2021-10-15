@@ -4,14 +4,18 @@ import 'package:bookollab/UI/Chat/RequestsPage.dart';
 import 'package:bookollab/UI/Payment/checkout.dart';
 import 'package:bookollab/UI/Transactions/the_transactions.dart';
 import 'package:bookollab/UI/Filters/filters.dart';
+import 'package:bookollab/UI/Onboarding/GenreTags.dart';
+
 import 'package:flutter/material.dart';
-import 'UI/SplashScreen.dart';
-import 'UI/Onboarding.dart';
-import 'UI/LoginPage.dart';
-import 'UI/CreateAccountPage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'Models/user.dart';
+import 'UI/Onboarding/SplashScreen.dart';
+import 'UI/Onboarding/Onboarding.dart';
+import 'UI/Onboarding/LoginPage.dart';
 import 'UI/Homepage.dart';
 import 'UI/maindisplaypage.dart';
-import 'UI/OTPverify.dart';
+import 'UI/Onboarding/OTPverify.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'UI/ProfilePage.dart';
 import 'UI/Book_info.dart';
@@ -19,7 +23,6 @@ import 'UI/Chat/chat_homepage.dart';
 import 'UI/Notification/notification.dart';
 import 'UI/Chat/ChatsPage.dart';
 import 'UI/Payment/testpayment.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'UI/AddBookPage.dart';
 import 'UI/Transactions/Transactions_Buyer.dart';
 import 'UI/Transactions/BuyerTransaction_Category/Ongoing_transaction.dart';
@@ -31,11 +34,17 @@ import 'UI/Transactions/AllTransactions.dart';
 import 'UI/Profile/Aboutus.dart';
 import 'UI/Profile/ContactUs.dart';
 import 'UI/Profile/Mybooks.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  runApp(bookollab());
+  await Hive.initFlutter();
+  await Hive.openBox<User>('users');
+  runApp(
+    ProviderScope(
+      child: bookollab(),
+    ),
+  );
 }
 
 class bookollab extends StatelessWidget {
@@ -43,12 +52,18 @@ class bookollab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: Filters.id,
+      theme: ThemeData(
+        primaryColor: Color(0xFFFFBD06),
+        colorScheme: ColorScheme.light()
+            .copyWith(primary: Color(0xFFFFBD06), secondary: Color(0xFFFFBD06)),
+        fontFamily: 'LeelawUI',
+        backgroundColor: Color(0xFFE9E9E9)
+      ),
+      initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
         Onboarding.id: (context) => Onboarding(),
         LoginPage.id: (context) => LoginPage(),
-        CreateAccountPage.id: (context) => CreateAccountPage(),
         Homepage.id: (context) => Homepage(),
         maindisplaypage.id: (context) => maindisplaypage(),
         ProfilePage.id: (context) => ProfilePage(),
@@ -58,7 +73,7 @@ class bookollab extends StatelessWidget {
         ChatsPage.id: (context) => ChatsPage(),
         ConversationsPage.id: (context) => ConversationsPage(),
         RequestsPage.id: (context) => RequestsPage(),
-        AddBookPage.id: (context) => AddBookPage(),
+        AddNewBook.id: (context) => AddNewBook(),
         AllBooksPage.id: (context) => AllBooksPage(),
         testpayment.id: (context) => testpayment(),
         Transactions_Buyer.id: (context) => Transactions_Buyer(),
@@ -76,6 +91,11 @@ class bookollab extends StatelessWidget {
         TheTransactions.id: (context) => TheTransactions(),
         Checkout.id: (context) => Checkout(),
         Filters.id: (context) => Filters(),
+        Aboutus.id: (context) => Aboutus(),
+        ContactUs.id: (context) => ContactUs(),
+        Mybooks.id: (context) => Mybooks(),
+        OTPverify.id: (context) => OTPverify(),
+        GenreTagsPage.id: (context) => GenreTagsPage(),
       },
     );
   }

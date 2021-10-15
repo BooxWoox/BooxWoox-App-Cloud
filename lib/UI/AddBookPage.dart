@@ -1,886 +1,723 @@
+import 'dart:io';
 
-import 'package:bookollab/UI/ProfilePage.dart';
+import 'package:direct_select_flutter/direct_select_container.dart';
+import 'package:direct_select_flutter/direct_select_item.dart';
+import 'package:direct_select_flutter/direct_select_list.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:images_picker/images_picker.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'LoginPage.dart';
-import 'dart:io';
-import 'package:images_picker/images_picker.dart';
-import 'maindisplaypage.dart';
-import 'package:getwidget/getwidget.dart';
-import 'dart:async';
-import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-// import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_dropdown/flutter_dropdown.dart';
-import 'package:bookollab/UI/Homepage.dart';
-import 'package:random_string/random_string.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:sweetsheet/sweetsheet.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:chips_choice/chips_choice.dart';
+import 'package:intl/intl.dart';
+import 'package:random_string/random_string.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
+final _firestore = FirebaseFirestore.instance;
+FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
-final _firestore=FirebaseFirestore.instance;
-FirebaseStorage _firebaseStorage=FirebaseStorage.instance;
-class AddBookPage extends StatefulWidget {
-  static String id='AddBookPage_Screen';
+class AddNewBook extends StatefulWidget {
+  static String id = "add_new_book";
+  const AddNewBook({Key key}) : super(key: key);
+
   @override
-  _AddBookPageState createState() => _AddBookPageState();
+  _AddNewBookState createState() => _AddNewBookState();
 }
-class _AddBookPageState extends State<AddBookPage>  {
-  final SweetSheet _sweetSheet = SweetSheet();
-  int leaseduration=-1;
-  String _scanBarcode = '';
-  TextEditingController _controller;
-  String cityName="Select Your City";
-  File _ImageFile;
-  String barcoderesult = "";
-  GlobalKey<ScaffoldState> _scaffoldKey= new GlobalKey<ScaffoldState>();
-  String BookName="",Author="",condition="",bkdesc="",pickup_address="",seller_UPI="",seller_phone="",Seller_fullname="";
-  double MRP=0;
-  double quotedprice=0;
-  double rentprice=0;
-  double commission_fee=10;//By default
+
+class _AddNewBookState extends State<AddNewBook> {
+  String BookName = "",
+      Author = "",
+      condition,
+      bkdesc = "",
+      pickup_address = "",
+      seller_UPI = "",
+      seller_phone = "",
+      Seller_fullname = "";
+  double MRP = 0;
+  double quotedprice = 0;
+  int leaseduration = 1;
+  double rentprice = 0;
+  double commission_fee = 10; //By default
   // list of string options
   List<String> options = [];
   List<String> tags = [];
-  int quality=100;
-@override
+  int quality = 100;
+  File _ImageFile;
+
+  String bookCoverPath;
+  String isbnBarcode;
+  TextEditingController isbnController;
+  String age;
+  Map<String, String> upis = {
+    "Personal ID": "personal@okaxis",
+    "Company ID": "company@oksbi",
+    "Secondary ID": "secondary@okiobrtbvtyrgytr5vbtybtyhbhty"
+  };
+  Map<String, String> addresses = {
+    "Home Adress": "address..",
+    "Company Address": "address.."
+  };
+  String selectedAddress;
+  String selectedUpiId;
+
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    isbnController = new TextEditingController();
     getSellerDetails(FirebaseAuth.instance.currentUser.uid);
     getQuotedParameters();
   }
+
+  @override
+  void dispose() {
+    isbnController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    ProgressDialog pd = ProgressDialog(context: context);
-    double width=MediaQuery.of(context).size.width;
+    final _formKey = GlobalKey<FormState>();
+
+    if (isbnBarcode != null && isbnBarcode != "" && isbnBarcode != "-1") {
+      isbnController.text = isbnBarcode;
+    }
+
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Add Books"),
-        backgroundColor: Color(0xFFFFCC00),
-        shadowColor: Color(0xFFF7C100),
-      ),
-        bottomSheet:RaisedButton(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical:13.0,horizontal: 13),
-            child: Container(
-              width: width,
-              height: 25,
-              child: Center(
-                child: FittedBox(
-                  child: Row(
-                    children: [
-                      Icon(Icons.book_outlined),
-                      Text(' Submit',style: TextStyle(
-                          fontFamily: 'LeelawUI',
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                      ),),
-                    ],
+          title: Text(
+            "Add Books",
+            style: TextStyle(
+              color: Colors.black,
+              fontFamily: "Avenir95Black",
+            ),
+          ),
+          backgroundColor: Color(0xFFFFBD06),
+          iconTheme: IconThemeData(color: Colors.black)),
+      body: SafeArea(
+        child: DirectSelectContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Theme(
+                  data: ThemeData(
+                    colorScheme: Theme.of(context).colorScheme.copyWith(
+                          secondary: Color(0xFFFFBD06),
+                        ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Text(
+                                "Book Details",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormLabel("Book Name"),
+                                  TextFormField(
+                                    onChanged: (value) {
+                                      BookName = value;
+                                    },
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      fillColor: Color(0xffE9E9E9),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 15),
+                                      hintText: "Book name here",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormLabel("Author Name"),
+                                  TextFormField(
+                                    onChanged: (value) {
+                                      Author = value;
+                                    },
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      fillColor: Color(0xffE9E9E9),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 15),
+                                      hintText: "Author name here",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            FormLabel("Condition"),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              decoration: BoxDecoration(
+                                color: Color(0xffE9E9E9),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: DirectSelectList<String>(
+                                      defaultItemIndex: ["used", "new"].indexOf(
+                                        condition != null ? condition : "used",
+                                      ),
+                                      values: ["used", "new"],
+                                      itemBuilder: (String value) =>
+                                          DirectSelectItem(
+                                        value: value,
+                                        itemBuilder: (context, value) => Text(
+                                          "${value.substring(0, 1).toUpperCase()}${value.substring(1)}",
+                                        ),
+                                      ),
+                                      onItemSelectedListener:
+                                          (value, _index, _) {
+                                        condition = value;
+                                      },
+                                      onUserTappedListener: () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              "Drag up or down to choose options",
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Icon(Icons.unfold_more)
+                                ],
+                              ),
+                            ),
+                            FormLabel("Genre Tags"),
+                            MultiSelectBottomSheetField<String>(
+                              items: [
+                                MultiSelectItem("used", "Used"),
+                                MultiSelectItem("new", "New")
+                              ],
+                              onConfirm: (List<String> values) {},
+                              listType: MultiSelectListType.CHIP,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Color(0xffE9E9E9),
+                              ),
+                              title: Text("Genre"),
+                              buttonText: Text(
+                                "Select Genre",
+                              ),
+                              buttonIcon: Icon(
+                                Icons.arrow_downward,
+                                color: Colors.grey[600],
+                              ),
+                              chipDisplay: MultiSelectChipDisplay(
+                                chipColor: Theme.of(context).primaryColor,
+                                textStyle: TextStyle(color: Colors.black),
+                                items: [],
+                              ),
+                            ),
+                            FormLabel("Upload Book Cover"),
+                            bookCoverPath == null
+                                ? Container(
+                                    height: 200,
+                                    child: Material(
+                                      color: Color(0xffE9E9E9),
+                                      child: InkWell(
+                                        onTap: () async {
+                                          List<Media> res =
+                                              await ImagesPicker.openCamera(
+                                            maxSize: 1,
+                                            quality: 0.0001,
+                                            cropOpt: CropOption(
+                                              aspectRatio:
+                                                  CropAspectRatio.custom,
+                                              cropType: CropType.rect,
+                                            ),
+                                            pickType: PickType.image,
+                                          );
+                                          if (res != null) {
+                                            final dir = await path_provider
+                                                .getTemporaryDirectory();
+                                            final targetPath =
+                                                dir.absolute.path + "/temp.jpg";
+                                            testCompressAndGetFile(
+                                                    File(res[0].path),
+                                                    targetPath)
+                                                .then((value) {
+                                              _ImageFile = value;
+                                              setState(() {
+                                                bookCoverPath = _ImageFile.path;
+                                              });
+                                            });
+                                          } else {
+                                            print("not wrking or null return");
+                                          }
+                                        },
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.camera_alt),
+                                              Text(
+                                                  "Take a snapshot of your book")
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : InkWell(
+                                    onTap: () async {
+                                      List<Media> res =
+                                          await ImagesPicker.openCamera(
+                                        maxSize: 1,
+                                        quality: 0.0001,
+                                        cropOpt: CropOption(
+                                          aspectRatio: CropAspectRatio.custom,
+                                          cropType: CropType.rect,
+                                        ),
+                                        pickType: PickType.image,
+                                      );
+                                      if (res != null) {
+                                        final dir = await path_provider
+                                            .getTemporaryDirectory();
+                                        final targetPath =
+                                            dir.absolute.path + "/temp.jpg";
+                                        testCompressAndGetFile(
+                                                File(res[0].path), targetPath)
+                                            .then((value) {
+                                          _ImageFile = value;
+                                          setState(() {
+                                            bookCoverPath = _ImageFile.path;
+                                          });
+                                        });
+                                      } else {
+                                        print("not wrking or null return");
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 400,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Image.file(
+                                        new File(bookCoverPath),
+                                      ),
+                                    ),
+                                  ),
+                            FormLabel('ISBN'),
+                            TextFormField(
+                              controller: isbnController,
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide.none),
+                                filled: true,
+                                fillColor: Color(0xffE9E9E9),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 15),
+                                hintText: 'Scan Barcode code or type manually',
+                                suffixIcon: GestureDetector(
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                  ),
+                                  onTap: () async {
+                                    String barcodeScanRes =
+                                        await FlutterBarcodeScanner.scanBarcode(
+                                      "#ffbd00",
+                                      "Cancel",
+                                      true,
+                                      ScanMode.BARCODE,
+                                    );
+                                    if (barcodeScanRes != "-1") {
+                                      setState(() {
+                                        isbnBarcode = barcodeScanRes;
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          FormLabel("MRP"),
+                                          TextFormField(
+                                            onChanged: (value) {
+                                              MRP = double.parse(value);
+                                            },
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  borderSide: BorderSide.none),
+                                              filled: true,
+                                              fillColor: Color(0xffE9E9E9),
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 15),
+                                              hintText: "MRP price",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 4.0),
+                                    child: Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          FormLabel("Quoted Deposit"),
+                                          TextFormField(
+                                            onChanged: (value) {
+                                              quotedprice = double.parse(value);
+                                            },
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  borderSide: BorderSide.none),
+                                              filled: true,
+                                              fillColor: Color(0xffE9E9E9),
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 15),
+                                              hintText: ">30%",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            FormLabel("Rent Duration (Months)"),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              decoration: BoxDecoration(
+                                color: Color(0xffE9E9E9),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: DirectSelectList<int>(
+                                      defaultItemIndex: [1, 2, 3, 4].indexOf(
+                                        age != null ? int.parse(age) : 1,
+                                      ),
+                                      values: [1, 2, 3, 4],
+                                      itemBuilder: (int value) =>
+                                          DirectSelectItem(
+                                        value: value,
+                                        itemBuilder: (context, value) => Text(
+                                          value != -1
+                                              ? value.toString()
+                                              : "More",
+                                        ),
+                                      ),
+                                      onItemSelectedListener:
+                                          (value, _index, context) {
+                                        age = value.toString();
+                                        leaseduration = int.parse(age);
+                                        print(int.parse(age));
+                                      },
+                                      onUserTappedListener: () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                "Drag up or down to choose options"),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Icon(Icons.unfold_more)
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Text(
+                                "Location & Payment",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
+                            selectedAddress == null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 30),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  width: 2),
+                                              borderRadius:
+                                                  BorderRadius.circular(40)),
+                                          child: IconButton(
+                                            onPressed: () async {
+                                              await updateAddress();
+                                            },
+                                            icon: Icon(
+                                              Icons.add,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Add delivery Address",
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                        ),
+                                        child: Icon(
+                                          Icons.location_on,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: ListTile(
+                                          title: Text(selectedAddress),
+                                          subtitle: Text(
+                                            addresses[selectedAddress],
+                                            style: TextStyle(
+                                                //overflow: TextOverflow.ellipsis,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                      OutlinedButton(
+                                        onPressed: () async {
+                                          await updateAddress();
+                                        },
+                                        child: Text("Edit"),
+                                      )
+                                    ],
+                                  ),
+                            FormLabel("UPI Id"),
+                            selectedUpiId == null
+                                ? Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                width: 2),
+                                            borderRadius:
+                                                BorderRadius.circular(40)),
+                                        child: IconButton(
+                                          onPressed: () async {
+                                            await updateUpi();
+                                          },
+                                          icon: Icon(
+                                            Icons.add,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "Add UPI Id",
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                        ),
+                                        child: Icon(
+                                          Icons.credit_card,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: ListTile(
+                                          title: Text(selectedUpiId),
+                                          subtitle: Text(
+                                            upis[selectedUpiId],
+                                            style: TextStyle(
+                                                //overflow: TextOverflow.ellipsis,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                      OutlinedButton(
+                                        onPressed: () async {
+                                          await updateUpi();
+                                        },
+                                        child: Text("Edit"),
+                                      )
+                                    ],
+                                  ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          color: Color(0xFFFFCC00),
-          onPressed: () async{
-            if(check(cityName,BookName,condition,MRP,quotedprice,_ImageFile,leaseduration,pickup_address,seller_UPI,seller_phone,Seller_fullname,tags)){
-              //checks passed
-              pd.show(max: 100, msg: 'Uploading...');
-
-              //TEMPORARY SEARCHING ALGORITHM(SPLITIING STRING METHOD)
-              List<String> splitList=BookName.split(' ');
-              List<String> indexList=[];
-
-              //backend starts
-              String useruid=FirebaseAuth.instance.currentUser.uid;
-              final DateFormat formatter = DateFormat('yyyy-MM-dd');
-              final String formattedDate = formatter.format(DateTime.now());
-              String uploadname=useruid+formattedDate+randomAlphaNumeric(10)+BookName.trim().replaceAll(' ', '');
-
-              try{
-                var reference=_firebaseStorage.ref()
-                    .child('BookFrontCovers')
-                    .child('/${uploadname}.jpg');
-                reference.putFile(_ImageFile).then((val){
-                  pd.update(value: 50);
-                  String docid=(DateTime.now().toString())+useruid;
-                  val.ref.getDownloadURL().then((value) {
-                    _firestore.collection("Book_Collection").doc(docid).set({
-                      "Book_Collection_ID":docid,
-                      "Author":Author,
-                      "adminapproval":0,//by default false
-                      "tags":[""],
-                      "Genretags":tags,
-                      "Availability":true,
-                      "BookName":BookName,
-                      "Condition":"Used",
-                      "Condition Description":condition,
-                      "Dislikes":0,
-                      "Homepage_category":"",
-                      "ISBN":_scanBarcode.toString(),
-                      "ImageUrl":value.toString(),
-                      "Likes":0,
-                      "Long Description":bkdesc,
-                      "MRP":MRP,
-                      "OwnerRatings":"5",
-                      "OwnerUID":useruid,
-                      "LeaseDuration":leaseduration,
-                      "Quantity":1,
-                      "QuotedDeposit":quotedprice,
-                      'SellerFullName':Seller_fullname.trim(),
-                      "seller_address":pickup_address,
-                      'seller_UPI':seller_UPI,
-                      "seller_phoneNumber":seller_phone,
-                      "SearchingIndex":indexList,
-                      "category":"Unknown",
-                    }).then((value) {
-                      pd.update(value: 99);
-                    });
-                  });
-                }).then((value) {
-                  pd.close();
-                  Navigator.pushNamed(context,Homepage.id);
-                  _onBasicSuccessAlert(context, "Book has been successfully added for admin approval");
-                });
-              }catch(e){
-                pd.close();
-                _sweetSheet.show(
-                  context: context,
-                  title: Text("Warning"),
-                  description: Text(
-                      'Unexpected Error :(\n${e.message} '),
-                  color: SweetSheetColor.WARNING,
-                  icon: Icons.delete_forever,
-                  positive: SweetSheetAction(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    title: 'OK',
-                    color: Colors.white,
-                  ),
-                );
-              }
-
-            }
-          },
-        ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Book Name",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: "LeelawUI",
-                      fontWeight: FontWeight.bold
-                    ),),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      onChanged: (value){
-                        BookName =value;
-                      },
-                      autocorrect: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[290],
-                        hintText: "Type your Book Name..",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Author",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontFamily: "LeelawUI",
-                                    fontWeight: FontWeight.bold
-                                ),),
-                            ),
-                            Container(
-                              width: width/2.5,
-                                child: TextField(
-                                  onChanged: (value){
-                                    Author =value;
-                                  },
-                                  autocorrect: false,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.grey[290],
-                                    hintText: "Optional",
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      borderSide: BorderSide(color: Colors.grey),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      borderSide: BorderSide(color: Colors.grey),
-                                    ),
-                                  ),
-                                ),),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Condition",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontFamily: "LeelawUI",
-                                    fontWeight: FontWeight.bold
-                                ),),
-                            ),
-                            Container(
-                              width: width/2.5,
-                                child: TextField(
-                                  onChanged: (value){
-                                    condition =value;
-                                  },
-                                  autocorrect: false,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.grey[290],
-                                    hintText: "Used or New",
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      borderSide: BorderSide(color: Colors.grey),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                      borderSide: BorderSide(color: Colors.grey),
-                                    ),
-                                  ),
-                                ),),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Genre tags",
+              Container(
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      blurRadius: 16,
+                      offset: Offset(0, 10),
+                      color: Colors.black),
+                ], color: Colors.white),
+                padding: EdgeInsets.symmetric(vertical: 10),
+                width: double.maxFinite,
+                child: Center(
+                  child: ElevatedButton(
+                    child: Text(
+                      "Submit",
                       style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: "LeelawUI",
-                          fontWeight: FontWeight.bold
-                      ),),
-                  ),
-                  ChipsChoice<String>.multiple(
-                    value: tags,
-                    onChanged: (val) => setState(() => tags = val),
-                    choiceItems:C2Choice.listFrom<String, String>(
-                      source: options,
-                      value: (i, v) => v,
-                      label: (i, v) => v,
-                      tooltip: (i, v) => v,
+                          color: Colors.black,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
-                    wrapped: true,
-
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("ISBN (Optional)",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: "LeelawUI",
-                          fontWeight: FontWeight.bold
-                      ),),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: TextField(
-                            controller: _controller,
-                            onChanged: (value){
-                              _scanBarcode =value;
-                            },
-                            autocorrect: false,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey[290],
-                              hintText: "Scan QR or type manually",
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                            ),
+                    onPressed: () {},
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Color(0xFFFFBD06),
+                        ),
+                        shadowColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        IconButton(icon: Icon(Icons.camera_alt), onPressed:(){
-                          //_scanQR();
-                          scanBarcodeNormal();
-                          setState(() {
-
-                          });
-
-                        })
-                      ],
-                    ),
+                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 10))),
                   ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RichText(
-                                overflow: TextOverflow.ellipsis,
-                                strutStyle: StrutStyle(fontSize: 18.0),
-                                text:TextSpan(
-                                  text: "MRP",
-                                  style: TextStyle(color: Colors.black87,
-                                      fontWeight: FontWeight.w500),
-                                ) ,
-                              ),
-                            ),
-                            Container(
-                              width: width/4.3,
-                              child: TextField(
-                                keyboardType: TextInputType.number,
-                                onChanged: (value){
-                                  MRP =double.parse(value);
-                                },
-                                autocorrect: false,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.grey[290],
-                                  hintText: "MRP",
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                ),
-                              ),),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: width/3.4,
-                                child: RichText(
-                                  overflow: TextOverflow.ellipsis,
-                                  strutStyle: StrutStyle(fontSize: 18.0),
-                                  text:TextSpan(
-                                    text: "Quoted Deposit",
-                                    style: TextStyle(color: Colors.black87,
-                                        fontWeight: FontWeight.w500),
-                                  ) ,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: width/3.3,
-                              child: TextField(
-                                keyboardType: TextInputType.number,
-                                onChanged: (value){
-//                                  if(double.parse(value)>(60/100)*MRP){
-//                                    quotedprice =(60/100)*MRP;
-//                                  }else{
-                                  quotedprice=double.parse(value);
-                                  //}
-                                },
-                                autocorrect: false,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.grey[290],
-                                  hintText: ">30% & <60% of MRP",
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                ),
-                              ),),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical:8.0),
-                              child: Container(
-                                width: width/4.5,
-                                child: AutoSizeText(
-                                  'Rent Duration\n(months)',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: "LeelawUI",
-                                      fontWeight: FontWeight.bold),
-                                  maxLines: 2,
-                                  minFontSize: 10,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical:5.0),
-                              child: Container(
-                                width:60,
-                                child: DropDown(
-                                  items: [1, 2, 3, 4],
-                                  hint: Text("Max.",
-                                  style: TextStyle(
-                                    fontSize: 14
-                                  ),),
-                                  onChanged: (value){
-                                    print(value);
-                                    leaseduration=value;
-                                  },
-                                ),),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("*Quoted Deposit is the security deposit which can be within 30-60 percent of MRP value.",
-                      style: TextStyle(
-                          color: Colors.grey
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("${rentprice}% of Quoted Deposit will be sent to owner as Rent for the book.",
-                    style: TextStyle(
-                        color: Colors.grey
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("${commission_fee}% of rental amount would be deducted as convenience fee.",
-                      style: TextStyle(
-                          color: Colors.grey
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Book Description (Optional)",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: "LeelawUI",
-                          fontWeight: FontWeight.bold
-                      ),),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      onChanged: (value){
-                        bkdesc =value;
-                      },
-                      autocorrect: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[290],
-                        hintText: "Enter Info of Book..",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Pickup Address",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: "LeelawUI",
-                          fontWeight: FontWeight.bold
-                      ),),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      onChanged: (value){
-                        pickup_address =value;
-                      },
-                      autocorrect: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[290],
-                        hintText: "Enter your Pickup Address..",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownButton<String>(
-                      focusColor:Colors.white,
-                      value: cityName,
-                      //elevation: 5,
-                      style: TextStyle(color: Colors.white),
-                      iconEnabledColor:Colors.black,
-                      items: <String>[
-                        'Select Your City',
-                        'Ahmedabad',
-                        'Others',
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value,style:TextStyle(color:Colors.black),),
-                        );
-                      }).toList(),
-                      hint:Text(
-                        "Please select your city",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      onChanged: (String value) {
-                        setState(() {
-                          cityName = value;
-                        });
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("UPI ID",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: "LeelawUI",
-                          fontWeight: FontWeight.bold
-                      ),),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      onChanged: (value){
-                        seller_UPI =value;
-                      },
-                      autocorrect: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[290],
-                        hintText: "Enter UPI ID..",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Contact Number",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: "LeelawUI",
-                          fontWeight: FontWeight.bold
-                      ),),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      keyboardType: TextInputType.phone,
-                      onChanged: (value){
-                        seller_phone =value;
-                      },
-                      autocorrect: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[290],
-                        hintText: "Enter your Phone Number.",
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Upload Front Book Cover",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontFamily: "LeelawUI",
-                          fontWeight: FontWeight.bold
-                      ),),
-                  ),
-                  RaisedButton(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical:13.0,horizontal: 13),
-                      child: Container(
-                        width: width,
-                        height: 25,
-                        child: Center(
-                          child: FittedBox(
-                            child: Row(
-                              children: [
-                                Icon(Icons.camera_alt),
-                                Text(' Capture',style: TextStyle(
-                                    fontFamily: 'LeelawUI',
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold
-                                ),),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    color: Color(0xFFFFCC00),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(21),
-                    ),
-                    onPressed: () async{
-                      print("camera");
-                      List<Media> res = await ImagesPicker.openCamera(
-                       maxSize: 1,
-                        quality: 0.0001,
-                        cropOpt: CropOption(
-                          aspectRatio: CropAspectRatio.custom,
-                          cropType: CropType.rect,
-                        ),
-                        pickType: PickType.image,
-                      );
-                      if(res!=null){
-                          final dir = await path_provider.getTemporaryDirectory();
-                        final targetPath = dir.absolute.path + "/temp.jpg";
-                        testCompressAndGetFile(File(res[0].path),targetPath).then((value) {
-                          _ImageFile=value;
-                        });
-                      }else{
-                        print("not wrking or null return");
-                      }
-                    },
-
-                  ),
-                  SizedBox(height: 50,),
-                ],
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  startBarcodeScanStream() async {
-    FlutterBarcodeScanner.getBarcodeStreamReceiver(
-        "#ff6666", "Cancel", true, ScanMode.BARCODE)
-        .listen((barcode) => print(barcode));
-  }
-  Future<void> scanBarcodeNormal() async {
-    String barcodeScanRes="";
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          "#ff6666", "Cancel", true, ScanMode.BARCODE);
-
-      print(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      if(barcodeScanRes=="-1"){
-        _controller.clear();
-        _scanBarcode="";
-      }
-      else{
-        _controller = new TextEditingController(text: barcodeScanRes);
-        _scanBarcode = barcodeScanRes;
-      }
-
-    });
-  }
-
-
-  bool check(String city, String bookName, String condition, double mrp, double quotedprice, File imageFile,int leaseduration,String pickup_address, String seller_upi,String sellercontact, String seller_fullname, List<String> tags) {
-   if(city.isEmpty||city==null||city!="Ahmedabad"){
-     _onBasicWaitingAlertPressed(context,"Sorry we are currently operating in Ahmedabad only\nStay tuned :)");
-     return false;
-   }
-   if(bookName.trim()==""||bookName.trim().isEmpty||bookName.trim().length==0){
-      _onBasicWaitingAlertPressed(context,"BookName can't be Empty");
-      return false;
-    }
-    if(condition.trim()==""||condition.trim().isEmpty||condition.trim().length==0){
-      _onBasicWaitingAlertPressed(context,"Condition field can't be Empty");
-      return false;
-    }
-    if(tags.isEmpty||tags.length==0){
-      _onBasicWaitingAlertPressed(context,"Please select atleast one Genre tag for the book");
-      return false;
-    }
-    if(mrp==0||mrp.isNaN){
-      _onBasicWaitingAlertPressed(context,"Recheck MRP Field");
-      return false;
-    }
-    if(quotedprice>(60/100)*mrp || quotedprice<(30/100)*mrp){
-      _onBasicWaitingAlertPressed(context,"Quoted Price should be >=30% and <=60% of MRP");
-      return false;
-    }
-    if(imageFile==null){
-      _onBasicWaitingAlertPressed(context,"Please Upload Front cover of Book");
-      return false;
-    }
-    if(leaseduration==-1||leaseduration==null){
-      _onBasicWaitingAlertPressed(context,"Please enter Max. period for Lenting");
-      return false;
-    }
-    if(pickup_address==null||pickup_address.trim()==0||pickup_address.trim()==""){
-      _onBasicWaitingAlertPressed(context,"Please check pickup address");
-      return false;
-    }
-    if(seller_upi==null||seller_upi.trim().length==0||seller_upi.trim()==""){
-      _onBasicWaitingAlertPressed(context,"UPI ID is mandatory");
-      return false;
-    }
-    if(sellercontact==null||sellercontact.trim().length==0||sellercontact.trim()==""){
-      _onBasicWaitingAlertPressed(context,"Please provide your contact number");
-      return false;
-    }
-    if(seller_fullname.isEmpty||seller_fullname.trim().length==0||seller_fullname==null)
-      {
-        _onBasicWaitingAlertPressed(context, "Some unknown error has occured :(");
-      }
-    return true;
-  }
-//validating user fields
-  _onBasicWaitingAlertPressed(context,String descrip) async {
-    await Alert(
-      type: AlertType.error,
-      context: context,
-      title: "Warning",
-      desc: descrip,
-    ).show();
-    // Code will continue after alert is closed.
-    debugPrint("Alert closed now.");
-  }
-  _onBasicSuccessAlert(context,String descrip) async {
-    await Alert(
-      type: AlertType.success,
-      context: context,
-      title: "Success",
-      desc: descrip,
-    ).show();
-    // Code will continue after alert is closed.
-    debugPrint("Alert closed now.");
-  }
   void getSellerDetails(String uid) {
     _firestore.collection("Users").doc(uid.trim()).get().then((value) {
-          setState(() {
-            Seller_fullname=value.get("FullName");
-          });
+      setState(() {
+        addresses = value.get("Addresses").cast<String, String>();
+        Seller_fullname = value.get("FullName");
+      });
     });
   }
+
   void getQuotedParameters() {
     _firestore.collection("Admin").doc("Quoted_Parameters").get().then((value) {
       setState(() {
-        rentprice=double.parse(value.get("Quoted_Rent_Percent").toString());
-        commission_fee=double.parse(value.get("SellerShare_Cut_Percent").toString());
-        quality=double.parse(value.get("Image_Quality").toString()).toInt();
-        for(var i in value.get("Genretags")){
+        rentprice = double.parse(value.get("Quoted_Rent_Percent").toString());
+        commission_fee =
+            double.parse(value.get("SellerShare_Cut_Percent").toString());
+        quality = double.parse(value.get("Image_Quality").toString()).toInt();
+        for (var i in value.get("Genretags")) {
           options.add(i.toString());
         }
       });
     });
   }
+
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
     var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path, targetPath,
-      quality: quality,
+      file.absolute.path,
+      targetPath,
+      quality: 100,
     );
 
     print(file.lengthSync());
@@ -889,6 +726,124 @@ class _AddBookPageState extends State<AddBookPage>  {
     return result;
   }
 
+  Future updateUpi() async {
+    String result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text("Choose an upi id"),
+          children: upis.keys
+              .map(
+                (key) => InkWell(
+                  child: ListTile(
+                    title: Text(key),
+                    subtitle: Text(upis[key]),
+                  ),
+                  onTap: () {
+                    Navigator.pop(
+                      context,
+                      key,
+                    );
+                  },
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+    if (result != null) {
+      setState(() {
+        selectedUpiId = result;
+      });
+    }
+  }
+
+  Future updateAddress() async {
+    String result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text("Choose an address"),
+          children: addresses.keys
+              .map(
+                (key) => InkWell(
+                  child: ListTile(
+                    title: Text(key),
+                    subtitle: Text(addresses[key]),
+                  ),
+                  onTap: () {
+                    Navigator.pop(
+                      context,
+                      key,
+                    );
+                  },
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+    if (result != null) {
+      setState(() {
+        selectedAddress = result;
+      });
+    }
+  }
 }
 
+class FormElement extends StatelessWidget {
+  final String label;
+  final String placeholder;
+  final String Function(String value) validator;
 
+  const FormElement({
+    Key key,
+    @required this.label,
+    @required this.placeholder,
+    @required this.validator,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FormLabel(this.label),
+          TextFormField(
+            style: TextStyle(
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  borderSide: BorderSide.none),
+              filled: true,
+              fillColor: Color(0xffE9E9E9),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              hintText: this.placeholder,
+            ),
+            validator: (value) => this.validator(value),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FormLabel extends StatelessWidget {
+  final String label;
+  const FormLabel(this.label, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 30, bottom: 10),
+      child: Text(
+        this.label,
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
