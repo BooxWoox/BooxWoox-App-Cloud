@@ -18,6 +18,8 @@ class Filters extends StatefulWidget {
 class _FiltersState extends State<Filters> {
 
   List<String> _car = [];
+  List<String> _smartphone = [];
+  List<String> _days = [];
 
   @override
   Widget build(BuildContext context) {

@@ -71,11 +71,13 @@ dependencies:
   badge_flutter: ^1.1.4
   multi_select_flutter: ^4.0.0
   direct_select_flutter: ^1.1.1
+  smart_select: ^4.3.2
   flutter_riverpod: ^0.14.0+3
   hive: ^2.0.4
   hive_flutter: ^1.1.0
   http: ^0.13.3
   logger: ^1.0.0
+
 
 
 dev_dependencies:
@@ -105,6 +107,7 @@ flutter:
     - UIAssets/Profile/
     - UIAssets/OtpScreen/
     - UIAssets/genre/
+    - assets/images/
   fonts:
     - family: Avenir95Black
       fonts:
