@@ -1,6 +1,7 @@
 import 'package:bookollab/Api/books.dart';
 import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/State/auth.dart';
+import 'package:bookollab/UI/Payment/checkout.dart';
 import 'package:bookollab/UI/widgets/ThemeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // }
 
 class BookIndividualView extends StatefulWidget {
-
   const BookIndividualView({Key key}) : super(key: key);
 
   @override
@@ -21,176 +21,212 @@ class _BookIndividualViewState extends State<BookIndividualView> {
   Widget build(BuildContext context) {
     int bookId = ModalRoute.of(context).settings.arguments as int;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xffFFBD06),
-        elevation: 0,
-      ),
-      body: Consumer(builder: (context, watch, child) {
-        final token = watch(apiProvider);
-        return FutureBuilder<BookDetailed>(
+      body: Consumer(
+        builder: (context, watch, child) {
+          final token = watch(apiProvider);
+          return FutureBuilder<BookDetailed>(
             future: BooksRepository.getBookDetailed(token, bookId),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Center(
-                  child: Text(snapshot.error.toString()),
+                return Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Color(0xffFFBD06),
+                    elevation: 0,
+                  ),
+                  body: Center(
+                    child: Text(snapshot.error.toString()),
+                  ),
                 );
               } else if (!snapshot.hasData) {
-                return LinearProgressIndicator();
+                return Scaffold(
+                  body: LinearProgressIndicator(),
+                  appBar: AppBar(
+                    backgroundColor: Color(0xffFFBD06),
+                    elevation: 0,
+                  ),
+                );
               } else {
-                return SingleChildScrollView(
-                    child: Column(
-                  children: [
-                    Stackssss(snapshot.data),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Container(
-                      child: Column(
+                return Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Color(0xffFFBD06),
+                    elevation: 0,
+                  ),
+                  bottomNavigationBar: BottomAppBar(
+                    color: Colors.white,
+                    child: Container(
+                      height: 83.0,
+                      // width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        color: Color(0xffffffff),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xffE5E5E5),
+                            offset: Offset(0, -8), //(x,y)
+                            blurRadius: 33,
+                            spreadRadius: 0,
+                          )
+                        ],
+                      ),
+                      child: Row(
                         children: [
-                          Box(
-                            height: 115,
-                            child: Container(
-                              // margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                              padding: EdgeInsets.all(10.0),
-                              alignment: Alignment.topLeft,
-                              child: snapshot.data.tags != null ?Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Tags',
-                                    style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  Container(
-                                    child: Wrap(
-                                      children: snapshot.data.tags
-                                          .split(" ")
-                                          .map((e) => Tag(name: e))
-                                          .toList(),
-                                    ),
-                                  ),
-                                ],
-                              ) : Container(),
-                            ),
-                          ),
-                          Box(
-                            height: 131,
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                              padding: EdgeInsets.only(left: 10.0),
-                              // alignment: Alignment.topLeft,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Highlights',
-                                    style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  Container(),
-                                ],
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ThemeTextButton(
+                                label: 'Add to wishlist',
+                                onPressed: () {},
                               ),
                             ),
                           ),
-                          Box(
-                            height: 131.0,
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                              padding: EdgeInsets.only(left: 10.0),
-                              // alignment: Alignment.topLeft,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Description',
-                                    style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  Container(),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Box(
-                            height: 348.0,
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                              padding: EdgeInsets.only(left: 10.0),
-                              // alignment: Alignment.topLeft,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Reviews',
-                                    style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  Container(),
-                                ],
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ThemeButton(
+                                label: 'Borrow Now',
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed(Checkout.id);
+                                },
                               ),
                             ),
                           ),
                         ],
                       ),
-                    )
-                  ],
-                ));
+                    ),
+                  ),
+                  body: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Stackssss(snapshot.data),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              Box(
+                                height: 115,
+                                child: Container(
+                                  // margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                  padding: EdgeInsets.all(10.0),
+                                  alignment: Alignment.topLeft,
+                                  child: snapshot.data.tags != null
+                                      ? Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Tags',
+                                              style: TextStyle(
+                                                fontSize: 25.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            Container(
+                                              child: Wrap(
+                                                children: snapshot.data.tags
+                                                    .split(" ")
+                                                    .map((e) => Tag(name: e))
+                                                    .toList(),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Container(),
+                                ),
+                              ),
+                              Box(
+                                height: 131,
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  // alignment: Alignment.topLeft,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Highlights',
+                                        style: TextStyle(
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Container(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Box(
+                                height: 131.0,
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  // alignment: Alignment.topLeft,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Description',
+                                        style: TextStyle(
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Container(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Box(
+                                height: 348.0,
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  // alignment: Alignment.topLeft,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Reviews',
+                                        style: TextStyle(
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Container(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
               }
-            });
-      }),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        child: Container(
-          height: 83.0,
-          // width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(7.0),
-            color: Color(0xffffffff),
-            boxShadow: [
-              BoxShadow(
-                color: Color(0xffE5E5E5),
-                offset: Offset(0, -8), //(x,y)
-                blurRadius: 33,
-                spreadRadius: 0,
-              )
-            ],
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ThemeTextButton(
-                        label: 'Add to wishlist', onPressed: () {})),
-              ),
-              Expanded(
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ThemeButton(label: 'Borrow Now', onPressed: () {})),
-              ),
-            ],
-          ),
-        ),
+            },
+          );
+        },
       ),
     );
   }
