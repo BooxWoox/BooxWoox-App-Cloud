@@ -1,7 +1,6 @@
 import 'dart:convert';
-
-import 'package:bookollab/Models/Api/auth.dart';
-import 'package:bookollab/Models/Api/exceptions.dart';
+import 'package:bookollab/Api/auth.dart';
+import 'package:bookollab/Api/exceptions.dart';
 import 'package:bookollab/repositories/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
