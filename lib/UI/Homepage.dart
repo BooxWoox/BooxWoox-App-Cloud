@@ -10,9 +10,10 @@ import 'package:bookollab/UI/Notification/notification.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
-final _firestore = FirebaseFirestore.instance;
+// final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
 
 class Homepage extends StatefulWidget {
@@ -23,21 +24,18 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  int _pageIndex = 1;
+  int _pageIndex = 0;
   PageController _pageController;
 
   List<Widget> tabPages = [
-    Chat_homepage(),
-    maindisplaypage(),
-    notification(),
+    MainDisplayPage(),
+    // Chat_homepage(),
+    // notification(),
   ];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    String useruid = _auth.currentUser.uid;
-    notificationUserActive(useruid);
     _pageController = PageController(initialPage: _pageIndex);
   }
 
@@ -54,7 +52,7 @@ class _HomepageState extends State<Homepage> {
         automaticallyImplyLeading: false,
         title: Image.asset(
           'UIAssets/title.png',
-          width: MediaQuery.of(context).size.width*0.3,
+          width: MediaQuery.of(context).size.width * 0.3,
           fit: BoxFit.fitWidth,
           alignment: Alignment.centerLeft,
         ),
@@ -64,15 +62,24 @@ class _HomepageState extends State<Homepage> {
               print("userprofile click");
               Navigator.pushNamed(context, ProfilePage.id);
             },
-            child: Image.asset(
-              'UIAssets/Homepage/user_circle.png',
-              color: Colors.white,
-              fit: BoxFit.scaleDown,
+            child:
+                // Image.asset(
+                //   'UIAssets/Homepage/notification_icon.png',
+                //   color: Colors.black,
+                //   fit: BoxFit.scaleDown,
+                // ),
+                Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.notifications_outlined,
+                color: Colors.black,
+              ),
             ),
           ),
         ],
-        backgroundColor: Color(0xFFFFCC00),
-        shadowColor: Color(0xFFF7C100),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        // shadowColor: Color(0xFFF7C100),
+        elevation: 0,
       ),
       body: PageView(
         children: tabPages,
@@ -100,28 +107,33 @@ class _HomepageState extends State<Homepage> {
             backgroundColor: Colors.white,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                  icon: Image.asset('UIAssets/Homepage/chat_icon.png'),
-                  title: Text("Home"),
-                  activeIcon: Image.asset(
-                    'UIAssets/Homepage/chat_icon.png',
-                    color: Colors.orangeAccent,
-                  )),
+                icon: Icon(
+                  Icons.home,
+                  color: Color(0xFFFFCC00),
+                ),
+                label: "Home",
+              ),
               BottomNavigationBarItem(
-                  icon: Image.asset('UIAssets/Homepage/bookollab_icon.png'),
-                  title: Text("official"),
-                  activeIcon: Image.asset(
-                    'UIAssets/Homepage/bookollab_icon.png',
-                    color: Colors.orangeAccent,
-                  )),
+                icon: Icon(
+                  Icons.chat,
+                  color: Colors.black,
+                ),
+                label: 'Chat',
+              ),
               BottomNavigationBarItem(
-                  icon: Image.asset(
-                    'UIAssets/Homepage/notification_icon.png',
-                  ),
-                  title: Text("notifications"),
-                  activeIcon: Image.asset(
-                    'UIAssets/Homepage/notification_icon.png',
-                    color: Colors.orangeAccent,
-                  )),
+                icon: Icon(
+                  Icons.favorite_rounded,
+                  color: Colors.red,
+                ),
+                label: 'Favorites',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person_pin_rounded,
+                  color: Colors.grey,
+                ),
+                label: 'Profile',
+              ),
             ],
           ),
         ),
@@ -140,16 +152,16 @@ class _HomepageState extends State<Homepage> {
         duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
-  void notificationUserActive(String uid) {
-    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    firebaseMessaging.getToken().then((deviceToken) {
-      print(deviceToken);
-      _firestore.collection("Notification_token").doc(deviceToken).set({
-        'device_Token': deviceToken,
-        'UserUID': uid.trim(),
-        'isActive': true,
-        'Timestamp': DateTime.now(),
-      });
-    });
-  }
+  // void notificationUserActive(String uid) {
+  //   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  //   firebaseMessaging.getToken().then((deviceToken) {
+  //     print(deviceToken);
+  //     _firestore.collection("Notification_token").doc(deviceToken).set({
+  //       'device_Token': deviceToken,
+  //       'UserUID': uid.trim(),
+  //       'isActive': true,
+  //       'Timestamp': DateTime.now(),
+  //     });
+  //   });
+  // }
 }
