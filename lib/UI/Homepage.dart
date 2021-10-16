@@ -5,17 +5,6 @@ import 'package:flutter/material.dart';
 import 'Filters/filters.dart';
 import 'Onboarding/LoginPage.dart';
 import 'maindisplaypage.dart';
-import 'dart:async';
-import 'package:bookollab/UI/Chat/chat_homepage.dart';
-import 'package:bookollab/UI/Notification/notification.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-
-// final _firestore = FirebaseFirestore.instance;
-final _auth = FirebaseAuth.instance;
 
 class Homepage extends StatefulWidget {
   static String id = 'Homepage_Screen';
@@ -81,7 +70,7 @@ class _HomepageState extends State<Homepage> {
             onPressed: () {
               Navigator.of(context).pushNamed(Filters.id);
             },
-            icon: Icon(Icons.control_point_sharp),
+            icon: Icon(Icons.tune, color: Colors.black),
           )
         ],
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,

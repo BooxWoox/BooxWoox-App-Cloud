@@ -105,8 +105,7 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                   } else if (!snapshot.hasData) {
                     return LinearProgressIndicator();
                   } else {
-                    final searchDelegate =
-                        watch(searchDelegateProvider(snapshot.data).notifier);
+                    final booklist = watch(searchDelegateProvider);
                     return FloatingSearchBar(
                       hint: 'Search...',
                       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
@@ -118,7 +117,12 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                       width: 600,
                       debounceDelay: const Duration(milliseconds: 500),
                       onQueryChanged: (query) {
-                        searchDelegate.updateQuery(query);
+                        context
+                            .read(searchDelegateProvider.notifier)
+                            .updateQuery(
+                              query,
+                              snapshot.data,
+                            );
                       },
                       // Specify a custom transition to be used for
                       // animating between opened and closed stated.
@@ -136,10 +140,17 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                             elevation: 4.0,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              children: searchDelegate.booksList
+                              children: booklist
                                   .map(
-                                    (e) => ListTile(
-                                      title: Text(e.bookTitle),
+                                    (e) => GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                            Book_info.id,
+                                            arguments: e.id);
+                                      },
+                                      child: ListTile(
+                                        title: Text(e.bookTitle),
+                                      ),
                                     ),
                                   )
                                   .toList(),
