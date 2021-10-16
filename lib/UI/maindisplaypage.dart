@@ -125,13 +125,6 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
               // animating between opened and closed stated.
               transition: CircularFloatingSearchBarTransition(),
               actions: [
-                FloatingSearchBarAction(
-                  showIfOpened: false,
-                  child: CircularButton(
-                    icon: const Icon(Icons.place),
-                    onPressed: () {},
-                  ),
-                ),
                 FloatingSearchBarAction.searchToClear(
                   showIfClosed: false,
                 ),
@@ -176,13 +169,9 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BookIndividualView(
-                                          book: snapshot.data[index],
-                                        ),
-                                      ),
+                                    Navigator.of(context).pushNamed(
+                                      Book_info.id,
+                                      arguments: snapshot.data[index].id,
                                     );
                                   },
                                   child: Column(
