@@ -95,7 +95,7 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
             Logger().d(token);
             int page = 1;
             return FloatingSearchBar(
-              hint: 'Search...',
+              hint: 'Search your favorite book',
               scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
               transitionDuration: const Duration(milliseconds: 800),
               transitionCurve: Curves.easeInOut,
