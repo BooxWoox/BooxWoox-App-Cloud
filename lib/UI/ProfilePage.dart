@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void getusername() async{
-    var uid = await _auth.currentUser.uid;
+    // var uid = await _auth.currentUser.uid;
     try{
       await _firestore.collection("Users").doc("${_auth.currentUser.uid}").get().then((value){
         print(value["Username"]);

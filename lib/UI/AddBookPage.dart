@@ -686,6 +686,7 @@ class _AddNewBookState extends State<AddNewBook> {
               width: double.maxFinite,
               child: Center(
                 child: ThemeButton(
+                  width: 300,
                   loading: loading,
                   label: 'Submit',
                   onPressed: () async {

@@ -107,14 +107,15 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                   } else {
                     final booklist = watch(searchDelegateProvider);
                     return FloatingSearchBar(
-                      hint: 'Search...',
+                      hint: 'Search your favourite book',
                       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
-                      transitionDuration: const Duration(milliseconds: 800),
+                      transitionDuration: const Duration(milliseconds: 500),
                       transitionCurve: Curves.easeInOut,
                       physics: const BouncingScrollPhysics(),
                       axisAlignment: 0.0,
                       openAxisAlignment: 0.0,
                       width: 600,
+                      backgroundColor: Color(0xffe9e9e9),
                       debounceDelay: const Duration(milliseconds: 500),
                       onQueryChanged: (query) {
                         context
@@ -126,7 +127,7 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                       },
                       // Specify a custom transition to be used for
                       // animating between opened and closed stated.
-                      transition: CircularFloatingSearchBarTransition(),
+                      transition: SlideFadeFloatingSearchBarTransition(),
                       actions: [
                         FloatingSearchBarAction.searchToClear(
                           showIfClosed: false,
