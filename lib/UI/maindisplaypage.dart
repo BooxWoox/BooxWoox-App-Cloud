@@ -14,7 +14,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'Book_info.dart';
 import 'AddBookPage.dart';
 import '../Models/Book_info_model.dart';
@@ -25,6 +24,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../Notifications.dart';
 import 'AddBookPage.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 final _firestore = FirebaseFirestore.instance;
 

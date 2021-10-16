@@ -1,4 +1,5 @@
 import 'package:bookollab/State/auth.dart';
+import 'package:bookollab/UI/Filters/displayGenre.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,17 +45,17 @@ class _FiltersState extends State<Filters> {
                       onChange: (selected) =>
                           setState(() => _car = selected.value),
                       choiceItems: choices.price,
-                      tileBuilder: (context, state) {
-                        return S2Tile.fromState(
-                          state,
-                          isTwoLine: true,
-                          leading: const CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              'https://bit.ly/3p0LpYh',
-                            ),
-                          ),
-                        );
-                      },
+                      // tileBuilder: (context, state) {
+                      //   return S2Tile.fromState(
+                      //     state,
+                      //     isTwoLine: true,
+                      //     leading: const CircleAvatar(
+                      //       backgroundImage: NetworkImage(
+                      //         'https://bit.ly/3p0LpYh',
+                      //       ),
+                      //     ),
+                      //   );
+                      // },
                       choiceType: S2ChoiceType.checkboxes,
                       modalType: S2ModalType.popupDialog,
                       modalHeaderStyle: S2ModalHeaderStyle(
@@ -71,17 +72,17 @@ class _FiltersState extends State<Filters> {
                       onChange: (selected) =>
                           setState(() => _car = selected.value),
                       choiceItems: choices.sort,
-                      tileBuilder: (context, state) {
-                        return S2Tile.fromState(
-                          state,
-                          isTwoLine: true,
-                          leading: const CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgqb_VJ-0Pl7X7MR2mapyKRRuuSAHC8bCfnnpTPKvzbgGRRiiIcSwp6RY94bTH6dqSqTI&usqp=CAU',
-                            ),
-                          ),
-                        );
-                      },
+                      // tileBuilder: (context, state) {
+                      //   return S2Tile.fromState(
+                      //     state,
+                      //     isTwoLine: true,
+                      //     leading: const CircleAvatar(
+                      //       backgroundImage: NetworkImage(
+                      //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgqb_VJ-0Pl7X7MR2mapyKRRuuSAHC8bCfnnpTPKvzbgGRRiiIcSwp6RY94bTH6dqSqTI&usqp=CAU',
+                      //       ),
+                      //     ),
+                      //   );
+                      // },
                       choiceType: S2ChoiceType.switches,
                       modalType: S2ModalType.bottomSheet,
                       modalHeaderStyle: S2ModalHeaderStyle(
@@ -94,7 +95,7 @@ class _FiltersState extends State<Filters> {
                     Divider(indent: 20),
                     Consumer(builder: (context, watch, child) {
                       final genres = watch(allGenres);
-                      if (genres.data.value == null) {
+                      if (genres.data == null) {
                         return LinearProgressIndicator();
                       }
                       return SmartSelect.multiple(
@@ -102,28 +103,22 @@ class _FiltersState extends State<Filters> {
                         value: _car,
                         onChange: (selected) =>
                             setState(() => _car = selected.value),
-                        // choiceItems: S2Choice.listFrom<String, Map>(
-                        //   source: choices.genre,
-                        //   value: (index, item) => item['value'],
-                        //   title: (index, item) => item['title'],
-                        //   // group: (index, item) => item['brand'],
-                        // ),
 
                         choiceItems: genres.data.value
                             .map((e) => S2Choice(value: e, title: e))
                             .toList(),
 
-                        tileBuilder: (context, state) {
-                          return S2Tile.fromState(
-                            state,
-                            isTwoLine: true,
-                            leading: const CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                'https://assets.ltkcontent.com/images/31018/book-genres_0066f46bde.jpg',
-                              ),
-                            ),
-                          );
-                        },
+                        // tileBuilder: (context, state) {
+                        //   return S2Tile.fromState(
+                        //     state,
+                        //     isTwoLine: true,
+                        //     leading: const CircleAvatar(
+                        //       backgroundImage: NetworkImage(
+                        //         'https://assets.ltkcontent.com/images/31018/book-genres_0066f46bde.jpg',
+                        //       ),
+                        //     ),
+                        //   );
+                        // },
 
                         choiceType: S2ChoiceType.checkboxes,
                         modalType: S2ModalType.fullPage,
@@ -135,7 +130,7 @@ class _FiltersState extends State<Filters> {
                         ),
                         modalFilter: true,
                       );
-                    }),
+                    },),
                     Divider(indent: 20),
                     SmartSelect.multiple(
                       title: 'Ratings',
@@ -143,17 +138,17 @@ class _FiltersState extends State<Filters> {
                       onChange: (selected) =>
                           setState(() => _car = selected.value),
                       choiceItems: choices.ratings,
-                      tileBuilder: (context, state) {
-                        return S2Tile.fromState(
-                          state,
-                          isTwoLine: true,
-                          leading: const CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              'https://www.pngall.com/wp-content/uploads/4/5-Star-Rating-PNG.png',
-                            ),
-                          ),
-                        );
-                      },
+                      // tileBuilder: (context, state) {
+                      //   return S2Tile.fromState(
+                      //     state,
+                      //     isTwoLine: true,
+                      //     leading: const CircleAvatar(
+                      //       backgroundImage: NetworkImage(
+                      //         'https://www.pngall.com/wp-content/uploads/4/5-Star-Rating-PNG.png',
+                      //       ),
+                      //     ),
+                      //   );
+                      // },
                       choiceType: S2ChoiceType.chips,
                       modalType: S2ModalType.popupDialog,
                       modalHeaderStyle: S2ModalHeaderStyle(
@@ -195,23 +190,41 @@ class _FiltersState extends State<Filters> {
                       SizedBox(
                         width: 42,
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Apply',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.black),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 42, vertical: 10),
-                          primary: Color(0xFFFFCC00),
-                        ),
+                      Consumer(
+                        builder: (context, watch, child) {
+                          final token = watch(apiProvider);
+                          return ElevatedButton(
+                            onPressed: () async {
+                              try {
+                                var res = await GenreAPI.filterByGenreListApi(token,_car);
+                                if(res.isEmpty)
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No books found')));
+                                  return ;
+                                }
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DisplayGenre(res)));
+                              }
+                              catch (e){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString()))); 
+                              }
+                            },
+                            child: Text(
+                              'Apply',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.black),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 42, vertical: 10),
+                              primary: Color(0xFFFFCC00),
+                            ),
+                          );
+                        }
                       ),
-                    ]),
+                    ],),
               ),
             ],
           ),

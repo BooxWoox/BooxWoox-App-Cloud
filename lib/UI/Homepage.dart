@@ -2,6 +2,7 @@ import 'package:bookollab/UI/AddBookPage.dart';
 import 'package:bookollab/UI/ProfilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'Filters/filters.dart';
 import 'Onboarding/LoginPage.dart';
 import 'maindisplaypage.dart';
 import 'dart:async';
@@ -76,6 +77,12 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
           ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(Filters.id);
+            },
+            icon: Icon(Icons.control_point_sharp),
+          )
         ],
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         // shadowColor: Color(0xFFF7C100),

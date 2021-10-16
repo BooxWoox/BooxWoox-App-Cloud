@@ -2,6 +2,7 @@ import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Book_individual_view.dart';
 import 'package:bookollab/UI/Chat/ConversationPage.dart';
 import 'package:bookollab/UI/Chat/RequestsPage.dart';
+import 'package:bookollab/UI/Filters/displayGenre.dart';
 import 'package:bookollab/UI/Genreselection.dart';
 import 'package:bookollab/UI/Onboarding/GenreTags.dart';
 import 'package:bookollab/UI/Order_info.dart';
