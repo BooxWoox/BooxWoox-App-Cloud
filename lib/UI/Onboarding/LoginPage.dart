@@ -27,7 +27,8 @@ class _LoginPageState extends State<LoginPage> {
       final token = watch(apiProvider);
       if (api.token != null) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          await Navigator.of(context).pushReplacementNamed(GenreSelectionpage.id);
+          await Navigator.of(context)
+              .pushReplacementNamed(GenreSelectionpage.id);
         });
       }
       return Scaffold(
@@ -35,6 +36,12 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           actions: [
+            Center(
+              child: Text(
+                "Click this button for logging in temperorarily ➔",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
             IconButton(
               onPressed: () async {
                 try {
@@ -118,7 +125,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     onPressed: () async {
                       try {
-                        // final provider = context.read(authProvider);
+                        final provider = context.read(apiProvider.notifier);
+                        await provider.sendOtpToPhone(phoneController.text);
                         // await provider.sendOtpToPhone(phoneController.text);
                         Navigator.pushReplacementNamed(
                           context,
@@ -127,8 +135,9 @@ class _LoginPageState extends State<LoginPage> {
                             phoneController.text,
                           ),
                         );
-                      } catch (e) {
+                      } catch (e, stack) {
                         logger.e(e.toString());
+                        logger.e(stack);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(

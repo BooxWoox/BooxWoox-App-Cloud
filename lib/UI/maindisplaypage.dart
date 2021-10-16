@@ -127,7 +127,7 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                       },
                       // Specify a custom transition to be used for
                       // animating between opened and closed stated.
-                      transition: SlideFadeFloatingSearchBarTransition(),
+                      transition: CircularFloatingSearchBarTransition(),
                       actions: [
                         FloatingSearchBarAction.searchToClear(
                           showIfClosed: false,

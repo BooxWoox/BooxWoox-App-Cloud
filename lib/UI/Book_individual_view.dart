@@ -20,213 +20,250 @@ class _BookIndividualViewState extends State<BookIndividualView> {
   @override
   Widget build(BuildContext context) {
     int bookId = ModalRoute.of(context).settings.arguments as int;
-    return Scaffold(
-      body: Consumer(
-        builder: (context, watch, child) {
-          final token = watch(apiProvider);
-          return FutureBuilder<BookDetailed>(
-            future: BooksRepository.getBookDetailed(token, bookId),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: Color(0xffFFBD06),
-                    elevation: 0,
-                  ),
-                  body: Center(
-                    child: Text(snapshot.error.toString()),
-                  ),
-                );
-              } else if (!snapshot.hasData) {
-                return Scaffold(
-                  body: LinearProgressIndicator(),
-                  appBar: AppBar(
-                    backgroundColor: Color(0xffFFBD06),
-                    elevation: 0,
-                  ),
-                );
-              } else {
-                return Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: Color(0xffFFBD06),
-                    elevation: 0,
-                  ),
-                  bottomNavigationBar: BottomAppBar(
-                    color: Colors.white,
-                    child: Container(
-                      height: 83.0,
-                      // width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7.0),
-                        color: Color(0xffffffff),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xffE5E5E5),
-                            offset: Offset(0, -8), //(x,y)
-                            blurRadius: 33,
-                            spreadRadius: 0,
+    return SafeArea(
+      child: Scaffold(
+        body: Consumer(
+          builder: (context, watch, child) {
+            final token = watch(apiProvider);
+            return FutureBuilder<BookDetailed>(
+              future: BooksRepository.getBookDetailed(token, bookId),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: Color(0xffFFBD06),
+                      elevation: 0,
+                    ),
+                    body: Center(
+                      child: Text(snapshot.error.toString()),
+                    ),
+                  );
+                } else if (!snapshot.hasData) {
+                  return Scaffold(
+                    body: LinearProgressIndicator(),
+                    appBar: AppBar(
+                      backgroundColor: Color(0xffFFBD06),
+                      elevation: 0,
+                    ),
+                  );
+                } else {
+                  return Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: Color(0xffFFBD06),
+                      elevation: 0,
+                    ),
+                    bottomNavigationBar: BottomAppBar(
+                      color: Colors.white,
+                      child: Container(
+                        height: 83.0,
+                        // width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7.0),
+                          color: Color(0xffffffff),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xffE5E5E5),
+                              offset: Offset(0, -8), //(x,y)
+                              blurRadius: 33,
+                              spreadRadius: 0,
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ThemeTextButton(
+                                  label: 'Add to wishlist',
+                                  onPressed: () {},
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ThemeButton(
+                                  label: 'Borrow Now',
+                                  onPressed: () {
+                                    if (snapshot.data.deposit == null) {
+                                      ScaffoldMessenger.of(context)
+                                        ..clearMaterialBanners()
+                                        ..showMaterialBanner(
+                                          MaterialBanner(
+                                            content: Text(
+                                                'Deposit is null, using ₹100 for testing'),
+                                            actions: [
+                                              IconButton(
+                                                  onPressed: () {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .clearMaterialBanners();
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                      Checkout.id,
+                                                      arguments: double
+                                                              .tryParse(snapshot
+                                                                      .data
+                                                                      .deposit ??
+                                                                  '100') ??
+                                                          100.0,
+                                                    );
+                                                  },
+                                                  icon: Icon(Icons.ac_unit))
+                                            ],
+                                          ),
+                                        );
+                                      return;
+                                    }
+                                    Navigator.of(context).pushNamed(
+                                      Checkout.id,
+                                      arguments: double.tryParse(
+                                              snapshot.data.deposit ?? '100') ??
+                                          100.0,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    body: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Stackssss(snapshot.data),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Container(
+                            child: Column(
+                              children: [
+                                Box(
+                                  height: 115,
+                                  child: Container(
+                                    // margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                    padding: EdgeInsets.all(10.0),
+                                    alignment: Alignment.topLeft,
+                                    child: snapshot.data.tags != null
+                                        ? Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Tags',
+                                                style: TextStyle(
+                                                  fontSize: 25.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              Container(
+                                                child: Wrap(
+                                                  children: snapshot.data.tags
+                                                      .split(" ")
+                                                      .map((e) => Tag(name: e))
+                                                      .toList(),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Container(),
+                                  ),
+                                ),
+                                Box(
+                                  height: 131,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                    padding: EdgeInsets.only(left: 10.0),
+                                    // alignment: Alignment.topLeft,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Highlights',
+                                          style: TextStyle(
+                                            fontSize: 25.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10.0,
+                                        ),
+                                        Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Box(
+                                  height: 131.0,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                    padding: EdgeInsets.only(left: 10.0),
+                                    // alignment: Alignment.topLeft,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Description',
+                                          style: TextStyle(
+                                            fontSize: 25.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10.0,
+                                        ),
+                                        Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Box(
+                                  height: 348.0,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                                    padding: EdgeInsets.only(left: 10.0),
+                                    // alignment: Alignment.topLeft,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Reviews',
+                                          style: TextStyle(
+                                            fontSize: 25.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10.0,
+                                        ),
+                                        Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ThemeTextButton(
-                                label: 'Add to wishlist',
-                                onPressed: () {},
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ThemeButton(
-                                label: 'Borrow Now',
-                                onPressed: () {
-                                  Navigator.of(context).pushNamed(Checkout.id);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                  ),
-                  body: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Stackssss(snapshot.data),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              Box(
-                                height: 115,
-                                child: Container(
-                                  // margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                                  padding: EdgeInsets.all(10.0),
-                                  alignment: Alignment.topLeft,
-                                  child: snapshot.data.tags != null
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Tags',
-                                              style: TextStyle(
-                                                fontSize: 25.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10.0,
-                                            ),
-                                            Container(
-                                              child: Wrap(
-                                                children: snapshot.data.tags
-                                                    .split(" ")
-                                                    .map((e) => Tag(name: e))
-                                                    .toList(),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : Container(),
-                                ),
-                              ),
-                              Box(
-                                height: 131,
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                                  padding: EdgeInsets.only(left: 10.0),
-                                  // alignment: Alignment.topLeft,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Highlights',
-                                        style: TextStyle(
-                                          fontSize: 25.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Container(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Box(
-                                height: 131.0,
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                                  padding: EdgeInsets.only(left: 10.0),
-                                  // alignment: Alignment.topLeft,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Description',
-                                        style: TextStyle(
-                                          fontSize: 25.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Container(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Box(
-                                height: 348.0,
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                                  padding: EdgeInsets.only(left: 10.0),
-                                  // alignment: Alignment.topLeft,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Reviews',
-                                        style: TextStyle(
-                                          fontSize: 25.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Container(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }
-            },
-          );
-        },
+                  );
+                }
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -319,12 +356,11 @@ class Stackssss extends StatelessWidget {
                         // ),
                       ],
                     ),
-                    // Text(
-                    //   'Deposit - Rs. 90.00',
-                    // ),
+                    Text(
+                      'Deposit - ${bookDetailed.deposit}',
+                    ),
                     Wrap(
-                      children: bookDetailed.conditionBook
-                          .split(" ")
+                      children: bookDetailed.ConditionBook.split(" ")
                           .map(
                             (e) => Chip(
                               label: Text(e),
