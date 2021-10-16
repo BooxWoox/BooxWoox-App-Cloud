@@ -1,4 +1,4 @@
-import 'package:bookollab/Models/Api/books.dart';
+import 'package:bookollab/Api/books.dart';
 import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/State/auth.dart';
 import 'package:bookollab/UI/widgets/ThemeButton.dart';
@@ -9,9 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // }
 
 class BookIndividualView extends StatefulWidget {
-  final BookShort book;
 
-  const BookIndividualView({Key key, @required this.book}) : super(key: key);
+  const BookIndividualView({Key key}) : super(key: key);
 
   @override
   _BookIndividualViewState createState() => _BookIndividualViewState();
@@ -20,6 +19,7 @@ class BookIndividualView extends StatefulWidget {
 class _BookIndividualViewState extends State<BookIndividualView> {
   @override
   Widget build(BuildContext context) {
+    int bookId = ModalRoute.of(context).settings.arguments as int;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffFFBD06),
@@ -28,7 +28,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
       body: Consumer(builder: (context, watch, child) {
         final token = watch(apiProvider);
         return FutureBuilder<BookDetailed>(
-            future: BooksRepository.getBookDetailed(token, widget.book.id),
+            future: BooksRepository.getBookDetailed(token, bookId),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Center(
@@ -40,7 +40,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
                 return SingleChildScrollView(
                     child: Column(
                   children: [
-                    Stackssss(widget.book, snapshot.data),
+                    Stackssss(snapshot.data),
                     SizedBox(
                       height: 10.0,
                     ),
@@ -179,15 +179,14 @@ class _BookIndividualViewState extends State<BookIndividualView> {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ThemeTextButton(label: 'Add to wishlist', onPressed: () {})
-                ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: ThemeTextButton(
+                        label: 'Add to wishlist', onPressed: () {})),
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ThemeButton(label: 'Borrow Now', onPressed: () {})
-                ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: ThemeButton(label: 'Borrow Now', onPressed: () {})),
               ),
             ],
           ),
@@ -198,10 +197,9 @@ class _BookIndividualViewState extends State<BookIndividualView> {
 }
 
 class Stackssss extends StatelessWidget {
-  final BookShort book;
   final BookDetailed bookDetailed;
 
-  const Stackssss(this.book, this.bookDetailed, {Key key}) : super(key: key);
+  const Stackssss(this.bookDetailed, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +237,7 @@ class Stackssss extends StatelessWidget {
                       height: 120.0,
                     ),
                     Text(
-                      book.bookTitle,
+                      bookDetailed.bookTitle,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 27.0,

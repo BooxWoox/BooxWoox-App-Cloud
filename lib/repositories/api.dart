@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:bookollab/Models/Api/exceptions.dart';
+import 'package:bookollab/Api/exceptions.dart';
 import 'package:http/http.dart' as http;
 
 class Api {

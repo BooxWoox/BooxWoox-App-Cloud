@@ -1,32 +1,18 @@
-import 'package:bookollab/Models/Api/books.dart';
+import 'package:bookollab/Api/books.dart';
 import 'package:bookollab/Models/book.dart';
-import 'package:bookollab/Models/maindisp_book_info_model.dart';
 import 'package:bookollab/State/auth.dart';
-import 'package:bookollab/State/auth.dart';
-import 'package:bookollab/UI/AllBooksPage.dart';
-import 'package:bookollab/UI/Book_individual_view.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bookollab/Models/homepage_items_featured.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'Book_info.dart';
 import 'AddBookPage.dart';
-import '../Models/Book_info_model.dart';
-import 'package:unicorndial/unicorndial.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../Notifications.dart';
 import 'AddBookPage.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-
-final _firestore = FirebaseFirestore.instance;
 
 class MainDisplayPage extends StatefulWidget {
   static String id = 'maindisplaypage_Screen';
@@ -125,13 +111,6 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
               // animating between opened and closed stated.
               transition: CircularFloatingSearchBarTransition(),
               actions: [
-                FloatingSearchBarAction(
-                  showIfOpened: false,
-                  child: CircularButton(
-                    icon: const Icon(Icons.place),
-                    onPressed: () {},
-                  ),
-                ),
                 FloatingSearchBarAction.searchToClear(
                   showIfClosed: false,
                 ),
@@ -176,13 +155,9 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BookIndividualView(
-                                          book: snapshot.data[index],
-                                        ),
-                                      ),
+                                    Navigator.of(context).pushNamed(
+                                      Book_info.id,
+                                      arguments: snapshot.data[index].id,
                                     );
                                   },
                                   child: Column(

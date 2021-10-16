@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:bookollab/Api/books.dart';
+import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/State/auth.dart';
+import 'package:bookollab/UI/widgets/ThemeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,16 +22,12 @@ class AddNewBook extends StatefulWidget {
 }
 
 class _AddNewBookState extends State<AddNewBook> {
-  String bookName = "",
-      author = "",
-      condition,
+  String condition,
       bkdesc = "",
       pickupAddress = "",
       sellerUPI = "",
       sellerPhone = "",
       sellerFullname = "";
-  double mrp = 0;
-  double quotedprice = 0;
   int leaseduration = 1;
   double rentprice = 0;
   double commissionFee = 10; //By default
@@ -38,9 +37,17 @@ class _AddNewBookState extends State<AddNewBook> {
   int quality = 100;
   File _imageFile;
 
+  bool loading = false;
+
   String bookCoverPath;
   String isbnBarcode;
-  TextEditingController isbnController;
+
+  TextEditingController isbnController = TextEditingController();
+  TextEditingController bookNameController = TextEditingController();
+  TextEditingController authorNameController = TextEditingController();
+  TextEditingController mrpController = TextEditingController();
+  TextEditingController depositController = TextEditingController();
+
   String age;
   Map<String, String> upis = {
     "Personal ID": "personal@okaxis",
@@ -120,9 +127,7 @@ class _AddNewBookState extends State<AddNewBook> {
                               children: [
                                 FormLabel("Book Name"),
                                 TextFormField(
-                                  onChanged: (value) {
-                                    bookName = value;
-                                  },
+                                  controller: bookNameController,
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),
@@ -152,9 +157,7 @@ class _AddNewBookState extends State<AddNewBook> {
                               children: [
                                 FormLabel("Author Name"),
                                 TextFormField(
-                                  onChanged: (value) {
-                                    author = value;
-                                  },
+                                  controller: authorNameController,
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),
@@ -250,23 +253,21 @@ class _AddNewBookState extends State<AddNewBook> {
                                     Icons.arrow_downward,
                                     color: Colors.grey[600],
                                   ),
-                                  chipDisplay: MultiSelectChipDisplay(
-                                    chipColor: Color(0xFFFFBD06),
-                                    textStyle: TextStyle(color: Colors.black),
-                                    items: [],
-                                  ),
+                                  // chipDisplay: MultiSelectChipDisplay(
+                                  //   chipColor: Color(0xFFFFBD06),
+                                  //   textStyle: TextStyle(color: Colors.black),
+                                  //   items: [],
+                                  // ),
                                   selectedColor: Color(0xFFFFBD06),
                                   selectedItemsTextStyle:
                                       TextStyle(color: Colors.black),
                                   validator: (val) {
-                                    Logger().i(val);
-                                    if (val == null || val == []) {
+                                    if (val == null || val.isEmpty) {
                                       return 'Please select atleast one genre';
                                     }
                                     return null;
                                   },
                                   autovalidateMode: AutovalidateMode.always,
-                                  
                                 ),
                               );
                             },
@@ -391,6 +392,12 @@ class _AddNewBookState extends State<AddNewBook> {
                                 },
                               ),
                             ),
+                            validator: (val) {
+                              if (val == null || val == '') {
+                                return 'Please enter a ISBN Number';
+                              }
+                              return null;
+                            },
                           ),
                           Row(
                             children: [
@@ -404,9 +411,8 @@ class _AddNewBookState extends State<AddNewBook> {
                                       children: [
                                         FormLabel("MRP"),
                                         TextFormField(
-                                          onChanged: (value) {
-                                            mrp = double.parse(value);
-                                          },
+                                          controller: mrpController,
+                                          keyboardType: TextInputType.number,
                                           style: TextStyle(
                                             fontSize: 14,
                                           ),
@@ -423,6 +429,12 @@ class _AddNewBookState extends State<AddNewBook> {
                                                     horizontal: 15),
                                             hintText: "MRP price",
                                           ),
+                                          validator: (val) {
+                                            if (val == null || val == '') {
+                                              return 'Please enter a MRP';
+                                            }
+                                            return null;
+                                          },
                                         ),
                                       ],
                                     ),
@@ -439,9 +451,7 @@ class _AddNewBookState extends State<AddNewBook> {
                                       children: [
                                         FormLabel("Quoted Deposit"),
                                         TextFormField(
-                                          onChanged: (value) {
-                                            quotedprice = double.parse(value);
-                                          },
+                                          controller: depositController,
                                           style: TextStyle(
                                             fontSize: 14,
                                           ),
@@ -458,6 +468,13 @@ class _AddNewBookState extends State<AddNewBook> {
                                                     horizontal: 15),
                                             hintText: ">30%",
                                           ),
+                                          keyboardType: TextInputType.number,
+                                          validator: (val) {
+                                            if (val == null || val == '') {
+                                              return 'Please enter a deposit percentage';
+                                            }
+                                            return null;
+                                          },
                                         ),
                                       ],
                                     ),
@@ -500,6 +517,12 @@ class _AddNewBookState extends State<AddNewBook> {
                                 Icons.arrow_downward,
                                 color: Colors.grey[600],
                               ),
+                              validator: (val) {
+                                if (val == null) {
+                                  return 'Please choose a proper rent duration';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Padding(
@@ -662,30 +685,43 @@ class _AddNewBookState extends State<AddNewBook> {
               padding: EdgeInsets.symmetric(vertical: 10),
               width: double.maxFinite,
               child: Center(
-                child: ElevatedButton(
-                  child: Text(
-                    "Submit",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () {
-                    _formKey.currentState.validate();
+                child: ThemeButton(
+                  loading: loading,
+                  label: 'Submit',
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      setState(() {
+                        loading = true;
+                      });
+                      try {
+                        final token = context.read(apiProvider);
+                        await BooksRepository.addBook(
+                          token,
+                          AddBook(
+                            bookTitle: bookNameController.text,
+                            author: authorNameController.text,
+                            condition: condition,
+                            gentags: tags.toString(),
+                            isbn: isbnController.toString(),
+                            mrp: int.parse(mrpController.text.toString()),
+                            tags: tags.toString(),
+                            description: "",
+                          ),
+                        );
+                        Navigator.pop(context);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e),
+                          ),
+                        );
+                      } finally {
+                        setState(() {
+                          loading = false;
+                        });
+                      }
+                    }
                   },
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Color(0xFFFFBD06),
-                      ),
-                      shadowColor:
-                          MaterialStateProperty.all(Colors.transparent),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 10))),
                 ),
               ),
             ),
