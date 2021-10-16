@@ -15,6 +15,9 @@ class BooksRepository {
       },
       body: jsonEncode({"page": page}),
     );
+    if (response.statusCode >= 300) {
+      throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
+    }
     List<dynamic> temp = jsonDecode(response.body);
     return temp.map((e) => BookShort.fromJson(e)).toList();
   }
@@ -29,6 +32,9 @@ class BooksRepository {
       },
       body: jsonEncode({"id": id}),
     );
+    if (response.statusCode >= 300) {
+      throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
+    }
     return BookDetailed.fromJson(jsonDecode(response.body));
   }
 
@@ -44,6 +50,9 @@ class BooksRepository {
         addBook.toJson(),
       ),
     );
+    if (response.statusCode >= 300) {
+      throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
+    }
 
     return response;
   }

@@ -53,7 +53,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
                               // margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                               padding: EdgeInsets.all(10.0),
                               alignment: Alignment.topLeft,
-                              child: Column(
+                              child: snapshot.data.tags != null ?Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -75,7 +75,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
                                     ),
                                   ),
                                 ],
-                              ),
+                              ) : Container(),
                             ),
                           ),
                           Box(
@@ -254,15 +254,15 @@ class Stackssss extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       children: [
                         Text(
-                          'Rs. ${bookDetailed.mrp}',
+                          'Rs. ${int.parse(bookDetailed.mrp) / 10}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 27.0,
                           ),
                         ),
-                        // Text(
-                        //   '/month',
-                        // ),
+                        Text(
+                          '/month',
+                        ),
                         // SizedBox(
                         //   width: 100.0,
                         // ),
