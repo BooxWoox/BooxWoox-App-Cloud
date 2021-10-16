@@ -1,6 +1,7 @@
 import 'package:bookollab/Api/books.dart';
 import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/State/auth.dart';
+import 'package:bookollab/State/search.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
@@ -94,99 +95,105 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
             final String token = watch(apiProvider);
             Logger().d(token);
             int page = 1;
-            return FloatingSearchBar(
-              hint: 'Search...',
-              scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
-              transitionDuration: const Duration(milliseconds: 800),
-              transitionCurve: Curves.easeInOut,
-              physics: const BouncingScrollPhysics(),
-              axisAlignment: 0.0,
-              openAxisAlignment: 0.0,
-              width: 600,
-              debounceDelay: const Duration(milliseconds: 500),
-              onQueryChanged: (query) {
-                // Call your model, bloc, controller here.
-              },
-              // Specify a custom transition to be used for
-              // animating between opened and closed stated.
-              transition: CircularFloatingSearchBarTransition(),
-              actions: [
-                FloatingSearchBarAction.searchToClear(
-                  showIfClosed: false,
-                ),
-              ],
-              builder: (context, transition) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Material(
-                    color: Colors.white,
-                    elevation: 4.0,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: Colors.accents.map((color) {
-                        return Container(height: 112, color: color);
-                      }).toList(),
-                    ),
-                  ),
-                );
-              },
-              body: Column(
-                children: [
-                  SizedBox(
-                    height: 70,
-                  ),
-                  Expanded(
-                    child: FutureBuilder<List<BookShort>>(
-                      future: BooksRepository.getAllBooks(token, page),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Text(snapshot.error.toString()),
-                          );
-                        } else if (!snapshot.hasData) {
-                          return LinearProgressIndicator();
-                        } else {
-                          return GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
-                            itemBuilder: (context, index) => Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                      Book_info.id,
-                                      arguments: snapshot.data[index].id,
-                                    );
-                                  },
-                                  child: Column(
-                                    children: [
-                                      if (snapshot.data[index].imgUrl != null &&
-                                          snapshot.data[index].imgUrl != "")
-                                        Expanded(
-                                          child: Image.network(
-                                              snapshot.data[index].imgUrl),
-                                        )
-                                      else
-                                        Expanded(
-                                          child: Icon(Icons.book),
-                                        ),
-                                      Text(snapshot.data[index].bookTitle),
-                                    ],
+            return FutureBuilder(
+                future: BooksRepository.getAllBooks(token, page),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return LinearProgressIndicator();
+                  } else {
+                    final searchDelegate =
+                        watch(searchDelegateProvider(snapshot.data).notifier);
+                    return FloatingSearchBar(
+                      hint: 'Search...',
+                      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+                      transitionDuration: const Duration(milliseconds: 800),
+                      transitionCurve: Curves.easeInOut,
+                      physics: const BouncingScrollPhysics(),
+                      axisAlignment: 0.0,
+                      openAxisAlignment: 0.0,
+                      width: 600,
+                      debounceDelay: const Duration(milliseconds: 500),
+                      onQueryChanged: (query) {
+                        searchDelegate.updateQuery(query);
+                      },
+                      // Specify a custom transition to be used for
+                      // animating between opened and closed stated.
+                      transition: CircularFloatingSearchBarTransition(),
+                      actions: [
+                        FloatingSearchBarAction.searchToClear(
+                          showIfClosed: false,
+                        ),
+                      ],
+                      builder: (context, transition) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Material(
+                            color: Colors.white,
+                            elevation: 4.0,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: searchDelegate.booksList
+                                  .map(
+                                    (e) => ListTile(
+                                      title: Text(e.bookTitle),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        );
+                      },
+                      body: Column(
+                        children: [
+                          SizedBox(
+                            height: 70,
+                          ),
+                          Expanded(
+                            child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2),
+                              itemBuilder: (context, index) => Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pushNamed(
+                                        Book_info.id,
+                                        arguments: snapshot.data[index].id,
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        if (snapshot.data[index].imgUrl !=
+                                                null &&
+                                            snapshot.data[index].imgUrl != "")
+                                          Expanded(
+                                            child: Image.network(
+                                                snapshot.data[index].imgUrl),
+                                          )
+                                        else
+                                          Expanded(
+                                            child: Icon(Icons.book),
+                                          ),
+                                        Text(snapshot.data[index].bookTitle),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
+                              itemCount: snapshot.data.length,
                             ),
-                            itemCount: snapshot.data.length,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                });
           },
         ),
       ),

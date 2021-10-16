@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:bookollab/Api/auth.dart';
+import 'package:bookollab/Models/auth.dart';
 import 'package:bookollab/Api/exceptions.dart';
 import 'package:bookollab/repositories/api.dart';
 import 'package:http/http.dart' as http;
