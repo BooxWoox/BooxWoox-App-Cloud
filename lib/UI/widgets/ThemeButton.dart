@@ -4,24 +4,31 @@ class ThemeButton extends StatelessWidget {
   final String label;
   final Function onPressed;
   final double width;
-  const ThemeButton(
-      {Key key, @required this.label, @required this.onPressed, this.width})
-      : super(key: key);
+  final bool loading;
+  const ThemeButton({
+    Key key,
+    @required this.label,
+    @required this.onPressed,
+    this.width,
+    this.loading = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      child: ElevatedButton(
+      child: loading
+              ? CircularProgressIndicator()
+              : ElevatedButton(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: Text(
-            label,
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+                  label,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
         ),
         onPressed: onPressed,
         style: ButtonStyle(

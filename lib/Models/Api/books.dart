@@ -31,4 +31,20 @@ class BooksRepository {
     );
     return BookDetailed.fromJson(jsonDecode(response.body));
   }
+
+  static Future addBook(String token, AddBook addBook) async {
+    var response = await http.post(
+      Uri.parse(
+        'https://gxq9227rxh.execute-api.ap-south-1.amazonaws.com/Prod/addBooks',
+      ),
+      headers: {
+        "authToken": token,
+      },
+      body: jsonEncode(
+        addBook.toJson(),
+      ),
+    );
+
+    return response;
+  }
 }

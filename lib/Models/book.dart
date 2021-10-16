@@ -105,3 +105,60 @@ class BookDetailed {
   }
 }
 
+class AddBook {
+/*
+{
+  "book_title": "Lord of Rings",
+  "mrp": 600,
+  "condition": "new",
+  "isbn": "bcbcfckofnifkvrvkr",
+  "author": "J. R. R. Tolkien",
+  "gentags": "mystery",
+  "tags": "action",
+  "description": "A very nice booK"
+} 
+*/
+
+  String bookTitle;
+  int mrp;
+  String condition;
+  String isbn;
+  String author;
+  String gentags;
+  String tags;
+  String description;
+
+  AddBook({
+    this.bookTitle,
+    this.mrp,
+    this.condition,
+    this.isbn,
+    this.author,
+    this.gentags,
+    this.tags,
+    this.description,
+  });
+  AddBook.fromJson(Map<String, dynamic> json) {
+    bookTitle = json["book_title"]?.toString();
+    mrp = json["mrp"]?.toInt();
+    condition = json["condition"]?.toString();
+    isbn = json["isbn"]?.toString();
+    author = json["author"]?.toString();
+    gentags = json["gentags"]?.toString();
+    tags = json["tags"]?.toString();
+    description = json["description"]?.toString();
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data["book_title"] = bookTitle;
+    data["mrp"] = mrp;
+    data["condition"] = condition;
+    data["isbn"] = isbn;
+    data["author"] = author;
+    data["gentags"] = gentags;
+    data["tags"] = tags;
+    data["description"] = description;
+    return data;
+  }
+}
+
