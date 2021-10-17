@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   static String id = 'Login_Screen';
@@ -19,6 +20,21 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final phoneController = TextEditingController();
+  String _urlPrivacyPolicy = 'https://www.booxwoox.com/privacypolicy.html';
+  String _urlTandC = 'https://www.booxwoox.com/tnc.html';
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        headers: <String, String>{'header_key': 'header_value'},
+      );
+    } else {
+      throw 'could not launch url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +195,9 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Theme.of(context).primaryColor,
                                       decoration: TextDecoration.underline),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  _launchInBrowser(_urlTandC);
+                                },
                               ),
                             ),
                             TextSpan(text: " and "),
@@ -191,7 +209,9 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Theme.of(context).primaryColor,
                                       decoration: TextDecoration.underline),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  _launchInBrowser(_urlPrivacyPolicy);
+                                },
                               ),
                             ),
                           ]),
