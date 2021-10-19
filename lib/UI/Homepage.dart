@@ -1,4 +1,6 @@
 import 'package:bookollab/UI/AddBookPage.dart';
+import 'package:bookollab/UI/Chat/chat_homepage.dart';
+import 'package:bookollab/UI/Favorite.dart';
 import 'package:bookollab/UI/Notification/notification.dart';
 import 'package:bookollab/UI/ProfilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'Filters/filters.dart';
 import 'Onboarding/LoginPage.dart';
 import 'maindisplaypage.dart';
+import 'package:bookollab/State/auth.dart';
 
 class Homepage extends StatefulWidget {
   static String id = 'Homepage_Screen';
@@ -15,24 +18,26 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  int _pageIndex = 0;
-  PageController _pageController;
-
   List<Widget> tabPages = [
     MainDisplayPage(),
-    // Chat_homepage(),
-    // notification(),
+    Chat_homepage(),
+    Favorite(),
+    ProfilePage(),
   ];
+  final controller = PageController(initialPage: 0);
+  int selectedIndex = 0;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    _pageController = PageController(initialPage: _pageIndex);
+    //String useruid = _auth.currentUser.uid;
+    //notificationUserActive(useruid);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -86,7 +91,7 @@ class _HomepageState extends State<Homepage> {
       body: PageView(
         children: tabPages,
         onPageChanged: onPageChanged,
-        controller: _pageController,
+        controller: controller,
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -97,23 +102,21 @@ class _HomepageState extends State<Homepage> {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
           child: BottomNavigationBar(
-            currentIndex: _pageIndex,
+            currentIndex: selectedIndex,
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            onTap: onTabTapped,
+            onTap: onTapped,
             backgroundColor: Colors.white,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.home,
-                  color: Color(0xFFFFCC00),
+                  color: Colors.black,
                 ),
-                label: "Home",
+                label: 'home',
+                activeIcon: Icon(Icons.home,
+                 color: Color(0xFFFFCC00)),
               ),
               BottomNavigationBarItem(
                 icon: Icon(
@@ -121,37 +124,50 @@ class _HomepageState extends State<Homepage> {
                   color: Colors.black,
                 ),
                 label: 'Chat',
+                activeIcon: Icon(Icons.chat,
+                 color: Color(0xFFFFCC00)),
               ),
               BottomNavigationBarItem(
-                icon: Icon(
+                  icon: Icon(
                   Icons.favorite_rounded,
                   color: Colors.red,
                 ),
-                label: 'Favorites',
-              ),
+                  label: 'notification',
+                  activeIcon: Icon(
+                  Icons.favorite_rounded,
+                  color: Color(0xFFFFCC00),
+                ),),
               BottomNavigationBarItem(
-                icon: Icon(
+                  icon: Icon(
                   Icons.person_pin_rounded,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
-                label: 'Profile',
-              ),
+                  label: 'profile',
+                  activeIcon: Icon(
+                  Icons.person_pin_rounded,
+                  color: Color(0xFFFFCC00),
+                ),),
             ],
+            selectedItemColor:  Color(0xFFFFCC00),
+            unselectedItemColor: Colors.black,
           ),
         ),
       ),
     );
   }
 
-  void onPageChanged(int page) {
+  void onTapped(int index) {
     setState(() {
-      this._pageIndex = page;
+      selectedIndex = index;
+      controller.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.linear);
     });
   }
 
-  void onTabTapped(int index) {
-    this._pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+  void onPageChanged(int page) {
+    setState(() {
+      this.selectedIndex = page;
+    });
   }
 
   // void notificationUserActive(String uid) {
