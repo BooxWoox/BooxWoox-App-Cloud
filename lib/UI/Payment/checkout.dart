@@ -30,18 +30,13 @@ class _CheckoutState extends State<Checkout> {
   }
 
   Map<String, int> months = {
-    'One': 1,
-    'Two': 2,
-    'Three': 3,
-    'Four': 4,
-    'Five': 5,
-    'Six': 6,
-    'Seven': 7,
-    'Eight': 8,
-    'Nine': 9,
-    'Ten': 10,
-    'Eleven': 11,
-    'Twelve': 12,
+    '1 week': 7,
+    '2 weeks': 14,
+    '3 weeks': 21,
+    '1 month': 30,
+    '2 months': 60,
+    '3 months': 90,
+    '4 months': 120,
   };
 
   List<String> city = ['Ahmedabad'];
