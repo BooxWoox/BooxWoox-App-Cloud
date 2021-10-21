@@ -20,9 +20,9 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   List<Widget> tabPages = [
     MainDisplayPage(),
-    Chat_homepage(),
-    Favorite(),
-    ProfilePage(),
+   // Chat_homepage(),
+   // Favorite(),
+   // ProfilePage(),
   ];
   final controller = PageController(initialPage: 0);
   int selectedIndex = 0;
@@ -53,7 +53,7 @@ class _HomepageState extends State<Homepage> {
           alignment: Alignment.centerLeft,
         ),
         actions: [
-          GestureDetector(
+         /*  GestureDetector(
             onTap: () {
               print("userprofile click");
               // Navigator.pushNamed(context, notification.id);
@@ -76,7 +76,7 @@ class _HomepageState extends State<Homepage> {
                 color: Colors.black,
               ),
             ),
-          ),
+          ), */
           IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(Filters.id);
@@ -93,7 +93,7 @@ class _HomepageState extends State<Homepage> {
         onPageChanged: onPageChanged,
         controller: controller,
       ),
-      bottomNavigationBar: Container(
+      /* bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(30), topLeft: Radius.circular(30)),
@@ -152,7 +152,7 @@ class _HomepageState extends State<Homepage> {
             unselectedItemColor: Colors.black,
           ),
         ),
-      ),
+      ), */
     );
   }
 

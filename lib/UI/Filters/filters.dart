@@ -27,7 +27,7 @@ class _FiltersState extends State<Filters> {
         title: Text(
           'Filters',
           style: TextStyle(
-              fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold),
+              fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Color(0xFFFFCC00),
       ),

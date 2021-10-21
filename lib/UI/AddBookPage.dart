@@ -87,8 +87,8 @@ class _AddNewBookState extends State<AddNewBook> {
           title: Text(
             "Add Books",
             style: TextStyle(
-              color: Colors.black,
-              fontFamily: "Avenir95Black",
+              fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold
+              //fontFamily: "Avenir95Black",
             ),
           ),
           backgroundColor: Color(0xFFFFBD06),
@@ -525,7 +525,7 @@ class _AddNewBookState extends State<AddNewBook> {
                               },
                             ),
                           ),
-                          Padding(
+                          /* Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: Text(
                               "Location & Payment",
@@ -533,10 +533,11 @@ class _AddNewBookState extends State<AddNewBook> {
                                 fontSize: 24,
                               ),
                             ),
-                          ),
+                          ), */
+                          FormLabel('Location & payment'),
                           selectedAddress == null
                               ? Padding(
-                                  padding: const EdgeInsets.only(top: 30),
+                                  padding: const EdgeInsets.only(top: 0),
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
