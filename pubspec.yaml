@@ -100,7 +100,7 @@ flutter:
     - UIAssets/Profile/
     - UIAssets/OtpScreen/
     - UIAssets/genre/
-    # - assets/images/
+    - assets/images/
   fonts:
     - family: Avenir95Black
       fonts:
