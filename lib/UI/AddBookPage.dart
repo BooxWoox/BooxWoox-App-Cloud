@@ -42,11 +42,17 @@ class _AddNewBookState extends State<AddNewBook> {
   String bookCoverPath;
   String isbnBarcode;
 
+  double lowerSlider = 30;
+  double upperSlider = 60;
+  double depositSlider = 30;
+
   TextEditingController isbnController = TextEditingController();
   TextEditingController bookNameController = TextEditingController();
   TextEditingController authorNameController = TextEditingController();
   TextEditingController mrpController = TextEditingController();
   TextEditingController depositController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
 
   String age;
   Map<String, String> upis = {
@@ -181,6 +187,43 @@ class _AddNewBookState extends State<AddNewBook> {
                               ],
                             ),
                           ),
+
+                          Container(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: [
+                                FormLabel("Description"),
+                                TextFormField(
+                                  controller: descriptionController,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5),
+                                        borderSide: BorderSide.none),
+                                    filled: true,
+                                    fillColor: Color(0xffE9E9E9),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(
+                                            vertical: 10,
+                                            horizontal: 15),
+                                    hintText: "Description of the book",
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  validator: (val) {
+                                    if (val == null || val == '') {
+                                      return 'Please enter a description of the book';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+
                           FormLabel("Condition"),
                           DropdownButtonHideUnderline(
                             child: DropdownButtonFormField<String>(
@@ -399,89 +442,103 @@ class _AddNewBookState extends State<AddNewBook> {
                               return null;
                             },
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        FormLabel("MRP"),
-                                        TextFormField(
-                                          controller: mrpController,
-                                          keyboardType: TextInputType.number,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                          ),
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                borderSide: BorderSide.none),
-                                            filled: true,
-                                            fillColor: Color(0xffE9E9E9),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 10,
-                                                    horizontal: 15),
-                                            hintText: "MRP price",
-                                          ),
-                                          validator: (val) {
-                                            if (val == null || val == '') {
-                                              return 'Please enter a MRP';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ],
+
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormLabel("MRP"),
+                                  TextFormField(
+                                    controller: mrpController,
+                                    keyboardType: TextInputType.number,
+                                    style: TextStyle(
+                                      fontSize: 14,
                                     ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 4.0),
-                                  child: Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        FormLabel("Quoted Deposit"),
-                                        TextFormField(
-                                          controller: depositController,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                          ),
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                borderSide: BorderSide.none),
-                                            filled: true,
-                                            fillColor: Color(0xffE9E9E9),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 10,
-                                                    horizontal: 15),
-                                            hintText: ">30%",
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                          validator: (val) {
-                                            if (val == null || val == '') {
-                                              return 'Please enter a deposit percentage';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                      ],
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      filled: true,
+                                      fillColor: Color(0xffE9E9E9),
+                                      contentPadding:
+                                      EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 15,
+                                      ),
+                                      hintText: "MRP price",
                                     ),
+                                    validator: (val) {
+                                      if (val == null || val == '') {
+                                        return 'Please enter a MRP';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
+                          ),
+
+                          SliderTheme(
+                            data: SliderThemeData(
+                              activeTrackColor: Color(0xFFFFCC00),
+                              inactiveTrackColor: Colors.grey[400],
+                              overlayColor: Colors.transparent,
+                            ),
+                            child: Slider.adaptive(
+                              label: depositSlider.abs().toString(),
+                              value: depositSlider,
+                              
+                              min: lowerSlider,
+                              max: upperSlider,
+                              onChanged: (val){
+                                setState(() {
+                                  depositSlider = val;
+                                });
+                              },
+                            ),
+                          ),  
+
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  FormLabel("Quoted Deposit"),
+                                  TextFormField(
+                                    controller: depositController,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      fillColor: Color(0xffE9E9E9),
+                                      contentPadding:
+                                          EdgeInsets.symmetric(
+                                              vertical: 10,
+                                              horizontal: 15),
+                                      hintText: ">30%",
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    validator: (val) {
+                                      if (val == null || val == '') {
+                                        return 'Please enter a deposit percentage';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                           FormLabel("Rent Duration (Months)"),
                           DropdownButtonHideUnderline(
@@ -703,11 +760,12 @@ class _AddNewBookState extends State<AddNewBook> {
                             bookTitle: bookNameController.text,
                             author: authorNameController.text,
                             condition: condition,
-                            gentags: tags.toString(),
+                            gentags: tags,
                             isbn: isbnController.toString(),
-                            mrp: int.parse(mrpController.text.toString()),
-                            tags: tags.toString(),
-                            description: "",
+                            mrp: double.parse(mrpController.text.toString()),
+                            tags: tags,
+                            description: descriptionController.text,
+                            deposit: double.parse(depositController.toString())*double.parse(mrpController.text)/100,
                           ),
                         );
                         Navigator.pop(context);
