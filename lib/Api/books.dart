@@ -22,7 +22,7 @@ class BooksRepository {
     return temp.map((e) => BookShort.fromJson(e)).toList();
   }
 
-  static Future<BookDetailed> getBookDetailed(String token, int id) async {
+  static Future<BookDetails> getBookDetailed(String token, int id) async {
     var response = await http.post(
       Uri.parse(
         'https://f672mr05b0.execute-api.ap-south-1.amazonaws.com/Prod/sarthak_test/get_bookDetails',
@@ -35,7 +35,7 @@ class BooksRepository {
     if (response.statusCode >= 300) {
       throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
     }
-    return BookDetailed.fromJson(jsonDecode(response.body));
+    return BookDetails.fromJson(jsonDecode(response.body));
   }
 
   static Future addBook(String token, AddBook addBook) async {

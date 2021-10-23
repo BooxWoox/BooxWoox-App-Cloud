@@ -73,6 +73,7 @@ dependencies:
   transparent_image: ^2.0.0
   unicorndial: ^1.1.5
   url_launcher: ^6.0.4
+  geocoder: ^0.2.1
   webviewx: ^0.0.4
 
 dev_dependencies:

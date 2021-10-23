@@ -25,7 +25,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
         body: Consumer(
           builder: (context, watch, child) {
             final token = watch(apiProvider);
-            return FutureBuilder<BookDetailed>(
+            return FutureBuilder<BookDetails>(
               future: BooksRepository.getBookDetailed(token, bookId),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -270,7 +270,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
 }
 
 class Stackssss extends StatelessWidget {
-  final BookDetailed bookDetailed;
+  final BookDetails bookDetailed;
 
   const Stackssss(this.bookDetailed, {Key key}) : super(key: key);
 
@@ -360,7 +360,7 @@ class Stackssss extends StatelessWidget {
                       'Deposit - ${bookDetailed.deposit}',
                     ),
                     Wrap(
-                      children: bookDetailed.ConditionBook.split(" ")
+                      children: bookDetailed.conditionBook.split(" ")
                           .map(
                             (e) => Chip(
                               label: Text(e),

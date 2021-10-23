@@ -45,13 +45,13 @@ class BookShort {
   }
 }
 
-class BookDetailed {
+class BookDetails {
 /*
 {
   "id": 25,
   "owner_id": 2,
   "available": 0,
-  "Condition_book": "new",
+  "condition_book": "new",
   "isbn_no": "bcbcfckofnifkvrvkr",
   "mrp": "500",
   "created_date": "10/01/2021, 08:18:43",
@@ -73,7 +73,7 @@ class BookDetailed {
   int id;
   int ownerId;
   int available;
-  String ConditionBook;
+  String conditionBook;
   String isbnNo;
   String mrp;
   String createdDate;
@@ -90,11 +90,11 @@ class BookDetailed {
   String rentDuration;
   String deposit;
 
-  BookDetailed({
+  BookDetails({
     this.id,
     this.ownerId,
     this.available,
-    this.ConditionBook,
+    this.conditionBook,
     this.isbnNo,
     this.mrp,
     this.createdDate,
@@ -111,11 +111,11 @@ class BookDetailed {
     this.rentDuration,
     this.deposit,
   });
-  BookDetailed.fromJson(Map<String, dynamic> json) {
+  BookDetails.fromJson(Map<String, dynamic> json) {
     id = json["id"]?.toInt();
     ownerId = json["owner_id"]?.toInt();
     available = json["available"]?.toInt();
-    ConditionBook = json["Condition_book"]?.toString();
+    conditionBook = json["condition_book"]?.toString();
     isbnNo = json["isbn_no"]?.toString();
     mrp = json["mrp"]?.toString();
     createdDate = json["created_date"]?.toString();
@@ -137,7 +137,7 @@ class BookDetailed {
     data["id"] = id;
     data["owner_id"] = ownerId;
     data["available"] = available;
-    data["Condition_book"] = ConditionBook;
+    data["condition_book"] = conditionBook;
     data["isbn_no"] = isbnNo;
     data["mrp"] = mrp;
     data["created_date"] = createdDate;

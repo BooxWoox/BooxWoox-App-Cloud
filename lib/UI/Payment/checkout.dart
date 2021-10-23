@@ -1,10 +1,15 @@
+import 'package:bookollab/State/location.dart';
 import 'package:bookollab/State/payment.dart';
 import 'package:bookollab/UI/widgets/ThemeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geocoder/services/local.dart';
+import 'package:location/location.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'dart:math';
 
 class Checkout extends StatefulWidget {
   static String id = 'checkout';
@@ -13,7 +18,7 @@ class Checkout extends StatefulWidget {
   _CheckoutState createState() => _CheckoutState();
 }
 
-class _CheckoutState extends State<Checkout> {
+class _CheckoutState extends State<Checkout> { 
   int month;
   String dropdownCity;
   String dropdownMedium;
@@ -29,6 +34,12 @@ class _CheckoutState extends State<Checkout> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
+  @override
+    void dispose(){
+      super.dispose();
+      _razorpay.clear(); // Removes all listeners
+    }
+
   Map<String, int> months = {
     '1 week': 7,
     '2 weeks': 14,
@@ -38,6 +49,34 @@ class _CheckoutState extends State<Checkout> {
     '3 months': 90,
     '4 months': 120,
   };
+
+  double userLongitude;
+  double userLatitude;
+  double bookLongitude = 72.8777;
+  double bookLatitude = 19.0760;
+
+  Address useradd;
+  Future<Address> getAddress(Coordinates coordinates) async{
+    final uA = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
+    useradd = uA.first;
+
+    return useradd;
+  }
+
+  double dist = 0;
+  double distance(double userLong, double userLat, double bookLong, double bookLat){
+    userLong = userLong/57.29577951;
+    userLat = userLat/57.29577951;
+    bookLong = bookLong/57.29577951;
+    bookLat = bookLat/57.29577951;
+
+    double dist = 1.609344*(3963.0*(acos((sin(userLat)*sin(bookLat))+(cos(userLat)*cos(bookLat)*cos(bookLong-userLong)))));
+
+    return dist;
+  }
+
+  String display = '';
 
   List<String> city = ['Ahmedabad'];
 
@@ -192,7 +231,7 @@ class _CheckoutState extends State<Checkout> {
                               backgroundColor:
                                   address == null ? Colors.white : Colors.blue,
                               onPressed: () async {
-                                final controller = TextEditingController();
+                                final controller = TextEditingController(text: address);
                                 await showDialog(
                                   context: context,
                                   builder: (context) => SimpleDialog(
@@ -202,18 +241,85 @@ class _CheckoutState extends State<Checkout> {
                                     children: [
                                       TextField(
                                         controller: controller,
-                                        minLines: 5,
-                                        maxLines: 10,
+                                        minLines: 3,
+                                        maxLines: 7,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(),
                                             hintText: 'Address'),
                                       ),
+
+                                      ElevatedButton(
+                                        child: Text(
+                                          'Your current location',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black
+                                          ),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 60, vertical: 10),
+                                          primary: Colors.grey[300],
+                                        ),
+                                        onPressed: () async{
+                                          try {
+                                            final location = await context.read(locationProvider.future);
+                                            LocationData userLocation = await location.getLocation();
+
+                                            Coordinates userCoordinates = Coordinates(userLocation.latitude, userLocation.longitude);
+
+                                            useradd = await getAddress(userCoordinates);
+
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text(e),
+                                              ),
+                                            );
+                                          }
+
+                                          // dist = distance(userLongitude, userLatitude, bookLongitude, bookLatitude);
+
+                                          setState(() {
+                                            controller.text = useradd.addressLine;
+                                            if (controller.text != "" && controller.text != null) {
+                                              address = controller.text;
+                                              // display = 'The book is approximately $dist km radius from the book drop address';
+                                              // print(useradd.addressLine);
+                                            }
+                                            Navigator.of(context).pop();
+                                          });
+                                          
+                                        },
+                                      ),
+
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ThemeButton(
                                           label: 'Submit',
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
+                                          onPressed: () async{                                            
+                                            // print(dist);
+                                            if (controller.text != "" &&
+                                              controller.text != null) {
+                                              setState(() {
+                                                address = controller.text;
+                                              });
+                                              Navigator.of(context).pop();
+                                            }
+                                            else{
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  Future.delayed(Duration(seconds: 1), () {
+                                                  Navigator.of(context).pop(true);
+                                                  });
+                                                  return AlertDialog(
+                                                    title: Text('Please add an address', style: TextStyle(color: Colors.black, fontSize: 12),),
+                                                  );
+                                                },
+                                              );
+                                            }
                                           },
                                         ),
                                       )
@@ -239,11 +345,13 @@ class _CheckoutState extends State<Checkout> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(
-                            address == null ? 'Add book drop address' : address,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
+                          Expanded(
+                            child: Text(
+                              address == null ? 'Add book drop address' : address,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ],
@@ -260,7 +368,11 @@ class _CheckoutState extends State<Checkout> {
                         ),
                       ),
                       SizedBox(
-                        height: 7,
+                        height: 5,
+                      ),
+                      // Text(display, style: TextStyle(color: Colors.red, fontSize: 10),),
+                      SizedBox(
+                        height: 10,
                       ),
                       Container(
                         decoration: BoxDecoration(
