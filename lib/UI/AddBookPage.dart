@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:bookollab/Api/books.dart';
 import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/State/auth.dart';
+import 'package:bookollab/State/location.dart';
 import 'package:bookollab/UI/widgets/ThemeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:location/location.dart';
 import 'package:logger/logger.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -752,8 +754,21 @@ class _AddNewBookState extends State<AddNewBook> {
                       setState(() {
                         loading = true;
                       });
+                      LocationData locationDetails;
+                      try {
+                        final location =
+                            await context.read(locationProvider.future);
+                        locationDetails = await location.getLocation();
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(e),
+                          ),
+                        );
+                      }
                       try {
                         final token = context.read(apiProvider);
+
                         await BooksRepository.addBook(
                           token,
                           AddBook(
