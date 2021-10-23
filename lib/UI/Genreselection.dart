@@ -3,6 +3,7 @@ import 'package:bookollab/UI/Homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:bookollab/UI/widgets/ThemeButton.dart';
 
 class GenreSelectionpage extends StatefulWidget {
   static String id = 'Genreselectionpage';
@@ -145,7 +146,6 @@ class _GenreSelectionpageState extends State<GenreSelectionpage> {
                         child: Column(
                           children: [
                             Expanded(
-                              flex:7,
                               child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -169,7 +169,7 @@ class _GenreSelectionpageState extends State<GenreSelectionpage> {
                                   // color: Colors.red,
                                 ),
                                 margin:
-                                    EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 0.0),
+                                    EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
                                 // child: FittedBox(
                                 //   child: Image.asset(_genreimages[index]),
                                 //   fit: BoxFit.fill,
@@ -187,7 +187,8 @@ class _GenreSelectionpageState extends State<GenreSelectionpage> {
                                 // ),
                               ),
                             ),
-                            Flexible(
+                            FittedBox(
+                              fit: BoxFit.contain,
                               child: Text(
                                 genres.data.value[index],
                                 textAlign: TextAlign.center,
@@ -207,50 +208,56 @@ class _GenreSelectionpageState extends State<GenreSelectionpage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () {
-
-                  //Here we will give error message if the number of genres selected is less than 3.
-                  if (_selectedgenre.length < 3) {
-                    return showDialog(
-                        context: context,
-                        builder: (context) {
-                          Future.delayed(Duration(seconds: 2), () {
-                            Navigator.of(context).pop(true);
-                          });
-                          return AlertDialog(
-                            title: Text(
-                                'Please choose atleast 3 genres.',
-                              textAlign: TextAlign.center,
-                            ),
-                          );
-                        });
-                  }
-
-                  //If number of genres selected is more than 3, no error.
-                  else {
-                    Navigator.of(context).pushReplacementNamed(Homepage.id);
-                  }
-                },
-                child: Container(
-                  height: 50.0,
+              child: ThemeButton(
+                  label: 'Submit',
                   width: MediaQuery.of(context).size.width * 0.75,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFBD06),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ),
-                ),
+                  onPressed: () {
+
+                    //Here we will give error message if the number of genres selected is less than 3.
+                    if (_selectedgenre.length < 3) {
+                      // return showDialog(
+                      //     context: context,
+                      //     builder: (context)
+                      //     {
+                      //       Future.delayed(Duration(seconds: 2), () {
+                      //         Navigator.of(context).pop(true);
+                      //       });
+                      //       return AlertDialog(
+                      //         title: Text(
+                      //           'Please choose atleast 3 genres.',
+                      //           textAlign: TextAlign.center,
+                      //         ),
+                      //       );
+                      //     });
+                      return showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: Text(
+                            'Please choose atleast 3 genres.',
+                            textAlign: TextAlign.center,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          actions: [
+                            Center(
+                              child: ThemeButton(
+                                label: 'OK',
+                                onPressed: () => Navigator.pop(context,false),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    //If number of genres selected is more than 3, no error.
+                    else {
+                      Navigator.of(context).pushReplacementNamed(Homepage.id);
+                    }
+                  },
               ),
-            ),
+            )
           ],
         );
       }),
