@@ -110,7 +110,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
                                                           100.0,
                                                     );
                                                   },
-                                                  icon: Icon(Icons.ac_unit))
+                                                  icon: Icon(Icons.che))
                                             ],
                                           ),
                                         );
@@ -164,7 +164,6 @@ class _BookIndividualViewState extends State<BookIndividualView> {
                                               Container(
                                                 child: Wrap(
                                                   children: snapshot.data.tags
-                                                      .split(" ")
                                                       .map((e) => Tag(name: e))
                                                       .toList(),
                                                 ),
@@ -360,10 +359,9 @@ class Stackssss extends StatelessWidget {
                       'Deposit - ${bookDetailed.deposit}',
                     ),
                     Wrap(
-                      children: bookDetailed.conditionBook.split(" ")
-                          .map(
-                            (e) => Chip(
-                              label: Text(e),
+                      children: [
+                        Chip(
+                              label: Text(bookDetailed.ConditionBook),
                               backgroundColor: Color(0xFF0094FF),
                               labelStyle: TextStyle(
                                 color: Colors.white,
@@ -373,8 +371,8 @@ class Stackssss extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
-                          )
-                          .toList(),
+                      ]
+                          
                     )
                   ],
                 ),

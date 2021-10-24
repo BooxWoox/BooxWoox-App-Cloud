@@ -185,8 +185,9 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
                                                 null &&
                                             snapshot.data[index].imgUrl != "")
                                           Expanded(
-                                            child: Image.network(
-                                                snapshot.data[index].imgUrl),
+                                            // child: Image.network(
+                                            //     snapshot.data[index].imgUrl),
+                                            child: Icon(Icons.book),
                                           )
                                         else
                                           Expanded(
