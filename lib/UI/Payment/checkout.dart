@@ -52,8 +52,9 @@ class _CheckoutState extends State<Checkout> {
 
   double userLongitude;
   double userLatitude;
+  Coordinates userCoordinates;
   double bookLongitude = 72.8777;
-  double bookLatitude = 19.0760;
+  double bookLatitude = 19.0760; 
 
   Address useradd;
   Future<Address> getAddress(Coordinates coordinates) async{
@@ -267,7 +268,7 @@ class _CheckoutState extends State<Checkout> {
                                             final location = await context.read(locationProvider.future);
                                             LocationData userLocation = await location.getLocation();
 
-                                            Coordinates userCoordinates = Coordinates(userLocation.latitude, userLocation.longitude);
+                                             userCoordinates = Coordinates(userLocation.latitude, userLocation.longitude);
 
                                             useradd = await getAddress(userCoordinates);
 
@@ -279,14 +280,13 @@ class _CheckoutState extends State<Checkout> {
                                             );
                                           }
 
-                                          // dist = distance(userLongitude, userLatitude, bookLongitude, bookLatitude);
+                                           dist = distance(userCoordinates.longitude, userCoordinates.latitude, bookLongitude, bookLatitude); 
 
                                           setState(() {
                                             controller.text = useradd.addressLine;
                                             if (controller.text != "" && controller.text != null) {
                                               address = controller.text;
-                                              // display = 'The book is approximately $dist km radius from the book drop address';
-                                              // print(useradd.addressLine);
+                                              display = 'The book is approximately ' + (dist.toInt()).toString() + 'km radius from the book drop address';
                                             }
                                             Navigator.of(context).pop();
                                           });
@@ -298,12 +298,12 @@ class _CheckoutState extends State<Checkout> {
                                         padding: const EdgeInsets.all(8.0),
                                         child: ThemeButton(
                                           label: 'Submit',
-                                          onPressed: () async{
-                                            // print(dist);
+                                          onPressed: () async{                                            
                                             if (controller.text != "" &&
                                               controller.text != null) {
                                               setState(() {
                                                 address = controller.text;
+                                                display = 'The book is approximately ' + (dist.toInt()).toString() + 'km radius from the book drop address';
                                               });
                                               Navigator.of(context).pop();
                                             }
@@ -315,7 +315,8 @@ class _CheckoutState extends State<Checkout> {
                                                   Navigator.of(context).pop(true);
                                                   });
                                                   return AlertDialog(
-                                                    title: Text('Please add an address', style: TextStyle(color: Colors.black, fontSize: 12),),
+                                                    backgroundColor: Colors.transparent,
+                                                    title: Text('Please add an address', style: TextStyle(color: Colors.black, fontSize: 15),),
                                                   );
                                                 },
                                               );
@@ -370,7 +371,7 @@ class _CheckoutState extends State<Checkout> {
                       SizedBox(
                         height: 5,
                       ),
-                      // Text(display, style: TextStyle(color: Colors.red, fontSize: 10),),
+                      Text(display, style: TextStyle(color: Colors.red, fontSize: 15),),
                       SizedBox(
                         height: 10,
                       ),
