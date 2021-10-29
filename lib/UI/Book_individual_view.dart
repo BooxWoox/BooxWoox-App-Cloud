@@ -110,7 +110,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
                                                           100.0,
                                                     );
                                                   },
-                                                  icon: Icon(Icons.che))
+                                                  icon: Icon(Icons.check))
                                             ],
                                           ),
                                         );
@@ -358,22 +358,19 @@ class Stackssss extends StatelessWidget {
                     Text(
                       'Deposit - ${bookDetailed.deposit}',
                     ),
-                    Wrap(
-                      children: [
-                        Chip(
-                              label: Text(bookDetailed.ConditionBook),
-                              backgroundColor: Color(0xFF0094FF),
-                              labelStyle: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                      ]
-                          
-                    )
+                    Wrap(children: [
+                      Chip(
+                        label: Text(bookDetailed.ConditionBook),
+                        backgroundColor: Color(0xFF0094FF),
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    ])
                   ],
                 ),
               ),
