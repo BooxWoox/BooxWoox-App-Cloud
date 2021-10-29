@@ -2,6 +2,7 @@ import 'package:bookollab/Api/books.dart';
 import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/State/auth.dart';
 import 'package:bookollab/UI/Payment/checkout.dart';
+import 'package:bookollab/UI/maindisplaypage.dart';
 import 'package:bookollab/UI/widgets/ThemeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class BookIndividualView extends StatefulWidget {
   const BookIndividualView({Key key}) : super(key: key);
 
+  static String id = 'BookIndividualView';
+
   @override
   _BookIndividualViewState createState() => _BookIndividualViewState();
 }
@@ -19,14 +22,14 @@ class BookIndividualView extends StatefulWidget {
 class _BookIndividualViewState extends State<BookIndividualView> {
   @override
   Widget build(BuildContext context) {
-    int bookId = ModalRoute.of(context).settings.arguments as int;
+    final booksAgrs = ModalRoute.of(context).settings.arguments as BookIdandAuth;
     return SafeArea(
       child: Scaffold(
         body: Consumer(
           builder: (context, watch, child) {
             final apiToken = watch(apiProvider);
             return FutureBuilder<BookDetails>(
-              future: BooksRepository.getBookDetailed(apiToken.token, bookId),
+              future: BooksRepository.getBookDetailed(apiToken.token, booksAgrs.bookID),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Scaffold(

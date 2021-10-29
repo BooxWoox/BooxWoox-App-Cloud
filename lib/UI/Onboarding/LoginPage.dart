@@ -41,12 +41,12 @@ class _LoginPageState extends State<LoginPage> {
     return Consumer(builder: (context, watch, child) {
       final api = watch(apiProvider);
       final token = watch(apiProvider);
-      if (api.token != null) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          await Navigator.of(context)
-              .pushReplacementNamed(GenreSelectionpage.id);
-        });
-      }
+      // if (api.token != null) {
+      //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      //     await Navigator.of(context)
+      //         .pushReplacementNamed(GenreSelectionpage.id);
+      //   });
+      // }
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,

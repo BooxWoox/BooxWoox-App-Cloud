@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:bookollab/Models/book.dart';
+import 'package:bookollab/Models/homepage_items_featured.dart';
+
 
 import 'package:http/http.dart' as http;
 
@@ -56,4 +58,26 @@ class BooksRepository {
 
     return response;
   }
+
+  static Future<List<homepage_items_featured>> HomeBooks(String token, List genre) async {
+    var response = await http.post(
+      Uri.parse(
+        'https://bxfw75ftq2.execute-api.ap-south-1.amazonaws.com/Prod/homeScreen',
+      ),
+      headers: {
+        "authToken": token,
+      },
+      body: jsonEncode({"genrelist": genre}),
+    );
+    if (response.statusCode >= 300) {
+      throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
+    }
+    List<dynamic> bookdata = jsonDecode(response.body);
+    return bookdata.map((e) => homepage_items_featured.fromJson(e)).toList();
+  }
+
 }
+
+
+ 
+

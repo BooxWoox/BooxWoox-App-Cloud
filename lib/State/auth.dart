@@ -35,6 +35,8 @@ class ApiProvider {
       body: jsonEncode({'phoneno': phone}),
     );
     handleError(res);
+
+    Logger().d(res.body);
     var response = SendOtpResponse.fromJson(jsonDecode(res.body));
     otpToken = response.token;
   }

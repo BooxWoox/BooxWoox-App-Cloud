@@ -19,7 +19,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   List<Widget> tabPages = [
-    MainDisplayPage(),
+    maindisplaypage(),
    // Chat_homepage(),
    // Favorite(),
    // ProfilePage(),

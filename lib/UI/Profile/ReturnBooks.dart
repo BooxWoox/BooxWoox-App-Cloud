@@ -158,7 +158,7 @@ class _ReturnBooksState extends State<ReturnBooks> {
                   ),
                 ),
                 onTap: (){
-                  Navigator.pushNamed(context, Book_info.id);
+                  // Navigator.pushNamed(context, Book_info.id);
                 },
               );
             }),
