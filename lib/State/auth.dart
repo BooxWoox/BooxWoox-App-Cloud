@@ -4,13 +4,13 @@ import 'package:bookollab/Api/exceptions.dart';
 import 'package:bookollab/Models/auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 
-class ApiProvider extends StateNotifier<String> {
-  ApiProvider() : super(null);
-
+class ApiProvider {
+  
   String otpToken;
 
-  String get token => state;
+  String token;
   devLogin() async {
     var response = await post(
       Uri.parse(
@@ -25,7 +25,7 @@ class ApiProvider extends StateNotifier<String> {
     );
     handleError(response);
     String token = jsonDecode(response.body)['authToken'];
-    state = token;
+    this.token = token;
   }
 
   Future<void> sendOtpToPhone(String phone) async {
@@ -40,24 +40,26 @@ class ApiProvider extends StateNotifier<String> {
   }
 
   Future<bool> verifyOtp(String otp) async {
-    try {
+    // try {
       var res = await post(
         Uri.parse(
             'https://z88f4npptf.execute-api.ap-south-1.amazonaws.com/Prod/validateotp'),
         body: jsonEncode({'otp': otp}),
-        headers: {'authToken': token},
+        headers: {'authToken': otpToken},
       );
+      handleError(res);
+      Logger().d(res.body);
       VerifyOtpResponse response =
           VerifyOtpResponse.fromJson(jsonDecode(res.body));
-      state = response.token;
-      handleError(res);
-    } catch (e) {
-      if (e is BadRequestException) {
-        return false;
-      } else {
-        throw e;
-      }
-    }
+      token = response.token;
+      Logger().d("State has been set to $token");
+    // } catch (e) {
+    //   if (e is BadRequestException) {
+    //     return false;
+    //   } else {
+    //     throw e;
+    //   }
+    // }
   }
 
   Future<List<String>> getAllGenres() async {
@@ -81,14 +83,15 @@ class ApiProvider extends StateNotifier<String> {
   }
 }
 
-final apiProvider = StateNotifierProvider.autoDispose<ApiProvider, String>(
+final apiProvider = Provider<ApiProvider>(
     (ref) => ApiProvider());
 
-final allGenres = FutureProvider.autoDispose((ref) async {
-  var token = ref.watch(apiProvider);
+final allGenres = FutureProvider((ref) async {
+  Logger().d("genres refresh");
+  var apiprovider = ref.watch(apiProvider);
   var url =
       "https://1uz3wnfddj.execute-api.ap-south-1.amazonaws.com/Prod/getAllGenre";
-  var response = await post(Uri.parse(url), headers: {'authToken': token});
+  var response = await post(Uri.parse(url), headers: {'authToken': apiprovider.token});
   print(json.decode(response.body).runtimeType);
   var temp = json.decode(response.body) as List<dynamic>;
   var genres = <String>[];

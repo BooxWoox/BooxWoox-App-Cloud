@@ -18,7 +18,7 @@ class Checkout extends StatefulWidget {
   _CheckoutState createState() => _CheckoutState();
 }
 
-class _CheckoutState extends State<Checkout> { 
+class _CheckoutState extends State<Checkout> {
   int month;
   String dropdownCity;
   String dropdownMedium;
@@ -52,9 +52,8 @@ class _CheckoutState extends State<Checkout> {
 
   double userLongitude;
   double userLatitude;
-  Coordinates userCoordinates;
   double bookLongitude = 72.8777;
-  double bookLatitude = 19.0760; 
+  double bookLatitude = 19.0760;
 
   Address useradd;
   Future<Address> getAddress(Coordinates coordinates) async{
@@ -268,7 +267,7 @@ class _CheckoutState extends State<Checkout> {
                                             final location = await context.read(locationProvider.future);
                                             LocationData userLocation = await location.getLocation();
 
-                                             userCoordinates = Coordinates(userLocation.latitude, userLocation.longitude);
+                                            Coordinates userCoordinates = Coordinates(userLocation.latitude, userLocation.longitude);
 
                                             useradd = await getAddress(userCoordinates);
 
@@ -280,17 +279,18 @@ class _CheckoutState extends State<Checkout> {
                                             );
                                           }
 
-                                           dist = distance(userCoordinates.longitude, userCoordinates.latitude, bookLongitude, bookLatitude); 
+                                          // dist = distance(userLongitude, userLatitude, bookLongitude, bookLatitude);
 
                                           setState(() {
                                             controller.text = useradd.addressLine;
                                             if (controller.text != "" && controller.text != null) {
                                               address = controller.text;
-                                              display = 'The book is approximately ' + (dist.toInt()).toString() + 'km radius from the book drop address';
+                                              // display = 'The book is approximately $dist km radius from the book drop address';
+                                              // print(useradd.addressLine);
                                             }
                                             Navigator.of(context).pop();
                                           });
-                                          
+
                                         },
                                       ),
 
@@ -298,12 +298,12 @@ class _CheckoutState extends State<Checkout> {
                                         padding: const EdgeInsets.all(8.0),
                                         child: ThemeButton(
                                           label: 'Submit',
-                                          onPressed: () async{                                            
+                                          onPressed: () async{
+                                            // print(dist);
                                             if (controller.text != "" &&
                                               controller.text != null) {
                                               setState(() {
                                                 address = controller.text;
-                                                display = 'The book is approximately ' + (dist.toInt()).toString() + 'km radius from the book drop address';
                                               });
                                               Navigator.of(context).pop();
                                             }
@@ -315,8 +315,7 @@ class _CheckoutState extends State<Checkout> {
                                                   Navigator.of(context).pop(true);
                                                   });
                                                   return AlertDialog(
-                                                    backgroundColor: Colors.transparent,
-                                                    title: Text('Please add an address', style: TextStyle(color: Colors.black, fontSize: 15),),
+                                                    title: Text('Please add an address', style: TextStyle(color: Colors.black, fontSize: 12),),
                                                   );
                                                 },
                                               );
@@ -371,7 +370,7 @@ class _CheckoutState extends State<Checkout> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(display, style: TextStyle(color: Colors.red, fontSize: 15),),
+                      // Text(display, style: TextStyle(color: Colors.red, fontSize: 10),),
                       SizedBox(
                         height: 10,
                       ),
@@ -384,7 +383,7 @@ class _CheckoutState extends State<Checkout> {
                         child: DropdownButton<String>(
                           hint: Text('Select transfer medium'),
                           isExpanded: true,
-                          borderRadius: BorderRadius.circular(10),
+                          // borderRadius: BorderRadius.circular(10),
                           underline: SizedBox(),
                           value: dropdownMedium,
                           icon: const Icon(
@@ -426,6 +425,7 @@ class _CheckoutState extends State<Checkout> {
                   ),
                   Consumer(builder: (context, watch, child) {
                     final paymentValues = watch(paymentProvider);
+                    // Logger.d
                     if (paymentValues == null) {
                       return Center(
                         child: Text("Choose above values to continue"),
@@ -595,6 +595,17 @@ class _CheckoutState extends State<Checkout> {
                                 'description': 'Payment for book-borrowingt',
                                 'prefill': {}
                               };
+                              // var options = {
+                              //   'key': '<YOUR_KEY_ID>',
+                              //   'amount': 50000, //total bill
+                              //   'name': 'Acme Corp.', //Publisher name
+                              //   'order_id': 'order_EMBFqjDHEEn80l', // Generate order_id using Orders API
+                              //   'description': 'Fine T-Shirt', //Name of Book
+                              //   'timeout': 300, // in seconds
+                              //   'prefill': {
+                              //     'contact': '9123456789', //Get contact from otp
+                              //   }
+                              // };
                               _razorpay.open(options);
                             },
                             width: double.maxFinite,

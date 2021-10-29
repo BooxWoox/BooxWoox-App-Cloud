@@ -767,10 +767,10 @@ class _AddNewBookState extends State<AddNewBook> {
                         );
                       }
                       try {
-                        final token = context.read(apiProvider);
+                        final apiAddBooktoken = context.read(apiProvider);
 
                         await BooksRepository.addBook(
-                          token,
+                          apiAddBooktoken.token,
                           AddBook(
                             bookTitle: bookNameController.text,
                             author: authorNameController.text,

@@ -1,4 +1,5 @@
 import 'package:bookollab/State/auth.dart';
+import 'package:bookollab/UI/Genreselection.dart';
 import 'package:bookollab/UI/Homepage.dart';
 import 'package:bookollab/UI/Onboarding/GenreTags.dart';
 import 'package:bookollab/UI/widgets/ThemeButton.dart';
@@ -27,14 +28,17 @@ class OTPverify extends StatefulWidget {
 
 class _OTPverifyState extends State<OTPverify> {
   String otp = "";
+  String tokenpassed = "";
   @override
   Widget build(BuildContext context) {
     OtpScreenArguments args =
         ModalRoute.of(context).settings.arguments as OtpScreenArguments;
     return Consumer(
       builder: (context, watch, child) {
-        final token = watch(apiProvider);
-        if (token != null) {
+        final apiProv = watch(apiProvider);
+
+        tokenpassed = apiProv.otpToken;
+        if (apiProv.token != null) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             Navigator.of(context).pushReplacementNamed(Homepage.id);
           });
@@ -95,16 +99,18 @@ class _OTPverifyState extends State<OTPverify> {
                 ThemeButton(
                   label: "Next",
                   onPressed: () async {
-                    try {
-                      await context.read(apiProvider.notifier).verifyOtp(otp);
-                    } catch (e) {
-                      logger.e(e);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("An unexpected error occurred"),
-                        ),
-                      );
-                    }
+                    // try {
+                      await context.read(apiProvider).verifyOtp(otp);
+                      Navigator.pushNamed(context, GenreSelectionpage.id,
+                      arguments: tokenpassed);
+                    // } catch (e) {
+                      // logger.e(e);
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Text("An unexpected error occurred"),
+                      //   ),
+                      // );
+                    // }
                   },
                   width: double.infinity,
                 ),

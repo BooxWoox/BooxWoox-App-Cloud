@@ -92,11 +92,11 @@ class _MainDisplayPageState extends State<MainDisplayPage> {
       body: SafeArea(
         child: Consumer(
           builder: (context, watch, child) {
-            final String token = watch(apiProvider);
-            Logger().d(token);
+            final otpToken = watch(apiProvider);
+            Logger().d(otpToken);
             int page = 1;
             return FutureBuilder(
-                future: BooksRepository.getAllBooks(token, page),
+                future: BooksRepository.getAllBooks(otpToken.token, page),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Center(

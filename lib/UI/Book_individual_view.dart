@@ -24,9 +24,9 @@ class _BookIndividualViewState extends State<BookIndividualView> {
       child: Scaffold(
         body: Consumer(
           builder: (context, watch, child) {
-            final token = watch(apiProvider);
+            final apiToken = watch(apiProvider);
             return FutureBuilder<BookDetails>(
-              future: BooksRepository.getBookDetailed(token, bookId),
+              future: BooksRepository.getBookDetailed(apiToken.token, bookId),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Scaffold(
@@ -110,7 +110,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
                                                           100.0,
                                                     );
                                                   },
-                                                  icon: Icon(Icons.check))
+                                                  icon: Icon(Icons.ac_unit))
                                             ],
                                           ),
                                         );
@@ -164,6 +164,7 @@ class _BookIndividualViewState extends State<BookIndividualView> {
                                               Container(
                                                 child: Wrap(
                                                   children: snapshot.data.tags
+                                                      .split(" ")
                                                       .map((e) => Tag(name: e))
                                                       .toList(),
                                                 ),
@@ -358,19 +359,24 @@ class Stackssss extends StatelessWidget {
                     Text(
                       'Deposit - ${bookDetailed.deposit}',
                     ),
-                    Wrap(children: [
-                      Chip(
-                        label: Text(bookDetailed.ConditionBook),
-                        backgroundColor: Color(0xFF0094FF),
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                    ])
+                    Wrap(
+                      children: bookDetailed.conditionBook
+                          .split(" ")
+                          .map(
+                            (e) => Chip(
+                              label: Text(e),
+                              backgroundColor: Color(0xFF0094FF),
+                              labelStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    )
                   ],
                 ),
               ),

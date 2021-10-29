@@ -192,11 +192,11 @@ class _FiltersState extends State<Filters> {
                       ),
                       Consumer(
                         builder: (context, watch, child) {
-                          final token = watch(apiProvider);
+                          final apiToken = watch(apiProvider);
                           return ElevatedButton(
                             onPressed: () async {
                               try {
-                                var res = await GenreAPI.filterByGenreListApi(token,_car);
+                                var res = await GenreAPI.filterByGenreListApi(apiToken.token,_car);
                                 if(res.isEmpty)
                                 {
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('No books found')));

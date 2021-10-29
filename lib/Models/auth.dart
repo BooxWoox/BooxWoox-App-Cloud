@@ -27,6 +27,6 @@ class VerifyOtpResponse {
 
   VerifyOtpResponse.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    token = json['token'];
+    token = json['authToken'];
   }
 }

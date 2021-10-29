@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
-      final api = watch(apiProvider.notifier);
+      final api = watch(apiProvider);
       final token = watch(apiProvider);
       if (api.token != null) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -141,10 +141,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     onPressed: () async {
                       try {
-                        final provider = context.read(apiProvider.notifier);
+                        final provider = context.read(apiProvider);
                         await provider.sendOtpToPhone(phoneController.text);
                         // await provider.sendOtpToPhone(phoneController.text);
-                        Navigator.pushReplacementNamed(
+                        Navigator.pushNamed(
                           context,
                           OTPverify.id,
                           arguments: OtpScreenArguments(
