@@ -4,7 +4,7 @@ import 'package:bookollab/State/auth.dart';
 import 'package:bookollab/State/search.dart';
 import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Book_individual_view.dart';
-import 'package:bookollab/UI/Profile/My_Books.dart';
+// import 'package:bookollab/UI/Profile/My_Books.dart';
 import 'package:bookollab/UI/See_all.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -27,6 +27,9 @@ import 'AddBookPage.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:bookollab/UI/Notification/notification.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'Onboarding/LoginSecureDetails.dart';
+import 'Onboarding/SplashScreen.dart';
 
 List book1 = ['abc', 'xyz'];
 final List<String> imageList = [
@@ -142,9 +145,12 @@ class _maindisplaypageState extends State<maindisplaypage> {
     //       child: Icon(Icons.note_add),
     //     ),
     //   ),
-    // );
+    // ); 
     if (Homepage_Cat.isEmpty) {
       return Scaffold(
+        // appBar: AppBar(
+        //   leading: Icon(Icons.add)
+        // ),
         body: Center(
           child: Text(
             "Fetching Data!",
@@ -154,6 +160,15 @@ class _maindisplaypageState extends State<maindisplaypage> {
       );
     } else
       return Scaffold(
+        appBar: AppBar(
+          actions: [IconButton(
+            icon: Icon(Icons.add), 
+            onPressed: () async{
+              await LoginSecureDetails.logout();
+              Navigator.of(context).pushReplacementNamed(SplashScreen.id);
+            },
+            )]
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: UnicornDialer(
             backgroundColor: Colors.transparent,

@@ -1,6 +1,7 @@
 import 'package:bookollab/State/auth.dart';
 import 'package:bookollab/UI/Genreselection.dart';
 import 'package:bookollab/UI/Onboarding/GenreTags.dart';
+import 'package:bookollab/UI/Onboarding/LoginSecureDetails.dart';
 import 'package:bookollab/UI/Onboarding/OTPverify.dart';
 import 'package:bookollab/repositories/auth_repo.dart';
 import 'package:bookollab/utilities/logger.dart';
@@ -143,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                       try {
                         final provider = context.read(apiProvider);
                         await provider.sendOtpToPhone(phoneController.text);
+                        await LoginSecureDetails.setPhoneNumber(phoneController.text);
                         // await provider.sendOtpToPhone(phoneController.text);
                         Navigator.pushNamed(
                           context,

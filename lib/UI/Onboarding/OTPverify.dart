@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'LoginSecureDetails.dart';
+
 class OtpScreenArguments {
   String phone;
 
@@ -99,18 +101,19 @@ class _OTPverifyState extends State<OTPverify> {
                 ThemeButton(
                   label: "Next",
                   onPressed: () async {
-                    // try {
+                    try {
                       await context.read(apiProvider).verifyOtp(otp);
+                      await LoginSecureDetails.setAccessToken(context.read(apiProvider).token);
                       Navigator.pushNamed(context, GenreSelectionpage.id,
                       arguments: tokenpassed);
-                    // } catch (e) {
-                      // logger.e(e);
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: Text("An unexpected error occurred"),
-                      //   ),
-                      // );
-                    // }
+                    } catch (e) {
+                      logger.e(e);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("An unexpected error occurred"),
+                        ),
+                      );
+                    }
                   },
                   width: double.infinity,
                 ),

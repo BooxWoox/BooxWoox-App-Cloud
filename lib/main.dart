@@ -36,10 +36,10 @@ import 'UI/Transactions/SellerTransaction_Category/Completed_Seller_Transaction.
 import 'UI/Transactions/AllTransactions.dart';
 import 'UI/Profile/Aboutus.dart';
 import 'UI/Profile/ContactUs.dart';
-import 'UI/Profile/Mybooks.dart';
+// import 'UI/Profile/Mybooks.dart';
 import 'UI/Profile/ReturnBooks.dart';
 import 'UI/See_all.dart';
-import 'UI/Profile/My_Books.dart';
+// import 'UI/Profile/My_Books.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,13 +93,13 @@ class bookollab extends StatelessWidget {
         AllTransactions.id: (context) => AllTransactions(),
         Aboutus.id:(context) => Aboutus(),
         ContactUs.id:(context) =>ContactUs(),
-        Mybooks.id:(context) => Mybooks(),
+        // Mybooks.id:(context) => Mybooks(),
         TheTransactions.id: (context) => TheTransactions(),
         Checkout.id: (context) => Checkout(),
         Filters.id: (context) => Filters(),
         Aboutus.id: (context) => Aboutus(),
         ContactUs.id: (context) => ContactUs(),
-        Mybooks.id: (context) => Mybookspage(),
+        // Mybooks.id: (context) => Mybookspage(),
         OTPverify.id: (context) => OTPverify(),
         GenreTagsPage.id: (context) => GenreTagsPage(),
         ReturnBooks.id: (context) => ReturnBooks(),

@@ -1,3 +1,8 @@
+import 'package:bookollab/State/auth.dart';
+import 'package:bookollab/UI/Onboarding/LoginSecureDetails.dart';
+import 'package:bookollab/UI/maindisplaypage.dart';
+import 'package:flutter_riverpod/src/provider.dart';
+import 'LoginPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
@@ -12,12 +17,23 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   startTime() async {
-    var _duration = new Duration(seconds: 7);
+    var _duration = new Duration(seconds: 5);
     return Timer(_duration, navigationPage);
   }
 
-  void navigationPage() {
-    Navigator.pushReplacementNamed(context, Onboarding.id);
+  void navigationPage() async{
+    String userPhoneNumber = await LoginSecureDetails.getPhoneNumber();
+    String accessToken = await LoginSecureDetails.getAccessToken();
+
+
+    if(userPhoneNumber != null && accessToken != null)
+    {
+      context.read(apiProvider).token = accessToken;
+      Navigator.pushReplacementNamed(context, maindisplaypage.id);
+    }
+    else{
+      Navigator.pushReplacementNamed(context, Onboarding.id);
+    }
   }
 
   @override
