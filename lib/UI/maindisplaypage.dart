@@ -66,7 +66,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
     ftoken = apiprovider.token;
     var result = await BooksRepository.HomeBooks(ftoken, ['thriller']);
     if (result == Null) {
-      print('NULLLLLLLLLLL');
+      print('NULL');
     }
 
     setState(() {
@@ -112,7 +112,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
     floatingButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: "Add Books(Rent)",
+        labelText: "Add Books",
         currentButton: FloatingActionButton(
           onPressed: () {
             print('add books rent');
@@ -173,9 +173,9 @@ class _maindisplaypageState extends State<maindisplaypage> {
             backgroundColor: Color(0xffe9e9e9),
             debounceDelay: const Duration(milliseconds: 500),
             onQueryChanged: (query) {
-              context.read(searchDelegateProvider.notifier).updateQuery(
+              context.read(searchHomeDelegateProvider.notifier).updateHomeQuery(
                     query,
-                    TotalBookName,
+                   booksForYou,
                   );
             },
             // Specify a custom transition to be used for
@@ -194,7 +194,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
                   elevation: 4.0,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: TotalBookName.map(
+                    children:booksForYou.map(
                       (e) => GestureDetector(
                         onTap: () {
                           /*  Navigator.of(context).pushNamed(
@@ -308,13 +308,16 @@ class _maindisplaypageState extends State<maindisplaypage> {
                           children: [
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 18),
-                              child: Text(
-                                Homepage_Cat[index],
-                                style: TextStyle(
-                                    fontFamily: "LeelawUI",
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold),
+                                 const EdgeInsets.symmetric(horizontal: 18,vertical: 0),
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 45),
+                                child: Text(
+                                  Homepage_Cat[index],
+                                  style: TextStyle(
+                                      fontFamily: "LeelawUI",
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                             Homepage_Cat[index] == "Books For You"
@@ -398,13 +401,11 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                                         Card(
                                                           elevation: 3,
                                                           child: Container(
+                                                            
                                                             height: 140,
                                                             width: 100,
                                                             child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          16),
+                                                              
                                                               child:
                                                                   Image.network(
                                                                 booksForYou[
