@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
 
-
 import 'package:http/http.dart' as http;
 
 class BooksRepository {
@@ -18,7 +17,8 @@ class BooksRepository {
       body: jsonEncode({"page": page}),
     );
     if (response.statusCode >= 300) {
-      throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
+      throw Exception(
+          jsonDecode(response.body)['message'] ?? "Unexpected error");
     }
     List<dynamic> temp = jsonDecode(response.body);
     return temp.map((e) => BookShort.fromJson(e)).toList();
@@ -35,7 +35,8 @@ class BooksRepository {
       body: jsonEncode({"id": id}),
     );
     if (response.statusCode >= 300) {
-      throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
+      throw Exception(
+          jsonDecode(response.body)['message'] ?? "Unexpected error");
     }
     return BookDetails.fromJson(jsonDecode(response.body));
   }
@@ -53,13 +54,15 @@ class BooksRepository {
       ),
     );
     if (response.statusCode >= 300) {
-      throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
+      throw Exception(
+          jsonDecode(response.body)['message'] ?? "Unexpected error");
     }
 
     return response;
   }
 
-  static Future<List<homepage_items_featured>> HomeBooks(String token, List genre) async {
+  static Future<List<homepage_items_featured>> HomeBooks(
+      String token, List genre) async {
     var response = await http.post(
       Uri.parse(
         'https://bxfw75ftq2.execute-api.ap-south-1.amazonaws.com/Prod/homeScreen',
@@ -70,14 +73,46 @@ class BooksRepository {
       body: jsonEncode({"genrelist": genre}),
     );
     if (response.statusCode >= 300) {
-      throw Exception(jsonDecode(response.body)['message'] ?? "Unexpected error");
+      throw Exception(
+          jsonDecode(response.body)['message'] ?? "Unexpected error");
     }
     List<dynamic> bookdata = jsonDecode(response.body);
     return bookdata.map((e) => homepage_items_featured.fromJson(e)).toList();
   }
 
+  static Future<UserDetails> GetUserDetails(String token) async {
+    var response = await http.get(
+        Uri.parse(
+          'https://pru4gl0p4k.execute-api.ap-south-1.amazonaws.com/Prod/get/profile',
+        ),
+        headers: {
+          "authToken": token,
+        });
+    if (response.statusCode >= 300) {
+      throw Exception(
+          jsonDecode(response.body)['message'] ?? "Unexpected error");
+    }
+    return UserDetails.fromJson(jsonDecode(response.body));
+  }
+
+    static Future<List<LatestBooks>> GetLatestBooks(
+      String token, String count) async {
+    var response = await http.post(
+      Uri.parse(
+        'https://bxfw75ftq2.execute-api.ap-south-1.amazonaws.com/Prod/homeScreen',
+      ),
+      headers: {
+        "authToken": token,
+      },
+      body: {
+        "count": count,
+      }
+    );
+    if (response.statusCode >= 300) {
+      throw Exception(
+          jsonDecode(response.body)['message'] ?? "Unexpected error");
+    }
+    List<dynamic> bookdata = jsonDecode(response.body);
+    return bookdata.map((e) => LatestBooks.fromJson(e)).toList();
+  }
 }
-
-
- 
-

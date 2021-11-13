@@ -1,9 +1,11 @@
 import 'package:bookollab/Api/books.dart';
+import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/Models/maindisp_book_info_model.dart';
 import 'package:bookollab/State/auth.dart';
 import 'package:bookollab/State/search.dart';
 import 'package:bookollab/UI/AllBooksPage.dart';
 import 'package:bookollab/UI/Book_individual_view.dart';
+import 'package:bookollab/UI/Filters/filters.dart';
 // import 'package:bookollab/UI/Profile/My_Books.dart';
 import 'package:bookollab/UI/See_all.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +53,7 @@ class maindisplaypage extends StatefulWidget {
 class _maindisplaypageState extends State<maindisplaypage> {
   List<String> Homepage_Cat = [];
   List<homepage_items_featured> featured = [];
-  List<homepage_items_featured> latestbooks = [];
+  List<LatestBooks> latestbooks = [];
   List<homepage_items_featured> BestRated = [];
   List<homepage_items_featured> booksForYou = [];
   List TotalBookName = [];
@@ -72,8 +74,11 @@ class _maindisplaypageState extends State<maindisplaypage> {
       print('NULL');
     }
 
+    //var lresult = await BooksRepository.GetLatestBooks(ftoken, '10');
+
     setState(() {
       booksForYou = result;
+     // latestbooks = lresult;
       print(booksForYou.length);
     });
     // return apiprovider.token;
@@ -145,7 +150,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
     //       child: Icon(Icons.note_add),
     //     ),
     //   ),
-    // ); 
+    // );
     if (Homepage_Cat.isEmpty) {
       return Scaffold(
         // appBar: AppBar(
@@ -161,13 +166,55 @@ class _maindisplaypageState extends State<maindisplaypage> {
     } else
       return Scaffold(
         appBar: AppBar(
-          actions: [IconButton(
-            icon: Icon(Icons.add), 
-            onPressed: () async{
-              await LoginSecureDetails.logout();
-              Navigator.of(context).pushReplacementNamed(SplashScreen.id);
+          automaticallyImplyLeading: false,
+          title: Image.asset(
+            'UIAssets/title.png',
+            width: MediaQuery.of(context).size.width * 0.3,
+            fit: BoxFit.fitWidth,
+            alignment: Alignment.centerLeft,
+          ),
+          actions: [
+            /*  GestureDetector(
+            onTap: () {
+              print("userprofile click");
+              // Navigator.pushNamed(context, notification.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('No notifications at this time'),
+                ),
+              );
             },
-            )]
+            child:
+                // Image.asset(
+                //   'UIAssets/Homepage/notification_icon.png',
+                //   color: Colors.black,
+                //   fit: BoxFit.scaleDown,
+                // ),
+                Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.notifications_outlined,
+                color: Colors.black,
+              ),
+            ),
+          ), */
+            IconButton(
+              icon: Icon(Icons.power_settings_new, color: Colors.black),
+              onPressed: () async {
+                await LoginSecureDetails.logout();
+                Navigator.of(context).pushReplacementNamed(SplashScreen.id);
+              },
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(Filters.id);
+              },
+              icon: Icon(Icons.tune, color: Colors.black),
+            )
+          ],
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          // shadowColor: Color(0xFFF7C100),
+          elevation: 0,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: UnicornDialer(
@@ -178,7 +225,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
             childButtons: floatingButtons),
         body: FloatingSearchBar(
             hint: 'Search your favourite book',
-            scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+            scrollPadding: const EdgeInsets.only(top: 16, bottom: 16),
             transitionDuration: const Duration(milliseconds: 500),
             transitionCurve: Curves.easeInOut,
             physics: const BouncingScrollPhysics(),
@@ -190,7 +237,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
             onQueryChanged: (query) {
               context.read(searchHomeDelegateProvider.notifier).updateHomeQuery(
                     query,
-                   booksForYou,
+                    booksForYou,
                   );
             },
             // Specify a custom transition to be used for
@@ -209,18 +256,20 @@ class _maindisplaypageState extends State<maindisplaypage> {
                   elevation: 4.0,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children:booksForYou.map(
-                      (e) => GestureDetector(
-                        onTap: () {
-                          /*  Navigator.of(context).pushNamed(
+                    children: booksForYou
+                        .map(
+                          (e) => GestureDetector(
+                            onTap: () {
+                              /*  Navigator.of(context).pushNamed(
                                             Book_info.id,
                                             arguments: e.id); */
-                        },
-                        child: ListTile(
-                          title: Text(e.bookTitle),
-                        ),
-                      ),
-                    ).toList(),
+                            },
+                            child: ListTile(
+                              title: Text(e.bookTitle),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               );
@@ -230,7 +279,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
               children: [
                 Padding(
                   padding:
-                      const EdgeInsets.only(right: 8.0, left: 8.0, top: 8.0),
+                      const EdgeInsets.only(right: 8.0, left: 8.0, top: 60.0),
 //               child: GFSearchBar(
 //                 searchList: TotalBookName,
 //                 searchQueryBuilder: (query, list) {
@@ -322,10 +371,10 @@ class _maindisplaypageState extends State<maindisplaypage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding:
-                                 const EdgeInsets.symmetric(horizontal: 18,vertical: 0),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 0),
                               child: Padding(
-                                padding: const EdgeInsets.only(top: 45),
+                                padding: const EdgeInsets.only(top: 10),
                                 child: Text(
                                   Homepage_Cat[index],
                                   style: TextStyle(
@@ -416,11 +465,9 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                                         Card(
                                                           elevation: 3,
                                                           child: Container(
-                                                            
                                                             height: 140,
                                                             width: 100,
                                                             child: ClipRRect(
-                                                              
                                                               child:
                                                                   Image.network(
                                                                 booksForYou[
@@ -767,8 +814,9 @@ class _maindisplaypageState extends State<maindisplaypage> {
                                                                               fontSize: 14.0),
                                                                       text:
                                                                           TextSpan(
-                                                                        text: latestbooks[itemIndex]
-                                                                            .author,
+                                                                        text: /* latestbooks[itemIndex]
+                                                                            .author, */
+                                                                            'abc',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Colors.grey,
@@ -992,9 +1040,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
           if (homepage_tag_cat.contains("featured")) {
             featured.add(homepage_items_featured());
           }
-          if (homepage_tag_cat.contains("latest books")) {
-            latestbooks.add(homepage_items_featured());
-          }
+         
           if (homepage_tag_cat.contains("best rated")) {
             BestRated.add(homepage_items_featured());
           }

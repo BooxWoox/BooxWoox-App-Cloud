@@ -2,6 +2,8 @@ import 'package:bookollab/UI/AddBookPage.dart';
 import 'package:bookollab/UI/Chat/chat_homepage.dart';
 import 'package:bookollab/UI/Favorite.dart';
 import 'package:bookollab/UI/Notification/notification.dart';
+import 'package:bookollab/UI/Onboarding/LoginSecureDetails.dart';
+import 'package:bookollab/UI/Onboarding/SplashScreen.dart';
 import 'package:bookollab/UI/ProfilePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +22,9 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   List<Widget> tabPages = [
     maindisplaypage(),
-   // Chat_homepage(),
-   // Favorite(),
-   // ProfilePage(),
+  // Chat_homepage(),
+  // Favorite(),
+   ProfilePage(),
   ];
   final controller = PageController(initialPage: 0);
   int selectedIndex = 0;
@@ -44,56 +46,13 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Image.asset(
-          'UIAssets/title.png',
-          width: MediaQuery.of(context).size.width * 0.3,
-          fit: BoxFit.fitWidth,
-          alignment: Alignment.centerLeft,
-        ),
-        actions: [
-         /*  GestureDetector(
-            onTap: () {
-              print("userprofile click");
-              // Navigator.pushNamed(context, notification.id);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('No notifications at this time'),
-                ),
-              );
-            },
-            child:
-                // Image.asset(
-                //   'UIAssets/Homepage/notification_icon.png',
-                //   color: Colors.black,
-                //   fit: BoxFit.scaleDown,
-                // ),
-                Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.notifications_outlined,
-                color: Colors.black,
-              ),
-            ),
-          ), */
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(Filters.id);
-            },
-            icon: Icon(Icons.tune, color: Colors.black),
-          )
-        ],
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // shadowColor: Color(0xFFF7C100),
-        elevation: 0,
-      ),
+     
       body: PageView(
         children: tabPages,
         onPageChanged: onPageChanged,
         controller: controller,
       ),
-      /* bottomNavigationBar: Container(
+       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(30), topLeft: Radius.circular(30)),
@@ -118,7 +77,7 @@ class _HomepageState extends State<Homepage> {
                 activeIcon: Icon(Icons.home,
                  color: Color(0xFFFFCC00)),
               ),
-              BottomNavigationBarItem(
+            /*  BottomNavigationBarItem(
                 icon: Icon(
                   Icons.chat,
                   color: Colors.black,
@@ -126,8 +85,8 @@ class _HomepageState extends State<Homepage> {
                 label: 'Chat',
                 activeIcon: Icon(Icons.chat,
                  color: Color(0xFFFFCC00)),
-              ),
-              BottomNavigationBarItem(
+              ),*/
+             /* BottomNavigationBarItem(
                   icon: Icon(
                   Icons.favorite_rounded,
                   color: Colors.red,
@@ -136,7 +95,7 @@ class _HomepageState extends State<Homepage> {
                   activeIcon: Icon(
                   Icons.favorite_rounded,
                   color: Color(0xFFFFCC00),
-                ),),
+                ),),*/
               BottomNavigationBarItem(
                   icon: Icon(
                   Icons.person_pin_rounded,
@@ -152,7 +111,7 @@ class _HomepageState extends State<Homepage> {
             unselectedItemColor: Colors.black,
           ),
         ),
-      ), */
+      ), 
     );
   }
 

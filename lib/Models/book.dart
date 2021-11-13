@@ -305,3 +305,81 @@ class AddBook {
     return data;
   }
 }
+
+class UserDetails {
+  String phone;
+  String email;
+  String firstName;
+  String lastName;
+  int credit;
+  double longitude;
+  double latitude;
+
+  UserDetails(
+      {this.phone,
+      this.email,
+      this.firstName,
+      this.lastName,
+      this.credit,
+      this.longitude,
+      this.latitude});
+
+  UserDetails.fromJson(Map<String, dynamic> json) {
+    phone = json['phone'];
+    email = json['email'];
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+    credit = json['credit'];
+    longitude = json['longitude'];
+    latitude = json['latitude'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['phone'] = this.phone;
+    data['email'] = this.email;
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    data['credit'] = this.credit;
+    data['longitude'] = this.longitude;
+    data['latitude'] = this.latitude;
+    return data;
+  }
+}
+
+class LatestBooks {
+  int id;
+  int available;
+  String bookTitle;
+  String imgUrl;
+  List<String> tags;
+  List<String> genre;
+
+  LatestBooks(
+      {this.id,
+      this.available,
+      this.bookTitle,
+      this.imgUrl,
+      this.tags,
+      this.genre});
+
+  LatestBooks.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    available = json['available'];
+    bookTitle = json['book_title'];
+    imgUrl = json['img_url'];
+    tags = json['tags'].cast<String>();
+    genre = json['genre'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['available'] = this.available;
+    data['book_title'] = this.bookTitle;
+    data['img_url'] = this.imgUrl;
+    data['tags'] = this.tags;
+    data['genre'] = this.genre;
+    return data;
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:bookollab/State/auth.dart';
+import 'package:bookollab/UI/Homepage.dart';
 import 'package:bookollab/UI/Onboarding/LoginSecureDetails.dart';
 import 'package:bookollab/UI/maindisplaypage.dart';
 import 'package:flutter_riverpod/src/provider.dart';
@@ -29,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if(userPhoneNumber != null && accessToken != null)
     {
       context.read(apiProvider).token = accessToken;
-      Navigator.pushReplacementNamed(context, maindisplaypage.id);
+      Navigator.pushReplacementNamed(context, Homepage.id);
     }
     else{
       Navigator.pushReplacementNamed(context, Onboarding.id);
