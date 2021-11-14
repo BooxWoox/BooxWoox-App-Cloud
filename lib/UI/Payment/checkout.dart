@@ -598,10 +598,10 @@ class _CheckoutState extends State<Checkout> {
                                 return;
                               }
                               var options = {
-                                'key': '<YOUR_KEY_HERE>',
-                                'amount': paymentValues.total,
+                                'key': 'rzp_test_JtUEcv7jC7SyPA',
+                                'amount': paymentValues.total*100,
                                 'name': 'BooxWoox',
-                                'description': 'Payment for book-borrowingt',
+                                'description': 'Payment for book-borrowing',
                                 'prefill': {}
                               };
                               // var options = {

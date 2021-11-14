@@ -40,6 +40,8 @@ import 'UI/Profile/ContactUs.dart';
 import 'UI/Profile/ReturnBooks.dart';
 import 'UI/See_all.dart';
 // import 'UI/Profile/My_Books.dart';
+import 'package:bookollab/UI/EditProfilePage.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -108,6 +110,7 @@ class bookollab extends StatelessWidget {
         GenreSelectionpage.id: (context) => GenreSelectionpage(),
         SeeAll.id: (context) => SeeAll(),
         BookIndividualView.id: (context) => BookIndividualView(),
+        ProfileEditPage.id: (context) => ProfileEditPage(),
       },
     );
   }

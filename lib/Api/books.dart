@@ -138,4 +138,26 @@ class BooksRepository {
 
     return ImageData.fromJson(jsonDecode(responseString));
   }
+
+  static Future<String> UpdateProfile(String token, String firstName, String lastName, String emailId, String imageurl) async {
+    var response = await http.post(
+      Uri.parse(
+          'https://dfeofi86hg.execute-api.ap-south-1.amazonaws.com/Prod/update/profile'),
+      headers: {
+        "authToken": token,
+      },
+      body: {
+        "firstname": firstName,
+        "lastname": lastName,
+        "emailid": emailId,
+        "img": imageurl,
+      },
+    );
+    if (response.statusCode >= 300) {
+      throw Exception(
+          jsonDecode(response.body)['message'] ?? "Unexpected error");
+    }
+    return response.body;
+  }
+
 }

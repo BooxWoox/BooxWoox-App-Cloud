@@ -30,6 +30,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //import 'package:bookollab/UI/Profile/Mybooks.dart';
 import 'package:image_picker/image_picker.dart';
+import 'EditProfilePage.dart';
+
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final _firestore = FirebaseFirestore.instance;
@@ -149,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Column(
                                 children: [
                                   Text(
-                                    'User Name', // 'username'
+                                    userdetails.firstName, // 'username'
                                     style: TextStyle(
                                         fontFamily: "Avenir95Black",
                                         fontSize: 15),
@@ -176,7 +178,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           IconButton(
                             iconSize: 20,
                             onPressed: () {
-                             
+                              Navigator.pushNamed(context, ProfileEditPage.id,
+                              arguments: {'prfimgurl':prfimage.url}
+                              );
                             },
                             icon: Icon(Icons.edit),
                           ),
