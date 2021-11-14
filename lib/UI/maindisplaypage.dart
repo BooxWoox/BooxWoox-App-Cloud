@@ -70,6 +70,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
     final apiprovider = context.read(apiProvider);
     ftoken = apiprovider.token;
     var result = await BooksRepository.HomeBooks(ftoken, ['thriller']);
+    //var lresult = await BooksRepository.GetLatestBooks(ftoken, '10');
     if (result == Null) {
       print('NULL');
     }
@@ -1040,7 +1041,7 @@ class _maindisplaypageState extends State<maindisplaypage> {
           if (homepage_tag_cat.contains("featured")) {
             featured.add(homepage_items_featured());
           }
-         
+
           if (homepage_tag_cat.contains("best rated")) {
             BestRated.add(homepage_items_featured());
           }

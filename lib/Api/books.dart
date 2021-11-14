@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bookollab/Models/book.dart';
 import 'package:bookollab/Models/homepage_items_featured.dart';
@@ -95,24 +96,46 @@ class BooksRepository {
     return UserDetails.fromJson(jsonDecode(response.body));
   }
 
-    static Future<List<LatestBooks>> GetLatestBooks(
+  static Future<List<LatestBooks>> GetLatestBooks(
       String token, String count) async {
     var response = await http.post(
-      Uri.parse(
-        'https://bxfw75ftq2.execute-api.ap-south-1.amazonaws.com/Prod/homeScreen',
-      ),
-      headers: {
-        "authToken": token,
-      },
-      body: {
-        "count": count,
-      }
-    );
+        Uri.parse(
+          'https://bxfw75ftq2.execute-api.ap-south-1.amazonaws.com/Prod/homeScreen',
+        ),
+        headers: {
+          "authToken": token,
+        },
+        body: jsonEncode( {
+          "count": count,
+        }));
     if (response.statusCode >= 300) {
       throw Exception(
           jsonDecode(response.body)['message'] ?? "Unexpected error");
     }
     List<dynamic> bookdata = jsonDecode(response.body);
     return bookdata.map((e) => LatestBooks.fromJson(e)).toList();
+  }
+
+  static Future<ImageData> GetImage(
+      String token, String folder, String file) async {
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://biixth2lcl.execute-api.ap-south-1.amazonaws.com/Prod/upload/image'));
+
+    request.files.add(await http.MultipartFile.fromPath("file", file));
+    request.headers.addAll({
+      "authtoken": token,
+      "foldername": folder,
+    });
+    var response = await request.send();
+    var responseString = await response.stream.bytesToString();
+
+    if (response.statusCode >= 300) {
+      throw Exception(
+          jsonDecode(responseString)['message'] ?? "Unexpected error");
+    }
+
+    return ImageData.fromJson(jsonDecode(responseString));
   }
 }

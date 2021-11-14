@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bookollab/Api/books.dart';
 import 'package:bookollab/Models/book.dart';
+
 import 'package:bookollab/State/auth.dart';
 import 'package:bookollab/UI/Homepage.dart';
 import 'package:bookollab/UI/Onboarding/LoginSecureDetails.dart';
@@ -41,15 +42,26 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   // final _auth = FirebaseAuth.instance;
-
+  XFile imageFile;
+  File profileImage;
   String token = "";
   UserDetails userdetails;
+  ImageData prfimage;
+
   getDetails() async {
     final apiprovider = context.read(apiProvider);
     token = apiprovider.token;
     var details = await BooksRepository.GetUserDetails(token);
     setState(() {
       userdetails = details;
+    });
+  }
+
+  addImage() async {
+    var image =
+        await BooksRepository.GetImage(token, 'profileImages', profileImage.path);
+    setState(() {
+      prfimage = image;
     });
   }
 
@@ -62,10 +74,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   var _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-
   @override
   Widget build(BuildContext context) {
-    if (userdetails ==  null) {
+    if (userdetails == null) {
       return Scaffold(
         body: Center(
           child: Text(
@@ -117,16 +128,24 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: EdgeInsets.all(10.00),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            child: 
-                                Image.asset(
-                                    'UIAssets/LoginScreen/DummyProfile.png'),
-                                
-                            radius: 45.00,
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: (){ _getFromGallery();},
+                                child: CircleAvatar(
+                                  backgroundImage: prfimage != null
+                                      ? NetworkImage(
+                                          prfimage.url,) //Image.file(profileImage)
+                                      : AssetImage(
+                                          'UIAssets/LoginScreen/DummyProfile.png'),
+                                  radius: 45.00,
+                                ),
+                              ),
+                            ],
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.all(25.00),
+                              padding: EdgeInsets.only(top: 40),
                               child: Column(
                                 children: [
                                   Text(
@@ -135,9 +154,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         fontFamily: "Avenir95Black",
                                         fontSize: 15),
                                   ),
-                                  SizedBox(height: 7.00),
+                                  
                                   Padding(
-                                    padding: EdgeInsets.only(left: 25.00),
+                                    padding: EdgeInsets.only(left: 40.00),
                                     child: Row(
                                       children: [
                                         Icon(
@@ -156,7 +175,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           IconButton(
                             iconSize: 20,
-                            onPressed: (){},
+                            onPressed: () {
+                             
+                            },
                             icon: Icon(Icons.edit),
                           ),
                         ],
@@ -174,6 +195,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Card(
                     child: Column(
                       children: [
+                        SizedBox(height: 10,),
                         InkWell(
                           onTap: () {
                             //  Navigator.pushNamed(context, Mybooks.id);
@@ -310,6 +332,21 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       );
+    }
+  }
+
+  _getFromGallery() async {
+    XFile pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = XFile(pickedFile.path);
+        profileImage = File(imageFile.path);
+        addImage();
+      });
     }
   }
 

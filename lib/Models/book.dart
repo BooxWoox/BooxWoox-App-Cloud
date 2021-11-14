@@ -383,3 +383,22 @@ class LatestBooks {
     return data;
   }
 }
+
+class ImageData {
+  String message;
+  String url;
+
+  ImageData({this.message, this.url});
+
+  ImageData.fromJson(Map<String, dynamic> json) {
+    message = json['message'];
+    url = json['url'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    data['url'] = this.url;
+    return data;
+  }
+}
