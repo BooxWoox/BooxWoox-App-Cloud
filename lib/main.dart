@@ -7,6 +7,7 @@ import 'package:bookollab/UI/Genreselection.dart';
 import 'package:bookollab/UI/Onboarding/GenreTags.dart';
 import 'package:bookollab/UI/Order_info.dart';
 import 'package:bookollab/UI/Payment/checkout.dart';
+import 'package:bookollab/UI/Payment/checkpayment.dart';
 import 'package:bookollab/UI/Transactions/the_transactions.dart';
 import 'package:bookollab/UI/Filters/filters.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +112,7 @@ class bookollab extends StatelessWidget {
         SeeAll.id: (context) => SeeAll(),
         BookIndividualView.id: (context) => BookIndividualView(),
         ProfileEditPage.id: (context) => ProfileEditPage(),
+        CheckPayments.id: (context) => CheckPayments(),
       },
     );
   }

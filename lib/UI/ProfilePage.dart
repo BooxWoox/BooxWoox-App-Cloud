@@ -151,7 +151,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Column(
                                 children: [
                                   Text(
-                                    userdetails.firstName, // 'username'
+                                   // userdetails.firstName, 
+                                   'username',
                                     style: TextStyle(
                                         fontFamily: "Avenir95Black",
                                         fontSize: 15),

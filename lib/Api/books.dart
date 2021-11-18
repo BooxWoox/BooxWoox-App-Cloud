@@ -105,7 +105,7 @@ class BooksRepository {
         headers: {
           "authToken": token,
         },
-        body: jsonEncode( {
+        body: jsonEncode({
           "count": count,
         }));
     if (response.statusCode >= 300) {
@@ -139,7 +139,8 @@ class BooksRepository {
     return ImageData.fromJson(jsonDecode(responseString));
   }
 
-  static Future<String> UpdateProfile(String token, String firstName, String lastName, String emailId, String imageurl) async {
+  static Future<String> UpdateProfile(String token, String firstName,
+      String lastName, String emailId, String imageurl) async {
     var response = await http.post(
       Uri.parse(
           'https://dfeofi86hg.execute-api.ap-south-1.amazonaws.com/Prod/update/profile'),
@@ -160,4 +161,23 @@ class BooksRepository {
     return response.body;
   }
 
+  static Future<String> VerifyOrder(
+      String orderId, String paymentId, String signature, String token) async {
+    var response = await http.post(
+        Uri.parse(
+            'https://49i1h45sfb.execute-api.ap-south-1.amazonaws.com/Prod/verifyorder'),
+        headers: {
+          "authToken": token,
+        },
+        body: {
+          "razorpay_order_id": orderId,
+          "razorpay_payment_id": paymentId,
+          "razorpay_signature": signature,
+        });
+    if (response.statusCode >= 300) {
+      throw Exception(
+          jsonDecode(response.body)['message'] ?? "Unexpected error");
+    }
+    return response.body;
+  }
 }

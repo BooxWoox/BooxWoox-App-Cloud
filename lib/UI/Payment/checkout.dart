@@ -1,5 +1,7 @@
+import 'package:bookollab/State/auth.dart';
 import 'package:bookollab/State/location.dart';
 import 'package:bookollab/State/payment.dart';
+import 'package:bookollab/UI/Payment/checkpayment.dart';
 import 'package:bookollab/UI/widgets/ThemeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,6 +13,8 @@ import 'package:geocoder/services/local.dart';
 import 'package:location/location.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'dart:math';
+import 'package:bookollab/Api/books.dart';
+import 'package:bookollab/Models/book.dart';
 
 class Checkout extends StatefulWidget {
   static String id = 'checkout';
@@ -24,6 +28,19 @@ class _CheckoutState extends State<Checkout> {
   String dropdownCity;
   String dropdownMedium;
   String address;
+  String razorpay_order_id = "";
+  String razorpay_payment_id = "";
+  String razorpay_signature = "";
+  String token = "";
+
+  CheckOrder() async {
+    final apiprovider = context.read(apiProvider);
+    token = apiprovider.token;
+
+    var result = await BooksRepository.VerifyOrder(
+        razorpay_order_id, razorpay_payment_id, razorpay_signature, token);
+    Navigator.pushNamed(context, CheckPayments.id, arguments: {'msg': result});
+  }
 
   final _razorpay = Razorpay();
 
@@ -36,10 +53,10 @@ class _CheckoutState extends State<Checkout> {
   }
 
   @override
-    void dispose(){
-      super.dispose();
-      _razorpay.clear(); // Removes all listeners
-    }
+  void dispose() {
+    super.dispose();
+    _razorpay.clear(); // Removes all listeners
+  }
 
   Map<String, int> months = {
     '1 week': 7,
@@ -55,10 +72,10 @@ class _CheckoutState extends State<Checkout> {
   double userLatitude;
   Coordinates userCoordinates;
   double bookLongitude = 72.8777;
-  double bookLatitude = 19.0760; 
+  double bookLatitude = 19.0760;
 
   Address useradd;
-  Future<Address> getAddress(Coordinates coordinates) async{
+  Future<Address> getAddress(Coordinates coordinates) async {
     final uA = await Geocoder.local.findAddressesFromCoordinates(coordinates);
 
     useradd = uA.first;
@@ -67,13 +84,17 @@ class _CheckoutState extends State<Checkout> {
   }
 
   double dist = 0;
-  double distance(double userLong, double userLat, double bookLong, double bookLat){
-    userLong = userLong/57.29577951;
-    userLat = userLat/57.29577951;
-    bookLong = bookLong/57.29577951;
-    bookLat = bookLat/57.29577951;
+  double distance(
+      double userLong, double userLat, double bookLong, double bookLat) {
+    userLong = userLong / 57.29577951;
+    userLat = userLat / 57.29577951;
+    bookLong = bookLong / 57.29577951;
+    bookLat = bookLat / 57.29577951;
 
-    double dist = 1.609344*(3963.0*(acos((sin(userLat)*sin(bookLat))+(cos(userLat)*cos(bookLat)*cos(bookLong-userLong)))));
+    double dist = 1.609344 *
+        (3963.0 *
+            (acos((sin(userLat) * sin(bookLat)) +
+                (cos(userLat) * cos(bookLat) * cos(bookLong - userLong)))));
 
     return dist;
   }
@@ -86,12 +107,21 @@ class _CheckoutState extends State<Checkout> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     // Do something when payment succeeds
-     Fluttertoast.showToast(
+
+    razorpay_order_id = response.orderId;
+    razorpay_payment_id = response.paymentId;
+    razorpay_signature = response.signature;
+
+    CheckOrder();
+
+    Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId, toastLength: Toast.LENGTH_SHORT);
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     // Do something when payment fails
+    Navigator.pushNamed(context, CheckPayments.id,
+        arguments: {'msg': response.message});
     Fluttertoast.showToast(
         msg: "ERROR: " + response.code.toString() + " - " + response.message,
         toastLength: Toast.LENGTH_SHORT);
@@ -100,7 +130,8 @@ class _CheckoutState extends State<Checkout> {
   void _handleExternalWallet(ExternalWalletResponse response) {
     // Do something when an external wallet was selected
     Fluttertoast.showToast(
-        msg: "EXTERNAL_WALLET: " + response.walletName, toastLength: Toast.LENGTH_SHORT);
+        msg: "EXTERNAL_WALLET: " + response.walletName,
+        toastLength: Toast.LENGTH_SHORT);
   }
 
   void setPaymentValues() {
@@ -240,7 +271,8 @@ class _CheckoutState extends State<Checkout> {
                               backgroundColor:
                                   address == null ? Colors.white : Colors.blue,
                               onPressed: () async {
-                                final controller = TextEditingController(text: address);
+                                final controller =
+                                    TextEditingController(text: address);
                                 await showDialog(
                                   context: context,
                                   builder: (context) => SimpleDialog(
@@ -256,14 +288,12 @@ class _CheckoutState extends State<Checkout> {
                                             border: OutlineInputBorder(),
                                             hintText: 'Address'),
                                       ),
-
                                       ElevatedButton(
                                         child: Text(
                                           'Your current location',
                                           style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black
-                                          ),
+                                              fontSize: 20,
+                                              color: Colors.black),
                                         ),
                                         style: ElevatedButton.styleFrom(
                                           elevation: 0,
@@ -271,60 +301,84 @@ class _CheckoutState extends State<Checkout> {
                                               horizontal: 60, vertical: 10),
                                           primary: Colors.grey[300],
                                         ),
-                                        onPressed: () async{
+                                        onPressed: () async {
                                           try {
-                                            final location = await context.read(locationProvider.future);
-                                            LocationData userLocation = await location.getLocation();
+                                            final location = await context
+                                                .read(locationProvider.future);
+                                            LocationData userLocation =
+                                                await location.getLocation();
 
-                                             userCoordinates = Coordinates(userLocation.latitude, userLocation.longitude);
+                                            userCoordinates = Coordinates(
+                                                userLocation.latitude,
+                                                userLocation.longitude);
 
-                                            useradd = await getAddress(userCoordinates);
-
+                                            useradd = await getAddress(
+                                                userCoordinates);
                                           } catch (e) {
-                                            ScaffoldMessenger.of(context).showSnackBar(
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
                                               SnackBar(
                                                 content: Text(e),
                                               ),
                                             );
                                           }
 
-                                           dist = distance(userCoordinates.longitude, userCoordinates.latitude, bookLongitude, bookLatitude); 
+                                          dist = distance(
+                                              userCoordinates.longitude,
+                                              userCoordinates.latitude,
+                                              bookLongitude,
+                                              bookLatitude);
 
                                           setState(() {
-                                            controller.text = useradd.addressLine;
-                                            if (controller.text != "" && controller.text != null) {
+                                            controller.text =
+                                                useradd.addressLine;
+                                            if (controller.text != "" &&
+                                                controller.text != null) {
                                               address = controller.text;
-                                              display = 'The book is approximately ' + (dist.toInt()).toString() + 'km radius from the book drop address';
+                                              display =
+                                                  'The book is approximately ' +
+                                                      (dist.toInt())
+                                                          .toString() +
+                                                      'km radius from the book drop address';
                                             }
                                             Navigator.of(context).pop();
                                           });
-
                                         },
                                       ),
-
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ThemeButton(
                                           label: 'Submit',
-                                          onPressed: () async{                                            
+                                          onPressed: () async {
                                             if (controller.text != "" &&
-                                              controller.text != null) {
+                                                controller.text != null) {
                                               setState(() {
                                                 address = controller.text;
-                                                display = 'The book is approximately ' + (dist.toInt()).toString() + 'km radius from the book drop address';
+                                                display =
+                                                    'The book is approximately ' +
+                                                        (dist.toInt())
+                                                            .toString() +
+                                                        'km radius from the book drop address';
                                               });
                                               Navigator.of(context).pop();
-                                            }
-                                            else{
+                                            } else {
                                               showDialog(
                                                 context: context,
                                                 builder: (context) {
-                                                  Future.delayed(Duration(seconds: 1), () {
-                                                  Navigator.of(context).pop(true);
+                                                  Future.delayed(
+                                                      Duration(seconds: 1), () {
+                                                    Navigator.of(context)
+                                                        .pop(true);
                                                   });
                                                   return AlertDialog(
-                                                    backgroundColor: Colors.transparent,
-                                                    title: Text('Please add an address', style: TextStyle(color: Colors.black, fontSize: 15),),
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    title: Text(
+                                                      'Please add an address',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 15),
+                                                    ),
                                                   );
                                                 },
                                               );
@@ -356,7 +410,9 @@ class _CheckoutState extends State<Checkout> {
                           ),
                           Expanded(
                             child: Text(
-                              address == null ? 'Add book drop address' : address,
+                              address == null
+                                  ? 'Add book drop address'
+                                  : address,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -379,7 +435,10 @@ class _CheckoutState extends State<Checkout> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(display, style: TextStyle(color: Colors.red, fontSize: 15),),
+                      Text(
+                        display,
+                        style: TextStyle(color: Colors.red, fontSize: 15),
+                      ),
                       SizedBox(
                         height: 10,
                       ),
@@ -599,7 +658,7 @@ class _CheckoutState extends State<Checkout> {
                               }
                               var options = {
                                 'key': 'rzp_test_JtUEcv7jC7SyPA',
-                                'amount': paymentValues.total*100,
+                                'amount': paymentValues.total * 100,
                                 'name': 'BooxWoox',
                                 'description': 'Payment for book-borrowing',
                                 'prefill': {}
